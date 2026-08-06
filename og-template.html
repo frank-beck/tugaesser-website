@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Liegt im Webroot mit, ist aber keine Seite für Besucher. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /*
+        Vorlage für images/og-image.jpg – wird von generate-og.mjs auf exakt
+        1200x630 abfotografiert. Nicht Teil der Website, wird nicht ausgeliefert.
+        Farben und Schriften bewusst identisch zur Seite gehalten.
+      */
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { width: 1200px; height: 630px; overflow: hidden; }
+
+      body {
+        position: relative;
+        background: #0a0d14;
+        font-family: 'Inter Tight', system-ui, sans-serif;
+        color: #f4efe7;
+      }
+
+      .bg {
+        position: absolute;
+        inset: 0;
+        background-image: url('images/tugaesser-rathaus-hero-1600x900.png');
+        background-size: cover;
+        /* Etwas nach rechts: Frau und Gedankenblase sollen ins Bild. */
+        background-position: 62% 42%;
+      }
+
+      /* Links kräftig abdunkeln, rechts das Foto stehen lassen. */
+      .scrim {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(100deg, rgba(10,13,20,0.95) 0%, rgba(10,13,20,0.86) 34%, rgba(10,13,20,0.35) 60%, rgba(10,13,20,0.08) 100%),
+          linear-gradient(to top, rgba(10,13,20,0.75) 0%, transparent 45%);
+      }
+
+      .content {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        padding: 62px 68px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .label {
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 19px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #e06359;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .label .dot { width: 9px; height: 9px; background: #c8322a; flex: none; }
+      .label .ort { color: rgba(244,239,231,0.5); }
+
+      h1 {
+        font-size: 82px;
+        font-weight: 700;
+        line-height: 0.94;
+        letter-spacing: -0.045em;
+        max-width: 15ch;
+        /* Der Text steht teils auf heller Fassade – der Schatten trägt hier
+           die Lesbarkeit, nicht noch mehr Abdunklung. */
+        text-shadow: 0 2px 4px rgba(10,13,20,0.7), 0 8px 34px rgba(10,13,20,0.95);
+      }
+
+      .foot {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 40px;
+      }
+      .claim {
+        font-size: 27px;
+        line-height: 1.45;
+        color: rgba(244,239,231,0.82);
+        max-width: 22ch;
+        text-shadow: 0 2px 18px rgba(10,13,20,0.95);
+      }
+      .handle {
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 19px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(244,239,231,0.72);
+        border: 1px solid rgba(244,239,231,0.3);
+        padding: 13px 20px;
+        white-space: nowrap;
+      }
+
+      /* Ecken-Ticks wie auf der Seite. */
+      .tick { position: absolute; background: rgba(244,239,231,0.3); z-index: 3; }
+      .tick.a { left: 30px; top: 30px; width: 1px; height: 20px; }
+      .tick.b { left: 30px; top: 30px; width: 20px; height: 1px; }
+      .tick.c { right: 30px; bottom: 30px; width: 1px; height: 20px; }
+      .tick.d { right: 30px; bottom: 30px; width: 20px; height: 1px; }
+    </style>
+  </head>
+  <body>
+    <div class="bg"></div>
+    <div class="scrim"></div>
+
+    <span class="tick a"></span><span class="tick b"></span>
+    <span class="tick c"></span><span class="tick d"></span>
+
+    <div class="content">
+      <div class="label">
+        <span class="dot"></span>
+        Tugässer&nbsp;Bräu <span class="ort">· Heilbronn</span>
+      </div>
+
+      <div>
+        <h1>Tugässer,<br />schaffen wir&rsquo;s.</h1>
+      </div>
+
+      <div class="foot">
+        <p class="claim">Man wird ja wohl noch träumen dürfen.</p>
+        <span class="handle">@tugaesser</span>
+      </div>
+    </div>
+  </body>
+</html>
