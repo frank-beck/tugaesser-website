@@ -106,6 +106,26 @@ Daraus folgt für die tägliche Arbeit:
 - Es gab einmal einen Actions-Workflow dafür. Der ist bewusst wieder raus:
   Für eine Seite ohne Build-Schritt war er nur eine zusätzliche Fehlerquelle —
   und ist prompt einer GitHub-Störung zum Opfer gefallen.
+- **„Page build failed." mit `duration: 0` heißt fast nie, dass etwas am Repo
+  kaputt ist.** Erst [githubstatus.com](https://www.githubstatus.com/) prüfen,
+  bevor man Dateien verdächtigt — am 6.8.2026 lagen Actions und Pages stundenlang
+  im major outage und alle Builds brachen sofort ab.
+
+### Link-Vorschau (Open Graph)
+
+`images/og-image.jpg` (1200×630, ~88 KB) entsteht aus `og-template.html` per
+`PORT=3001 node generate-og.mjs` — Dev-Server muss laufen. Das Hero-PNG direkt zu
+verlinken funktioniert nicht: 2 MB im 16:9-Format, WhatsApp lädt das oft gar
+nicht erst. Unter 300 KB bleiben, sonst fällt die Vorschau still aus.
+
+- **Nach Änderungen an Claim, Marke oder Bild das OG-Bild neu erzeugen** — es ist
+  eine Kopie, die sonst stillschweigend veraltet.
+- Die Domain steht in allen Meta-Tags als **Punycode** (`xn--tugsser-7wa.de`).
+  Die Umlautform ist hübscher, aber manche Crawler stolpern darüber, und das
+  Vorschaubild muss zuverlässig laden.
+- **WhatsApp und Facebook cachen die Vorschau lange.** Nach Änderungen über den
+  [Sharing Debugger](https://developers.facebook.com/tools/debug/) „Scrape Again"
+  auslösen, sonst sieht man tagelang den alten Stand.
 
 ## Befehle
 
