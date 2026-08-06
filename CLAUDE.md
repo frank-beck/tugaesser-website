@@ -183,6 +183,14 @@ damit die geänderte CSS live frisch geladen wird.
 - **`text-current/60` funktioniert nicht.** Tailwind kann `currentColor` nicht
   mit Deckkraft mischen; die Klasse fällt wirkungslos aus. Stattdessen
   `opacity-60` auf das Element.
+- **Kein `h-screen` für bildschirmfüllende Flächen — `h-dvh` nehmen.** iOS
+  Safari rechnet `100vh` ohne seine Toolbars; alles, was per `bottom-0` am
+  unteren Rand sitzt, verschwindet dort hinter der Adressleiste. Auf dem Desktop
+  fällt das nie auf, deshalb: **Änderungen am Vollbild-Layout immer auf einem
+  echten iPhone gegenprüfen**, ein schmaler Puppeteer-Viewport zeigt den Fehler
+  nicht. Der Scrollweg von `#scrolly` bleibt dagegen bewusst in `vh` — `dvh`
+  würde sich beim Ein- und Ausfahren der Toolbar mitverändern und die Sequenz
+  springen lassen.
 
 ## Referenzbilder
 

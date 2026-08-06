@@ -59,7 +59,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="tailwind.css?v=e9bd4c74" />
+    <link rel="stylesheet" href="tailwind.css?v=98b9cbf4" />
   </head>
 
   <body class="bg-night font-body text-cream antialiased">
@@ -85,9 +85,16 @@
     -->
     <section
       id="scrolly"
-      class="relative h-[300vh] motion-reduce:h-screen lg:h-[420vh]"
+      class="relative h-[300vh] motion-reduce:h-dvh lg:h-[420vh]"
     >
-      <div class="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
+      <!--
+        h-dvh, nicht h-screen: iOS Safari rechnet 100vh ohne seine Toolbars,
+        der Container ragt dadurch unter die Adressleiste und die untere Leiste
+        ist auf dem iPhone unsichtbar. dvh folgt der tatsächlich sichtbaren Höhe.
+        Der Scrollweg oben bleibt bewusst in vh: dvh würde sich mitverändern,
+        während Safari die Toolbar ein- und ausfährt, und die Sequenz spränge.
+      -->
+      <div class="sticky top-0 flex h-dvh items-center justify-center overflow-hidden">
         <!--
           h-full w-auto statt w-full: das Bild ragt seitlich über den Rahmen
           hinaus, statt vorher beschnitten zu werden. Nur so lässt es sich per
