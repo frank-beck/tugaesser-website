@@ -1,0 +1,19 @@
+{
+  "name": "tugaesser-website",
+  "version": "1.0.0",
+  "description": "Website für Tugässer Bräu, Heilbronn",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./tailwind.css --minify",
+    "postbuild:css": "node scripts/bust-css-cache.mjs",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./tailwind.css --watch"
+  },
+  "type": "commonjs",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "puppeteer": "^24.40.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}

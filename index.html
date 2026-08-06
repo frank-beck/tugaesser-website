@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tugässer Bräu — Ein neues Bier belebt Heilbronn</title>
+    <meta
+      name="description"
+      content="Tugässer Bräu — ein neues Bier belebt Heilbronn."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="tailwind.css?v=24b24938" />
+  </head>
+
+  <body class="bg-night font-body text-cream antialiased">
+    <!--
+      Bild und Text teilen sich ab lg dieselbe Grid-Zelle (Overlay), darunter
+      stehen sie gestapelt. So bleibt das Foto auf kleinen Schirmen komplett
+      unverdeckt und wird auf großen nur im unteren Textbereich abgedunkelt.
+    -->
+    <header class="relative isolate">
+      <div class="mx-auto grid max-w-[1600px] grid-cols-1">
+        <img
+          src="images/tugaesser-rathaus-hero-1600x900.png"
+          alt="Der Heilbronner Marktplatz bei Nacht mit beleuchtetem Rathaus; im Vordergrund eine Frau, über ihr eine Gedankenblase mit einem Bierdeckel „Tugässer Bräu — Ein neues Bier belebt Heilbronn“ und einem frisch gezapften Bier"
+          class="col-start-1 row-start-1 aspect-[16/9] w-full object-cover object-center"
+        />
+
+        <!--
+          Scrims bewusst schwach halten – die Lesbarkeit trägt der Text-Schatten
+          an den Überschriften, nicht großflächiges Abdunkeln. Sonst verschwindet
+          die beleuchtete Rathaus-Fassade, die den Reiz des Bildes ausmacht.
+        -->
+        <div
+          class="col-start-1 row-start-1 hidden bg-gradient-to-r from-night/70 via-night/20 to-transparent lg:block"
+          aria-hidden="true"
+        ></div>
+
+        <div
+          class="col-start-1 row-start-2 px-6 pb-14 pt-10 sm:px-10 lg:row-start-1 lg:self-end lg:bg-gradient-to-t lg:from-night/95 lg:via-night/40 lg:to-transparent lg:pb-16 lg:pt-40"
+        >
+          <div class="mx-auto max-w-5xl">
+            <h1
+              class="max-w-[14ch] font-display text-4xl font-bold leading-[1.05] tracking-[-0.03em] text-cream sm:text-6xl lg:text-7xl lg:[text-shadow:0_1px_3px_rgba(10,13,20,0.65),0_6px_28px_rgba(10,13,20,0.9)]"
+            >
+              Tugässer, schaffen wir&rsquo;s.
+            </h1>
+
+            <p
+              class="mt-5 max-w-xl text-lg leading-[1.7] text-cream/85 sm:text-xl lg:[text-shadow:0_1px_14px_rgba(10,13,20,0.95)]"
+            >
+              Man wird ja wohl noch träumen dürfen.
+            </p>
+
+            <p
+              class="mt-10 text-sm uppercase tracking-[0.2em] text-cream/70 lg:[text-shadow:0_1px_14px_rgba(10,13,20,0.95)]"
+            >
+              Neugierig?
+            </p>
+
+            <a
+              href="https://www.instagram.com/tugaesser/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group mt-3 inline-flex items-center gap-3 whitespace-nowrap rounded-full bg-brand-500 px-5 py-3.5 text-[0.9375rem] font-semibold text-cream shadow-[0_2px_8px_-2px_rgba(200,50,42,0.55),0_14px_32px_-10px_rgba(200,50,42,0.45)] outline-none transition-transform duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-0.5 hover:bg-brand-600 focus-visible:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-night active:translate-y-0 active:bg-brand-700 sm:px-6 sm:text-base"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.9"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-5 w-5"
+                aria-hidden="true"
+              >
+                <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" />
+                <circle cx="12" cy="12" r="4.2" />
+                <circle cx="17.6" cy="6.4" r="1.15" fill="currentColor" stroke="none" />
+              </svg>
+              <span>Folg uns auf Instagram</span>
+              <span
+                class="hidden text-cream/75 transition-transform duration-200 group-hover:translate-x-0.5 sm:inline"
+              >
+                @tugaesser
+              </span>
+            </a>
+
+            <!-- Handle passt auf schmalen Schirmen nicht mehr in den Button. -->
+            <p class="mt-3 text-sm text-cream/60 sm:hidden">@tugaesser</p>
+          </div>
+        </div>
+      </div>
+    </header>
+  </body>
+</html>
