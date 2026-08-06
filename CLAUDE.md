@@ -146,6 +146,17 @@ JetBrains Mono 400/500, zusammen ~107 KB, nur Subset `latin`).
 - `og-template.html` nutzt dieselben Dateien. Dort steht Inter Tight nur auf der
   Überschrift, weil lokal ausschließlich der 700er vorliegt.
 
+## Favicon
+
+`favicon.svg` ist die Quelle — der Bierdeckel aus dem Hero, reduziert auf helles
+Quadrat, roten Rahmen und blaues T. Der Schriftzug des Originals ist bei 16 px
+nicht darstellbar und würde nur vermatschen.
+
+`PORT=3001 node generate-icons.mjs` rendert daraus `favicon-32.png` (Fallback für
+Browser ohne SVG-Favicon) und `apple-touch-icon.png` (iOS-Homescreen, kann kein
+SVG). **Nach Änderungen am SVG neu erzeugen** — die PNGs sind Kopien und
+veralten sonst still.
+
 ## Offen
 
 - **Kein Impressum, keine Datenschutzerklärung.** Bewusst offen: Für eine

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Tugässer Bräu">
+  <!--
+    Der Bierdeckel aus dem Hero, auf das reduziert, was bei 16px übrig bleibt:
+    helles abgerundetes Quadrat, roter Rahmen, blaues T. Der Schriftzug des
+    Originals ist in dieser Größe nicht darstellbar und würde nur vermatschen.
+  -->
+  <rect width="64" height="64" rx="12" fill="#F4EFE7" />
+  <rect
+    x="9.5"
+    y="9.5"
+    width="45"
+    height="45"
+    rx="3"
+    fill="none"
+    stroke="#C8322A"
+    stroke-width="5"
+  />
+  <path
+    d="M18.5 21.5h27v7.5h-9.6v21h-7.8v-21h-9.6z"
+    fill="#1B3F80"
+  />
+</svg>
