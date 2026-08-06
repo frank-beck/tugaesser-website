@@ -81,6 +81,32 @@ Ebenfalls offen und für jede Design-Arbeit relevant:
   Statusangabe** zum Unternehmen. Nicht durch etwas wie „In Gründung" ersetzen —
   das wäre eine Tatsachenbehauptung, die niemand geprüft hat.
 
+## Deployment
+
+**GitHub Pages, direkt vom Branch** — `main`, Repo-Root, kein Build-Schritt auf
+GitHub-Seite. Ein Push auf `main` geht live. Repo:
+[frank-beck/tugaesser-website](https://github.com/frank-beck/tugaesser-website)
+(öffentlich, weil Pages bei GitHub Free keine privaten Repos ausliefert).
+
+Domain: **tugässer.de**, im DNS `xn--tugsser-7wa.de`, Registrar INWX.
+`tugaesser.de` (ASCII, ebenfalls INWX) leitet per 301 darauf weiter.
+
+Daraus folgt für die tägliche Arbeit:
+
+- **`tailwind.css` muss committed und aktuell sein.** Niemand baut auf dem
+  Server. Wer Klassen in `index.html` ändert und `npm run build:css` vergisst,
+  pusht eine Seite, die live anders aussieht als lokal. Das ist der
+  wahrscheinlichste Weg, diese Seite kaputtzumachen.
+- **`CNAME` und `.nojekyll` nicht löschen.** Ohne `CNAME` verliert Pages die
+  Custom Domain und liefert wieder unter `github.io` aus; ohne `.nojekyll`
+  schickt Pages die Dateien durch Jekyll.
+- **Das Repo-Root ist das Webroot.** `package.json`, `serve.mjs` und diese Datei
+  liegen mit im Netz. Harmlos, aber bewusst so. Wer das ändern will, stellt
+  Pages auf einen `docs/`-Ordner um und legt nur die vier Web-Dateien dorthin.
+- Es gab einmal einen Actions-Workflow dafür. Der ist bewusst wieder raus:
+  Für eine Seite ohne Build-Schritt war er nur eine zusätzliche Fehlerquelle —
+  und ist prompt einer GitHub-Störung zum Opfer gefallen.
+
 ## Befehle
 
 ```bash
