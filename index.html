@@ -11,14 +11,18 @@
 
     <!--
       Link-Vorschau für WhatsApp, Signal, Slack, Facebook & Co.
-      Domain überall in Punycode: die Umlautform ist zwar hübscher, aber
-      manche Crawler stolpern darüber – und das Bild muss zuverlässig laden.
       og:image erzeugt `node generate-og.mjs` aus og-template.html.
+
+      Bewusst zweierlei Schreibweise: og:url in Umlautform, weil WhatsApp diese
+      Zeile als kanonische Adresse anzeigt – mit Punycode stand dort das
+      unleserliche xn--tugsser-7wa.de. og:image dagegen in Punycode, denn diese
+      URL wird tatsächlich abgerufen und muss überall zuverlässig auflösen.
     -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Tugässer Bräu" />
     <meta property="og:locale" content="de_DE" />
-    <meta property="og:url" content="https://xn--tugsser-7wa.de/" />
+    <meta property="og:url" content="https://tugässer.de/" />
+    <link rel="canonical" href="https://tugässer.de/" />
     <meta
       property="og:title"
       content="Tugässer Bräu — Ein neues Bier belebt Heilbronn"
