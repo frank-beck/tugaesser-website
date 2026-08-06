@@ -38,6 +38,17 @@ module.exports = {
         gold: '#C89A3C', // Bier im Glas
         sandstone: '#A08A63', // Rathaus-Fassade
       },
+      // Scroll-Hinweis: sinkt leicht ab und wird dabei heller. Bewusst nur
+      // opacity und transform, damit es auf jeder Karte flüssig läuft.
+      keyframes: {
+        nudge: {
+          '0%, 100%': { opacity: '0.22', transform: 'translateY(-2px)' },
+          '50%': { opacity: '0.75', transform: 'translateY(2px)' },
+        },
+      },
+      animation: {
+        nudge: 'nudge 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
       fontFamily: {
         // Ebenfalls provisorisch – Hausschriften stehen noch aus.
         // Grotesk für Display und Fließtext, Mono für Labels und Messwerte:
