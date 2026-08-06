@@ -129,3 +129,8 @@ damit die geänderte CSS live frisch geladen wird.
 - Kein `transition-all`
 - Kein Tailwind-Standard-Blau/-Indigo als Primärfarbe
 - Keine Markenfarben erfinden, wenn `brand_assets/` welche vorgibt
+- **Den KI-Transparenzhinweis im Footer nicht entfernen und nicht unauffälliger
+  machen.** Die Person im Hero-Foto ist KI-generiert (das Foto selbst nicht);
+  Art. 50 Abs. 4 EU AI Act verlangt eine klar erkennbare Offenlegung. Der
+  Hinweis steht doppelt: sichtbar im Footer und im Alt-Text des Bildes. Wird das
+  Bild ausgetauscht, muss der Hinweis mitgeführt oder bewusst gestrichen werden.
