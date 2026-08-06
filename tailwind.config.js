@@ -40,10 +40,11 @@ module.exports = {
       },
       fontFamily: {
         // Ebenfalls provisorisch – Hausschriften stehen noch aus.
-        // Anführungszeichen zwingend: ein Familienname mit Ziffer ist unquoted
-        // CSS-ungültig, sonst verwirft der Browser die ganze Deklaration.
-        display: ['"Source Serif 4"', 'Georgia', 'serif'],
-        body: ['Figtree', 'system-ui', 'sans-serif'],
+        // Grotesk für Display und Fließtext, Mono für Labels und Messwerte:
+        // die Trennung trägt hier die Mono, nicht ein Serif/Sans-Kontrast.
+        display: ['"Inter Tight"', 'system-ui', 'sans-serif'],
+        body: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
     },
   },

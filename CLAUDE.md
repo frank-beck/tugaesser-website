@@ -13,17 +13,60 @@ Design-Schleife).
 
 ## Aktueller Stand
 
-**Teaser-Seite**: `index.html` besteht aus einem einzigen Hero — Foto, Claim
-„Tugässer, schaffen wir's." / „Man wird ja wohl noch träumen dürfen." und einem
-Instagram-CTA auf [@tugaesser](https://www.instagram.com/tugaesser/). Keine
-Navigation, keine Unterseiten, kein Impressum.
+**Teaser-Seite**: `index.html`, eine Bildschirmhöhe, Claim „Tugässer, schaffen
+wir's." / „Man wird ja wohl noch träumen dürfen." plus Instagram-CTA auf
+[@tugaesser](https://www.instagram.com/tugaesser/). Keine Navigation, keine
+Unterseiten, kein Impressum.
 
-Das Foto soll bewusst **gut sichtbar** bleiben — es ist der einzige Inhalt.
-Deshalb: ab `lg` liegt der Text im Bild, aber die Scrims sind schwach gehalten
-und die Lesbarkeit kommt aus `text-shadow` an den Überschriften. Darunter stehen
-Bild und Text gestapelt, das Foto bleibt dort völlig unverdeckt. Wer die Scrims
-verstärkt, nimmt der beleuchteten Rathaus-Fassade genau die Wirkung, wegen der
-das Bild ausgewählt wurde.
+## Design-Richtung
+
+**Stark, editorial, Swiss-industrial** — die Referenz sind Entwickler-Werkzeuge
+wie Linear oder Vercel, nicht Gastro-Websites. Konkret heißt das hier:
+
+- **Das Foto ist eine eigene Fläche, kein Hintergrund.** Es liegt nie Text
+  darüber und wird nicht abgedunkelt. Das war eine ausdrückliche Korrektur —
+  nicht zurückdrehen.
+- **Micro-Borders statt Flächen:** 1px `cream/10` als Raster, Ecken-Ticks am
+  Bild. Keine Karten, keine Radien, keine Schatten.
+- **Typo trägt die Hierarchie:** Grotesk-Display sehr groß mit `-0.045em`
+  Tracking und `leading-[0.94]`, alles Kleinteilige in Mono, uppercase,
+  `tracking-[0.16em]`–`[0.22em]`.
+- **Rot ist der einzige Akzent** und wird sparsam gesetzt (Statuspunkt,
+  Fortschritt, Label). Alles andere ist `night`/`cream`.
+
+### Die Scroll-Sequenz
+
+Das Herzstück. `#scrolly` liefert nur den Scrollweg (300vh, ab `lg` 420vh), das
+`sticky` Kind bleibt stehen. Der Fortschritt 0…1 fährt das Bild durch vier
+Stationen: **Rathaus → die Frau tritt ins Bild → die Gedankenblase → Totale.**
+Danach fährt der Textblock ein. Das Skript steht inline, ohne Abhängigkeiten.
+
+Beim Anfassen zu beachten:
+
+- **`transform` statt `object-position`**, und das Bild muss **über den Rahmen
+  hinausragen** (`h-full w-auto min-w-full max-w-none shrink-0`). `object-cover`
+  auf voller Breite beschneidet *vor* der Transformation — der überstehende
+  Bildteil ist dann weg und Schwenks laufen ins Leere. **`shrink-0` ist
+  zwingend**, sonst staucht Flexbox das Bild wieder auf Containerbreite.
+- **Grenze für die Stationen:** `|tx| ≤ 100·(s−1)/(2s)`, bezogen auf die
+  *Bildbreite* (nicht die Containerbreite — das Bild ist breiter). Darüber
+  schiebt man den Bildrand ins Bild. Im Querformat heißt das bei `s = 1`
+  zwingend `tx = 0`.
+- **Zwei Stationssätze.** `STOPS_LG` zoomt aus bis zur Totale. `STOPS_SM` kann
+  das nicht: ein 16:9-Bild füllt einen Hochformat-Schirm nur als Ausschnitt, die
+  Totale ist dort unmöglich. Dafür gibt es seitlich viel Spielraum — mobil
+  schwenkt die Sequenz quer und endet auf Frau plus Gedankenblase. Der Wechsel
+  hängt an `matchMedia('(min-width: 1024px)')` und wird bei Drehung neu gesetzt.
+- **Der Zoom ist auf ~2× gedeckelt**, weil die Vorlage nur 1600×900 hat. Mit
+  einem höher aufgelösten Original darf `s` deutlich größer werden — dann wird
+  der Einstieg wieder dramatischer.
+- **`prefers-reduced-motion`**: `#scrolly` schrumpft per `motion-reduce:h-screen`
+  auf eine Bildschirmhöhe und die Sequenz springt auf den Endzustand — sonst
+  scrollte man durch drei leere Bildschirme, ohne dass etwas passiert. Der
+  Text-Reveal startet nur unter `motion-safe:`, ist also ohne Animation sofort
+  lesbar.
+- **Ortszeit Heilbronn** in der Kopfleiste über `Intl.DateTimeFormat` mit
+  `timeZone: 'Europe/Berlin'` — echte Zeitzone, kein fester Offset.
 
 Ebenfalls offen und für jede Design-Arbeit relevant:
 
@@ -31,8 +74,12 @@ Ebenfalls offen und für jede Design-Arbeit relevant:
 - Farben und Fonts in `tailwind.config.js` sind deshalb **provisorisch**: die
   Farben aus `images/tugaesser-rathaus-hero-1600x900.png` abgetastet
   (Bierdeckel-Rot `brand`, Bierdeckel-Blau `navy`, Nachthimmel `night`,
-  Bier `gold`, Rathaus-Sandstein `sandstone`), die Schriften frei gewählt.
-  Sobald echte Assets vorliegen: dort ersetzen und den Hinweis entfernen.
+  Bier `gold`, Rathaus-Sandstein `sandstone`), die Schriften frei gewählt
+  (Inter Tight / Inter / JetBrains Mono). Sobald echte Assets vorliegen: dort
+  ersetzen und den Hinweis entfernen.
+- „01 Traumphase" im Kopf der Textspalte ist ein **Wortspiel zum Claim, keine
+  Statusangabe** zum Unternehmen. Nicht durch etwas wie „In Gründung" ersetzen —
+  das wäre eine Tatsachenbehauptung, die niemand geprüft hat.
 
 ## Befehle
 
@@ -66,9 +113,14 @@ damit die geänderte CSS live frisch geladen wird.
   -gewicht/Zeilenhöhe, Farben (exakter Hex), Ausrichtung, Border-Radius,
   Schatten, Bildgrößen.
 - Mindestens **2 Vergleichsrunden**, nicht nach dem ersten Screenshot aufhören.
-- Das Layout wechselt bei `lg` von gestapelt auf Overlay — **immer beide
-  Breiten screenshotten** (`WIDTH=390` und Default), sonst bleiben Umbrüche im
-  jeweils anderen Modus unbemerkt.
+- **Immer beide Breiten screenshotten** (`WIDTH=390` und Default). Quer- und
+  Hochformat fahren verschiedene Stationssätze — ein Fehler in einem Satz ist im
+  anderen unsichtbar.
+- **Ein Screenshot der Startposition sagt nichts über die Sequenz.** Für die
+  Scroll-Fahrt ein Puppeteer-Skript schreiben, das auf `p = 0 / 0.33 / 0.62 /
+  0.85 / 1` scrollt und je ein Bild plus `#hero.style.transform` festhält.
+  Schwarze Ränder im Bild bedeuten immer: `tx`/`ty` überschreiten die Grenze
+  oben, oder das Bild wurde wieder auf Containerbreite gestaucht.
 
 ## Fallstricke
 
@@ -77,9 +129,14 @@ damit die geänderte CSS live frisch geladen wird.
   trotzdem ein Bild, nämlich das *falsche Projekt*. Nach dem Start immer
   gegenprüfen, z. B. `curl -s http://localhost:3000 | grep -o '<title>[^<]*'`,
   oder gleich auf `PORT=3001` ausweichen.
-- **Schriftfamilien mit Ziffer im Namen in `tailwind.config.js` quoten**
-  (`'"Source Serif 4"'`). Unquoted ist die Deklaration CSS-ungültig, der Browser
-  verwirft sie stillschweigend und fällt auf die Body-Schrift zurück.
+- **Schriftfamilien mit Ziffer oder Leerzeichen im Namen in `tailwind.config.js`
+  quoten** (`'"Inter Tight"'`, `'"JetBrains Mono"'`). Unquoted ist die
+  Deklaration CSS-ungültig, der Browser verwirft sie stillschweigend und fällt
+  auf die nächste Familie zurück — im Screenshot sieht man nur „irgendwie falsche
+  Schrift", nicht die Ursache.
+- **`text-current/60` funktioniert nicht.** Tailwind kann `currentColor` nicht
+  mit Deckkraft mischen; die Klasse fällt wirkungslos aus. Stattdessen
+  `opacity-60` auf das Element.
 
 ## Referenzbilder
 
@@ -103,23 +160,25 @@ damit die geänderte CSS live frisch geladen wird.
 
 - **Farben:** Nie die Tailwind-Standardpalette (`indigo-500`, `blue-600` …).
   Die Marken-Scales aus `tailwind.config.js` verwenden und daraus ableiten.
-- **Schatten:** Kein flaches `shadow-md`. Geschichtete, farbig getönte Schatten
-  mit geringer Deckkraft.
-- **Typografie:** Nie dieselbe Schrift für Überschriften und Fließtext. Display/
-  Serif mit klarer Sans paaren. Enges Tracking (`-0.03em`) bei großen
-  Überschriften, großzügige Zeilenhöhe (`1.7`) im Fließtext.
-- **Verläufe:** Mehrere radiale Gradients schichten. Für Tiefe Grain/Textur über
-  einen SVG-Noise-Filter ergänzen.
-- **Animationen:** Nur `transform` und `opacity` animieren. Nie `transition-all`.
-  Spring-artiges Easing.
+- **Keine generischen Karten.** Kein `rounded-*` + `shadow-*` + `bg-white/5`.
+  Struktur entsteht aus Hairlines und Rasterkanten, nicht aus Boxen.
+- **Flach statt geschichtet.** Keine Schlagschatten, keine radialen
+  Gradient-Stapel, keine „elevated/floating"-Ebenen. Tiefe kommt aus dem Foto,
+  alles andere liegt in einer Ebene.
+- **Typografie:** Zwei Familien im Einsatz — Grotesk (`font-display` für
+  Überschriften, `font-body` für Fließtext) und `font-mono` für Labels, Werte
+  und Statuszeilen. Die Mono trägt den Kontrast; Serifen passen nicht mehr.
+  Große Überschriften eng (`-0.045em`, `leading-[0.94]`), Fließtext ruhig
+  (`leading-[1.65]`).
+- **Bilder nicht behandeln.** Kein Gradient-Overlay, kein `mix-blend-multiply`,
+  keine Abdunklung. Das Foto steht für sich.
+- **Animationen:** `transform` und `opacity` bevorzugen, `transition-colors` ist
+  für Hover-Zustände erlaubt. Nie `transition-all`. Bewegung respektiert
+  `prefers-reduced-motion` (`motion-safe:`).
 - **Interaktive Zustände:** Jedes klickbare Element braucht `hover`,
   `focus-visible` und `active` — ausnahmslos.
-- **Bilder:** Gradient-Overlay (`bg-gradient-to-t from-night/70`) plus
-  Farbebene mit `mix-blend-multiply`.
 - **Spacing:** Bewusste, konsistente Abstands-Tokens statt zufälliger
   Tailwind-Stufen.
-- **Tiefe:** Flächen brauchen ein Layering-System (base → elevated → floating),
-  nicht alles auf derselben z-Ebene.
 
 ## Hard Rules
 

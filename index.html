@@ -12,105 +12,302 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="tailwind.css?v=335aa010" />
+    <link rel="stylesheet" href="tailwind.css?v=493bae8a" />
   </head>
 
   <body class="bg-night font-body text-cream antialiased">
+    <header
+      class="fixed inset-x-0 top-0 z-20 border-b border-cream/10 bg-night/70 backdrop-blur-md"
+    >
+      <div
+        class="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] sm:px-8"
+      >
+        <span class="font-medium text-cream">Tugässer&nbsp;Bräu</span>
+        <span class="text-cream/40">
+          Heilbronn <time id="clock" class="ml-2 tabular-nums">--:--</time>
+        </span>
+      </div>
+    </header>
+
     <!--
-      Bild und Text teilen sich ab lg dieselbe Grid-Zelle (Overlay), darunter
-      stehen sie gestapelt. So bleibt das Foto auf kleinen Schirmen komplett
-      unverdeckt und wird auf großen nur im unteren Textbereich abgedunkelt.
+      Scroll-Sequenz: Der hohe Abschnitt liefert nur den Scrollweg, das sticky
+      Kind bleibt stehen. Der Fortschritt 0…1 fährt das Bild von der
+      Rathaus-Nahaufnahme bis zur Totale zurück. Bei prefers-reduced-motion
+      schrumpft der Abschnitt auf eine Bildschirmhöhe – sonst müsste man durch
+      drei leere Bildschirme scrollen, ohne dass etwas passiert.
     -->
-    <header class="relative isolate">
-      <div class="mx-auto grid max-w-[1600px] grid-cols-1">
+    <section
+      id="scrolly"
+      class="relative h-[300vh] motion-reduce:h-screen lg:h-[420vh]"
+    >
+      <div class="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
+        <!--
+          h-full w-auto statt w-full: das Bild ragt seitlich über den Rahmen
+          hinaus, statt vorher beschnitten zu werden. Nur so lässt es sich per
+          translate quer schwenken – object-cover würde den überstehenden Teil
+          wegschneiden, bevor die Transformation greift. min-w-full fängt sehr
+          breite Fenster ab, in denen 16:9 nicht mehr ausfüllt.
+          shrink-0 ist zwingend: als Flex-Item würde das Bild sonst auf
+          Containerbreite gestaucht und der Überstand wäre wieder weg.
+        -->
         <img
+          id="hero"
           src="images/tugaesser-rathaus-hero-1600x900.png"
           alt="Der Heilbronner Marktplatz bei Nacht mit beleuchtetem Rathaus; im Vordergrund eine KI-generierte Frau, über ihr eine Gedankenblase mit einem Bierdeckel „Tugässer Bräu — Ein neues Bier belebt Heilbronn“ und einem frisch gezapften Bier"
-          class="col-start-1 row-start-1 aspect-[16/9] w-full object-cover object-center"
+          class="h-full w-auto min-w-full max-w-none shrink-0 origin-center object-cover will-change-transform"
         />
 
-        <!--
-          Scrims bewusst schwach halten – die Lesbarkeit trägt der Text-Schatten
-          an den Überschriften, nicht großflächiges Abdunkeln. Sonst verschwindet
-          die beleuchtete Rathaus-Fassade, die den Reiz des Bildes ausmacht.
-        -->
-        <div
-          class="col-start-1 row-start-1 hidden bg-gradient-to-r from-night/70 via-night/20 to-transparent lg:block"
-          aria-hidden="true"
-        ></div>
+        <!-- Ecken-Ticks -->
+        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+          <span class="absolute left-4 top-20 h-3 w-px bg-cream/25"></span>
+          <span class="absolute left-4 top-20 h-px w-3 bg-cream/25"></span>
+          <span class="absolute bottom-20 right-4 h-3 w-px bg-cream/25"></span>
+          <span class="absolute bottom-20 right-4 h-px w-3 bg-cream/25"></span>
+        </div>
 
-        <div
-          class="col-start-1 row-start-2 px-6 pb-14 pt-10 sm:px-10 lg:row-start-1 lg:self-end lg:bg-gradient-to-t lg:from-night/95 lg:via-night/40 lg:to-transparent lg:pb-16 lg:pt-40"
-        >
-          <div class="mx-auto max-w-5xl">
-            <h1
-              class="max-w-[14ch] font-display text-4xl font-bold leading-[1.05] tracking-[-0.03em] text-cream sm:text-6xl lg:text-7xl lg:[text-shadow:0_1px_3px_rgba(10,13,20,0.65),0_6px_28px_rgba(10,13,20,0.9)]"
-            >
-              Tugässer, schaffen wir&rsquo;s.
-            </h1>
+        <!-- Phase und Fortschritt, ersetzt die frühere Ausschnittwahl. -->
+        <div class="absolute inset-x-0 bottom-0 border-t border-cream/15 bg-night/55 backdrop-blur-sm">
+          <div class="h-px w-full bg-cream/10">
+            <div id="bar" class="h-px w-0 bg-brand-500" aria-hidden="true"></div>
+          </div>
+          <div
+            class="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] sm:px-8"
+          >
+            <span class="flex items-center gap-2.5">
+              <span class="h-1.5 w-1.5 shrink-0 bg-brand-500"></span>
+              <span id="phase" class="text-cream">Rathaus</span>
+            </span>
+            <span id="hint" class="text-cream/40 transition-opacity duration-500">
+              Scrollen
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!--
+      Der Text kommt nach der Sequenz herein. Startzustand nur unter
+      motion-safe, damit er ohne Animation sofort lesbar ist.
+    -->
+    <section
+      id="lead"
+      class="group/lead mx-auto max-w-[1600px] border-t border-cream/10 px-5 py-20 sm:px-8 lg:py-28"
+    >
+      <div class="grid gap-x-10 gap-y-12 lg:grid-cols-12">
+        <div class="lg:col-span-7">
+          <p
+            class="font-mono text-[11px] uppercase tracking-[0.22em] text-brand-400 transition-[opacity,transform] duration-700 ease-out [transition-delay:60ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
+          >
+            <span class="text-cream/35">01</span> &nbsp;Traumphase
+          </p>
+
+          <h1
+            class="mt-7 font-display text-[clamp(2.75rem,7vw,5.25rem)] font-bold leading-[0.94] tracking-[-0.045em] text-cream transition-[opacity,transform] duration-700 ease-out [transition-delay:140ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
+          >
+            Tugässer,<br />schaffen wir&rsquo;s.
+          </h1>
+        </div>
+
+        <div class="flex flex-col justify-end lg:col-span-5">
+          <p
+            class="max-w-sm text-lg leading-[1.65] text-cream/60 transition-[opacity,transform] duration-700 ease-out [transition-delay:240ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
+          >
+            Man wird ja wohl noch träumen dürfen.
+          </p>
+
+          <div
+            class="mt-9 transition-[opacity,transform] duration-700 ease-out [transition-delay:340ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
+          >
+            <div class="h-px w-full bg-cream/10" aria-hidden="true"></div>
             <p
-              class="mt-5 max-w-xl text-lg leading-[1.7] text-cream/85 sm:text-xl lg:[text-shadow:0_1px_14px_rgba(10,13,20,0.95)]"
-            >
-              Man wird ja wohl noch träumen dürfen.
-            </p>
-
-            <p
-              class="mt-10 text-sm uppercase tracking-[0.2em] text-cream/70 lg:[text-shadow:0_1px_14px_rgba(10,13,20,0.95)]"
+              class="mt-7 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/40"
             >
               Neugierig?
             </p>
-
             <a
               href="https://www.instagram.com/tugaesser/"
               target="_blank"
               rel="noopener noreferrer"
-              class="group mt-3 inline-flex items-center gap-3 whitespace-nowrap rounded-full bg-brand-500 px-5 py-3.5 text-[0.9375rem] font-semibold text-cream shadow-[0_2px_8px_-2px_rgba(200,50,42,0.55),0_14px_32px_-10px_rgba(200,50,42,0.45)] outline-none transition-transform duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-0.5 hover:bg-brand-600 focus-visible:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-night active:translate-y-0 active:bg-brand-700 sm:px-6 sm:text-base"
+              class="mt-3.5 inline-flex items-center gap-3 border border-cream/25 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:border-cream hover:bg-cream hover:text-night focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:bg-cream/85"
             >
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="1.9"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="h-5 w-5"
+                stroke-width="1.8"
+                class="h-4 w-4"
                 aria-hidden="true"
               >
-                <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" />
-                <circle cx="12" cy="12" r="4.2" />
-                <circle cx="17.6" cy="6.4" r="1.15" fill="currentColor" stroke="none" />
+                <rect x="3" y="3" width="18" height="18" />
+                <circle cx="12" cy="12" r="4.1" />
+                <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
               </svg>
-              <span>Folg uns auf Instagram</span>
-              <span
-                class="hidden text-cream/75 transition-transform duration-200 group-hover:translate-x-0.5 sm:inline"
-              >
-                @tugaesser
-              </span>
+              <span>Folg uns</span>
+              <span class="opacity-60">@tugaesser</span>
             </a>
-
-            <!-- Handle passt auf schmalen Schirmen nicht mehr in den Button. -->
-            <p class="mt-3 text-sm text-cream/60 sm:hidden">@tugaesser</p>
           </div>
         </div>
       </div>
-    </header>
+    </section>
 
     <!--
-      Transparenzhinweis nach Art. 50 Abs. 4 EU AI Act: Die Person im Hero ist
-      KI-generiert, das Foto selbst nicht. Der Hinweis steht zusätzlich im
-      Alt-Text, damit er auch ohne Blick aufs Bild ankommt.
+      Transparenzhinweis nach Art. 50 Abs. 4 EU AI Act: Die Person im Foto ist
+      KI-generiert, das Foto selbst nicht. Steht zusätzlich im Alt-Text.
     -->
-    <footer class="mx-auto max-w-[1600px] px-6 sm:px-10">
-      <div class="mx-auto max-w-5xl pb-16 pt-8">
-        <p class="max-w-2xl text-sm leading-[1.7] text-cream/70">
-          Foto: Frank Beck. Die abgebildete Person ist nicht real, sondern mit
-          künstlicher Intelligenz erzeugt.
-        </p>
-      </div>
+    <footer class="mx-auto max-w-[1600px] border-t border-cream/10 px-5 py-5 sm:px-8">
+      <p class="max-w-2xl font-mono text-[11px] leading-[1.7] text-cream/55">
+        Foto: Frank Beck. Die abgebildete Person ist nicht real, sondern mit
+        künstlicher Intelligenz erzeugt.
+      </p>
     </footer>
+
+    <script>
+      (() => {
+        const scrolly = document.getElementById('scrolly');
+        const hero = document.getElementById('hero');
+        const bar = document.getElementById('bar');
+        const phase = document.getElementById('phase');
+        const hint = document.getElementById('hint');
+        const lead = document.getElementById('lead');
+        const clock = document.getElementById('clock');
+
+        const fmt = new Intl.DateTimeFormat('de-DE', {
+          timeZone: 'Europe/Berlin',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        });
+        const tick = () => {
+          const now = new Date();
+          clock.textContent = fmt.format(now);
+          clock.setAttribute('datetime', now.toISOString());
+        };
+        tick();
+        setInterval(tick, 15000);
+
+        // Stationen der Sequenz. x/y sind Prozentwerte der sichtbaren Bildfläche,
+        // s der Zoomfaktor. Die Reihenfolge erzählt: Rathaus -> Person tritt ins
+        // Bild -> Gedankenblase -> Totale.
+        // s = Zoomfaktor, tx/ty = Verschiebung in Prozent der Bildfläche (vor
+        // der Skalierung, denn translate wirkt im skalierten Raum).
+        //
+        // Der Startzoom ist bewusst auf ~2× gedeckelt: die Vorlage ist nur
+        // 1600×900, darüber wird sie sichtbar weich. Mit einem höher
+        // aufgelösten Original darf s hier deutlich größer werden.
+        const STOPS_LG = [
+          { p: 0.0, s: 2.05, tx: 22, ty: 2, label: 'Rathaus' },
+          { p: 0.33, s: 1.72, tx: 6, ty: -5, label: 'Wer träumt da?' },
+          { p: 0.62, s: 1.34, tx: -10, ty: 8, label: 'Der Traum' },
+          { p: 0.85, s: 1.0, tx: 0, ty: 0, label: 'Heilbronn' },
+          { p: 1.0, s: 1.0, tx: 0, ty: 0, label: 'Heilbronn' },
+        ];
+
+        // Im Hochformat ist die Totale unmöglich: ein 16:9-Bild füllt einen
+        // schmalen Schirm nur als Ausschnitt. Dafür gibt es dort seitlich viel
+        // Spielraum – die Sequenz schwenkt quer statt auszuzoomen und endet auf
+        // Frau plus Gedankenblase statt auf dem ganzen Bild.
+        //
+        // Grenze für beide Sätze: |tx| ≤ 100·(s−1)/(2s) bezogen auf die
+        // Bildbreite, sonst schiebt man den Bildrand ins Bild. Bei s = 1 heißt
+        // das im Querformat tx = 0; im Hochformat gibt es Spielraum, weil das
+        // Bild dort ohnehin seitlich übersteht.
+        const STOPS_SM = [
+          { p: 0.0, s: 1.2, tx: 18, ty: 0, label: 'Rathaus' },
+          { p: 0.33, s: 1.1, tx: -6, ty: 0, label: 'Wer träumt da?' },
+          { p: 0.62, s: 1.15, tx: -26, ty: 0, label: 'Der Traum' },
+          { p: 0.85, s: 1.0, tx: -12, ty: 0, label: 'Heilbronn' },
+          { p: 1.0, s: 1.0, tx: -12, ty: 0, label: 'Heilbronn' },
+        ];
+
+        const wide = window.matchMedia('(min-width: 1024px)');
+        let STOPS = wide.matches ? STOPS_LG : STOPS_SM;
+
+        const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+        // Weiche Ein-/Ausblendung zwischen zwei Stationen, damit die Fahrt nicht
+        // an jeder Station sichtbar knickt.
+        const smooth = (t) => t * t * (3 - 2 * t);
+
+        let currentLabel = '';
+
+        const render = (p) => {
+          let i = 0;
+          while (i < STOPS.length - 2 && p > STOPS[i + 1].p) i++;
+          const a = STOPS[i];
+          const b = STOPS[i + 1];
+          const t = smooth(clamp((p - a.p) / (b.p - a.p), 0, 1));
+
+          const s = a.s + (b.s - a.s) * t;
+          const tx = a.tx + (b.tx - a.tx) * t;
+          const ty = a.ty + (b.ty - a.ty) * t;
+
+          hero.style.transform =
+            `scale(${s.toFixed(4)}) translate(${tx.toFixed(3)}%, ${ty.toFixed(3)}%)`;
+
+          bar.style.width = `${(p * 100).toFixed(2)}%`;
+
+          const label = t < 0.5 ? a.label : b.label;
+          if (label !== currentLabel) {
+            currentLabel = label;
+            phase.textContent = label;
+          }
+          hint.style.opacity = p > 0.04 ? '0' : '1';
+        };
+
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        let ticking = false;
+        const onScroll = () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(() => {
+            ticking = false;
+            if (reduced.matches) return;
+            const travel = scrolly.offsetHeight - window.innerHeight;
+            const p = travel > 0
+              ? clamp(-scrolly.getBoundingClientRect().top / travel, 0, 1)
+              : 1;
+            render(p);
+          });
+        };
+
+        const start = () => {
+          if (reduced.matches) {
+            render(1);
+            bar.style.width = '100%';
+            hint.style.opacity = '0';
+            return;
+          }
+          render(0);
+          addEventListener('scroll', onScroll, { passive: true });
+          addEventListener('resize', onScroll);
+          onScroll();
+        };
+        start();
+        reduced.addEventListener('change', start);
+
+        // Beim Wechsel zwischen Quer- und Hochformat gilt der jeweils andere
+        // Satz Stationen – sonst zeigt die Sequenz nach einer Drehung ins Leere.
+        wide.addEventListener('change', (e) => {
+          STOPS = e.matches ? STOPS_LG : STOPS_SM;
+          currentLabel = '';
+          start();
+        });
+
+        // Text erst einblenden, wenn er tatsächlich im Blick ist.
+        new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((e) => {
+              if (!e.isIntersecting) return;
+              lead.classList.add('is-in');
+              obs.unobserve(e.target);
+            });
+          },
+          { threshold: 0.25 }
+        ).observe(lead);
+      })();
+    </script>
   </body>
 </html>
