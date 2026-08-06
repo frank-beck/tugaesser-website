@@ -127,6 +127,33 @@ nicht erst. Unter 300 KB bleiben, sonst fällt die Vorschau still aus.
   [Sharing Debugger](https://developers.facebook.com/tools/debug/) „Scrape Again"
   auslösen, sonst sieht man tagelang den alten Stand.
 
+## Schriften
+
+**Liegen lokal in `fonts/`, nicht bei Google.** Ein Einbinden über
+`fonts.googleapis.com` überträgt die IP-Adresse jedes Besuchers an Google — in
+Deutschland ein bekanntes Abmahnrisiko. Die Seite lädt nichts von fremden Hosts;
+das lässt sich mit einem Puppeteer-Lauf gegenprüfen, der alle Requests
+mitschreibt.
+
+`node fetch-fonts.mjs` erzeugt `fonts/` samt `fonts.css` neu. Enthalten sind
+**nur die tatsächlich verwendeten Schnitte** (Inter Tight 700, Inter 400,
+JetBrains Mono 400/500, zusammen ~107 KB, nur Subset `latin`).
+
+- **Wer eine neue Gewichtung einsetzt** — etwa `font-semibold` — **muss sie in
+  `FAMILIES` in `fetch-fonts.mjs` ergänzen und das Skript laufen lassen.** Sonst
+  rechnet der Browser den Schnitt selbst hoch und die Schrift wirkt verzerrt,
+  ohne dass eine Fehlermeldung darauf hinweist.
+- `og-template.html` nutzt dieselben Dateien. Dort steht Inter Tight nur auf der
+  Überschrift, weil lokal ausschließlich der 700er vorliegt.
+
+## Offen
+
+- **Kein Impressum, keine Datenschutzerklärung.** Bewusst offen: Für eine
+  ladungsfähige Anschrift käme sonst die Privatadresse infrage, das ist nicht
+  gewollt. Zu klären, sobald eine Geschäftsadresse existiert. Die Einschätzung,
+  die Seite sei mangels Produkt rein privat, trägt nur bedingt — sie bewirbt eine
+  Marke samt Instagram-Auftritt.
+
 ## Befehle
 
 ```bash

@@ -4,12 +4,7 @@
     <meta charset="utf-8" />
     <!-- Liegt im Webroot mit, ist aber keine Seite für Besucher. -->
     <meta name="robots" content="noindex, nofollow" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="fonts/fonts.css" />
     <style>
       /*
         Vorlage für images/og-image.jpg – wird von generate-og.mjs auf exakt
@@ -19,10 +14,13 @@
       * { box-sizing: border-box; margin: 0; padding: 0; }
       html, body { width: 1200px; height: 630px; overflow: hidden; }
 
+      /* Inter fürs Fließende, Inter Tight nur für die Überschrift – genau wie
+         auf der Seite. Von Inter Tight liegt lokal nur der 700er, alles andere
+         würde der Browser sonst selbst verzerren. */
       body {
         position: relative;
         background: #0a0d14;
-        font-family: 'Inter Tight', system-ui, sans-serif;
+        font-family: 'Inter', system-ui, sans-serif;
         color: #f4efe7;
       }
 
@@ -68,6 +66,7 @@
       .label .ort { color: rgba(244,239,231,0.5); }
 
       h1 {
+        font-family: 'Inter Tight', system-ui, sans-serif;
         font-size: 82px;
         font-weight: 700;
         line-height: 0.94;
