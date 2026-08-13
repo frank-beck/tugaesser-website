@@ -68,7 +68,7 @@
       jedes Besuchers dorthin. Erzeugt von fetch-fonts.mjs.
     -->
     <link rel="stylesheet" href="fonts/fonts.css" />
-    <link rel="stylesheet" href="tailwind.css?v=98b9cbf4" />
+    <link rel="stylesheet" href="tailwind.css?v=9c232198" />
   </head>
 
   <body class="bg-night font-body text-cream antialiased">
@@ -86,106 +86,73 @@
     </header>
 
     <!--
-      Scroll-Sequenz: Der hohe Abschnitt liefert nur den Scrollweg, das sticky
-      Kind bleibt stehen. Der Fortschritt 0…1 fährt das Bild von der
-      Rathaus-Nahaufnahme bis zur Totale zurück. Bei prefers-reduced-motion
-      schrumpft der Abschnitt auf eine Bildschirmhöhe – sonst müsste man durch
-      drei leere Bildschirme scrollen, ohne dass etwas passiert.
+      Das Foto ist eine eigene Fläche, kein Hintergrund: kein Text darüber,
+      keine Abdunklung. Früher lief hier eine 420vh lange Scroll-Sequenz, die
+      das Bild durch vier Stationen fuhr. Sie ist bewusst entfernt — die Seite
+      bekommt weitere Abschnitte, und drei leere Bildschirme davor hätten jeden
+      davon unerreichbar gemacht.
     -->
-    <section
-      id="scrolly"
-      class="relative h-[300vh] motion-reduce:h-dvh lg:h-[420vh]"
-    >
+    <figure class="relative">
       <!--
-        h-dvh, nicht h-screen: iOS Safari rechnet 100vh ohne seine Toolbars,
-        der Container ragt dadurch unter die Adressleiste und die untere Leiste
-        ist auf dem iPhone unsichtbar. dvh folgt der tatsächlich sichtbaren Höhe.
-        Der Scrollweg oben bleibt bewusst in vh: dvh würde sich mitverändern,
-        während Safari die Toolbar ein- und ausfährt, und die Sequenz spränge.
+        Zwei Zuschnitte statt einer Sequenz.
+
+        Im Hochformat ein festes Seitenverhältnis (3:2), keine dvh-Höhe. Das ist
+        der entscheidende Punkt für Querformat-Bilder auf Hochformat-Schirmen:
+        `object-cover` skaliert auf die Höhe, also schneidet jede zusätzliche
+        Höhe seitlich Bild weg. Bei den früheren 62dvh blieben rund 40 Prozent
+        der Bildbreite übrig — das Rathaus war praktisch verschwunden. Mit 3:2
+        sind es etwa 84 Prozent: Rathaus, Frau und Gedankenblase stehen zusammen
+        im Bild.
+
+        Die Umschaltung hängt an `landscape:`, **nicht an einem
+        Breiten-Breakpoint**. Mit `sm:` (640px) fiel ein hochkant gehaltenes
+        Tablet zurück in die hohe Variante und zeigte wieder nur gut die Hälfte
+        der Bildbreite — die Breite ist eben nicht das Problem, die Orientierung
+        ist es. Ein 768px-Tablet im Hochformat hat dieselbe Not wie ein Handy.
+
+        Im Querformat liegt das Bild in voller Breite, die Höhe ist auf 78dvh
+        gedeckelt.
+        Ungedeckelt wäre es bei 16:9 auf einem 1440×900-Schirm 810 px hoch und
+        schöbe den Claim vollständig unter die Falz — man sähe nur ein Foto und
+        müsste raten, dass darunter noch etwas kommt. Die Deckelung lässt die
+        Überschrift anreißen.
+
+        Kein `aspect-[16/9]` zusammen mit `max-h`: aspect-ratio schrumpft dann
+        auch die *Breite* mit, und rechts steht ein schwarzer Balken.
+
+        `object-[center_28%]` statt `center`: object-cover schneidet oben und
+        unten gleichmäßig ab, und oben sitzt die Gedankenblase mit dem
+        Bierdeckel — also die eigentliche Botschaft. Der Fokus wandert nach
+        oben, der Verlust fällt auf den Mantelsaum unten.
+
+        dvh statt vh: iOS Safari rechnet vh ohne seine Toolbars.
       -->
-      <div class="sticky top-0 flex h-dvh items-center justify-center overflow-hidden">
-        <!--
-          h-full w-auto statt w-full: das Bild ragt seitlich über den Rahmen
-          hinaus, statt vorher beschnitten zu werden. Nur so lässt es sich per
-          translate quer schwenken – object-cover würde den überstehenden Teil
-          wegschneiden, bevor die Transformation greift. min-w-full fängt sehr
-          breite Fenster ab, in denen 16:9 nicht mehr ausfüllt.
-          shrink-0 ist zwingend: als Flex-Item würde das Bild sonst auf
-          Containerbreite gestaucht und der Überstand wäre wieder weg.
-        -->
+      <div class="relative aspect-[3/2] overflow-hidden landscape:aspect-auto landscape:h-[78dvh]">
         <img
-          id="hero"
           src="images/tugaesser-rathaus-hero-1600x900.png"
           alt="Der Heilbronner Marktplatz bei Nacht mit beleuchtetem Rathaus; im Vordergrund eine KI-generierte Frau, über ihr eine Gedankenblase mit einem Bierdeckel „Tugässer Bräu — Ein neues Bier belebt Heilbronn“ und einem frisch gezapften Bier"
-          class="h-full w-auto min-w-full max-w-none shrink-0 origin-center object-cover will-change-transform"
+          class="h-full w-full object-cover object-[62%_center] landscape:object-[center_28%]"
         />
 
         <!-- Ecken-Ticks -->
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
           <span class="absolute left-4 top-20 h-3 w-px bg-cream/25"></span>
           <span class="absolute left-4 top-20 h-px w-3 bg-cream/25"></span>
-          <span class="absolute bottom-20 right-4 h-3 w-px bg-cream/25"></span>
-          <span class="absolute bottom-20 right-4 h-px w-3 bg-cream/25"></span>
-        </div>
-
-        <!-- Phase und Fortschritt, ersetzt die frühere Ausschnittwahl. -->
-        <div class="absolute inset-x-0 bottom-0 border-t border-cream/15 bg-night/55 backdrop-blur-sm">
-          <div class="h-px w-full bg-cream/10">
-            <div id="bar" class="h-px w-0 bg-brand-500" aria-hidden="true"></div>
-          </div>
-          <div
-            class="relative mx-auto flex max-w-[1600px] items-center justify-between px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] sm:px-8"
-          >
-            <span class="flex items-center gap-2.5">
-              <span class="h-1.5 w-1.5 shrink-0 bg-brand-500"></span>
-              <span id="phase" class="text-cream">Rathaus</span>
-            </span>
-
-            <!--
-              Absolut statt als drittes Flex-Kind: so sitzt der Hinweis exakt
-              mittig im Balken, unabhängig davon, wie lang der Phasenname links
-              gerade ist. Der zweite Winkel läuft versetzt und erzeugt damit
-              die Abwärtsbewegung.
-            -->
-            <span
-              id="nudge"
-              class="pointer-events-none absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center text-cream transition-opacity duration-500"
-              aria-hidden="true"
-            >
-              <svg
-                viewBox="0 0 16 8"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="h-2 w-4 animate-nudge motion-reduce:animate-none motion-reduce:opacity-40"
-              >
-                <path d="M1 1.5 8 6.5 15 1.5" />
-              </svg>
-              <svg
-                viewBox="0 0 16 8"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="-mt-1 h-2 w-4 animate-nudge [animation-delay:280ms] motion-reduce:animate-none motion-reduce:opacity-40"
-              >
-                <path d="M1 1.5 8 6.5 15 1.5" />
-              </svg>
-            </span>
-
-            <span id="hint" class="text-cream/40 transition-opacity duration-500">
-              Scrollen
-            </span>
-          </div>
+          <span class="absolute bottom-4 right-4 h-3 w-px bg-cream/25"></span>
+          <span class="absolute bottom-4 right-4 h-px w-3 bg-cream/25"></span>
         </div>
       </div>
-    </section>
+
+      <figcaption
+        class="mx-auto flex max-w-[1600px] items-center gap-2.5 border-t border-cream/10 px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] text-cream/40 sm:px-8"
+      >
+        <span class="h-1.5 w-1.5 shrink-0 bg-brand-500" aria-hidden="true"></span>
+        Heilbronn, Marktplatz
+      </figcaption>
+    </figure>
 
     <!--
-      Der Text kommt nach der Sequenz herein. Startzustand nur unter
+      Der Text fährt ein, sobald er im Blick ist. Startzustand nur unter
       motion-safe, damit er ohne Animation sofort lesbar ist.
     -->
     <section
@@ -250,24 +217,275 @@
     </section>
 
     <!--
-      Transparenzhinweis nach Art. 50 Abs. 4 EU AI Act: Die Person im Foto ist
-      KI-generiert, das Foto selbst nicht. Steht zusätzlich im Alt-Text.
+      Phase 02. Die Seite erzählt die Phasen chronologisch, parallel zur
+      Instagram-Postserie: oben der Traum, hier die nüchterne Bestandsaufnahme.
+
+      Dasselbe Gesicht wie im Auftakt, aber eine Phase weiter: dort träumt sie
+      mit einer Gedankenblase, hier steht sie nachdenklich vor echten
+      Tugässer-Fahnen. Nacht wird Dämmerung. Die Figur trägt die Serie, statt
+      dass jeder Abschnitt ein neues Motiv aufmacht.
+
+      Eine frühere Fassung zeigte verwitterte Fahnen erfundener Brauereien.
+      Dieses Bild kommt ohne fremde Zeichen aus — auch ohne erfundene — und ist
+      damit markenrechtlich unkritisch. Nicht durch reale Brauereilogos
+      ersetzen: Cluss und Kronenbräu sind lebende Marken, und das Bild wirbt für
+      eine Marke, ist also Nutzung im geschäftlichen Verkehr.
+
+      Bildauftrag: ../its_my_life/projects/Ventures/project_tugaesser/hero_motiv_bestandsaufnahme.md
+    -->
+    <figure class="relative border-t border-cream/10">
+      <!--
+        Flacher als der Auftakt oben (dort 78dvh): Dieses Bild eröffnet einen
+        Abschnitt mitten auf der Seite, es muss keinen Einstieg tragen.
+
+        Der Zuschnitt ist eng: Oben hängen die Fahnen, unten steht die Frau —
+        beides muss drin bleiben. `center 25%` opfert deshalb den Boden vor dem
+        Rathaus und die Fahnenspitzen, nicht den Schriftzug und nicht ihr
+        Gesicht. Wer die Höhe ändert, muss diesen Wert nachziehen und im
+        Screenshot prüfen, ob „Tugässer Bräu“ noch vollständig lesbar ist.
+
+        Im Hochformat gilt dasselbe wie oben: festes 3:2 statt dvh-Höhe, an
+        `landscape:` gehängt statt an einem Breiten-Breakpoint. Der Ausschnitt
+        sitzt trotzdem etwas rechts der Mitte, weil die zweite Fahne fast am
+        rechten Bildrand steht und sonst angeschnitten wäre.
+      -->
+      <div class="relative aspect-[3/2] overflow-hidden landscape:aspect-auto landscape:h-[62dvh]">
+        <img
+          src="images/tugaesser-rathaus-daemmerung-fahnen.jpg"
+          alt="Der Heilbronner Marktplatz in der Dämmerung mit beleuchtetem Rathaus; rechts steht dieselbe KI-generierte Frau wie im Auftaktbild, nachdenklich, die Hand am Kinn, dahinter zwei weiße Fahnen mit dem Logo „Tugässer Bräu — Ein neues Bier belebt Heilbronn“"
+          width="1600"
+          height="900"
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover object-[64%_center] landscape:object-[center_25%]"
+        />
+
+        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+          <span class="absolute left-4 top-4 h-3 w-px bg-night/30"></span>
+          <span class="absolute left-4 top-4 h-px w-3 bg-night/30"></span>
+          <span class="absolute bottom-4 right-4 h-3 w-px bg-night/30"></span>
+          <span class="absolute bottom-4 right-4 h-px w-3 bg-night/30"></span>
+        </div>
+      </div>
+
+      <figcaption
+        class="mx-auto flex max-w-[1600px] items-center gap-2.5 border-t border-cream/10 px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] text-cream/40 sm:px-8"
+      >
+        <span class="h-1.5 w-1.5 shrink-0 bg-brand-500" aria-hidden="true"></span>
+        Wie es aussehen könnte
+      </figcaption>
+    </figure>
+
+    <!--
+      Abschnitt 02 — Bestandsaufnahme.
+
+      TYPOSKALA. Es gibt in diesem Abschnitt genau vier Textgrößen, und jede hat
+      eine Aufgabe. Wer eine fünfte einführt, macht den Abschnitt kaputt:
+
+        Rail-Label   11px mono         die Marginalie links, Navigationsmarke
+        Fließtext    clamp 1.125–1.375rem   jeder Absatz, ausnahmslos
+        Zwischenpointe clamp 1.85–2.9rem    die Sätze, die den Text gliedern
+        Kapitelsatz  clamp 2.25–4rem        H2 oben und „Muss das so bleiben?“
+
+      Eine frühere Fassung setzte den Schlussabsatz auf text-lg, weil er in einer
+      Nebenspalte stand. Ergebnis: Der Text wurde nach der stärksten Frage der
+      Seite plötzlich kleiner und wirkte wie eine Fußnote. Fließtext ist hier
+      überall gleich groß — auch im Schluss.
+
+      LAYOUT. Links eine schmale Rail mit dem Zwischentitel, rechts der Text.
+      Die Zwischenpointen brechen aus dem Einzug aus und stehen an der linken
+      Kante des Rasters. Daraus entsteht die Rhythmik des Abschnitts: an der
+      Kante spricht die Marke, eingerückt steht die Sachlage.
+
+      Kein Karussell, keine Bildergalerie, keine Faktenkacheln. Eine frühere
+      Fassung zerlegte dieselbe Geschichte in Zeitleiste, Tabelle und
+      Zahlenblöcke; das war korrekt und tonlos. Eine zweite hängte ein
+      Bilderkarussell an, das nichts beitrug. Beides ist bewusst wieder raus.
+    -->
+    <section
+      id="bestand"
+      class="mx-auto max-w-[1600px] border-t border-cream/10 px-5 py-20 sm:px-8 lg:py-28"
+    >
+      <!-- Kopf: Kapitelsatz links, Leitfrage rechts auf Grundlinie. -->
+      <div class="grid gap-x-10 gap-y-10 lg:grid-cols-12">
+        <div class="lg:col-span-7">
+          <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-brand-400">
+            <span class="text-cream/35">02</span> &nbsp;Bestandsaufnahme
+          </p>
+
+          <h2
+            class="mt-7 font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
+          >
+            Nach dem Traum<br />schauen wir jetzt<br />nüchtern ins Glas.
+          </h2>
+        </div>
+
+        <div class="flex flex-col justify-end lg:col-span-5">
+          <p
+            class="max-w-md text-[clamp(1.35rem,2.2vw,1.8rem)] leading-[1.5] text-cream/85"
+          >
+            Heilbronn hat Biergeschichte. Die Frage ist nur, wo das Heilbronner
+            Bier heute gebraut wird.
+          </p>
+        </div>
+      </div>
+
+      <!-- Damals -->
+      <div
+        class="mt-20 grid gap-x-10 gap-y-4 border-t border-cream/10 pt-10 lg:mt-28 lg:grid-cols-12 lg:pt-12"
+      >
+        <p
+          class="font-mono text-[11px] uppercase tracking-[0.22em] text-cream/35 lg:col-span-3"
+        >
+          Damals
+        </p>
+        <div class="lg:col-span-8 lg:col-start-4">
+          <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
+            Fünf Brauereien sind namentlich belegt, und jede hatte eine Adresse
+            in dieser Stadt. Die Rosenau fing 1860 in der Götzenturmstraße an
+            und zog 1898 an die Innsbrucker Straße. Ein Jahr nach ihr braute
+            Schuchmann in Böckingen, Kirchgasse 65, im Gasthaus Zur Sonne. 1865
+            kam Cluss auf dem Rosenberg dazu. Die Adlerbrauerei Würzburger stand
+            in der Deutschhofstraße 1 und hatte ihren Bierkeller in der
+            Klarastraße. Und 1894 wurde in Biberach aus dem Gasthaus Krone die
+            Kronenbrauerei, Bonfelder Straße 26.
+          </p>
+
+          <p
+            class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
+          >
+            1920 verkaufte Schuchmann sein Braurecht an die Rosenau. 1938 wurde
+            die Adlerbrauerei ihren jüdischen Eigentümern genommen, der Familie
+            Würzburger. Rosenau und Cluss taten sich 1968 zusammen und
+            fusionierten 1973; 1976 ging in der Rosenau das Licht aus. Bei Cluss
+            lief der Sud noch bis Ende 1995. Und als die Kronenbrauerei Ende
+            2016 zum letzten Mal einbraute, war Heilbronn eine Stadt ohne
+            Brauerei.
+          </p>
+        </div>
+      </div>
+
+      <p
+        class="mt-16 font-display text-[clamp(1.85rem,3.6vw,2.9rem)] font-bold leading-[1.1] tracking-[-0.035em] text-cream lg:mt-24"
+      >
+        Aus vielen wurden wenige,<br />aus wenigen keine.
+      </p>
+
+      <!-- Heute -->
+      <div
+        class="mt-16 grid gap-x-10 gap-y-4 border-t border-cream/10 pt-10 lg:mt-24 lg:grid-cols-12 lg:pt-12"
+      >
+        <p
+          class="font-mono text-[11px] uppercase tracking-[0.22em] text-cream/35 lg:col-span-3"
+        >
+          Heute
+        </p>
+        <div class="lg:col-span-8 lg:col-start-4">
+          <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
+            Käthchen, Cluss, Kronenbräu — die Marken gibt es. Das Käthchen wird
+            in Nagold-Hochdorf gebraut, Cluss in Stuttgart, Kronenbräu in
+            Schwäbisch Hall. Das ist kein Vorwurf. Diese Brauereien halten
+            Heilbronner Markengeschichte am Leben; ohne sie wären die Namen
+            längst weg.
+          </p>
+
+          <p
+            class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
+          >
+            Auch bei den bekannten Heilbronner Standorten mit Brauhausbezug wird
+            aktuell nicht vor Ort gebraut. Genau deshalb geht es uns nicht um
+            eine weitere Kulisse, sondern um eine echte lokale Braustätte.
+          </p>
+        </div>
+      </div>
+
+      <p
+        class="mt-16 font-display text-[clamp(1.85rem,3.6vw,2.9rem)] font-bold leading-[1.1] tracking-[-0.035em] text-cream lg:mt-24"
+      >
+        Heilbronner Bier gibt es.<br />Nur nicht aus Heilbronn.
+      </p>
+
+      <!-- Anderswo -->
+      <div
+        class="mt-16 grid gap-x-10 gap-y-4 border-t border-cream/10 pt-10 lg:mt-24 lg:grid-cols-12 lg:pt-12"
+      >
+        <p
+          class="font-mono text-[11px] uppercase tracking-[0.22em] text-cream/35 lg:col-span-3"
+        >
+          Anderswo
+        </p>
+        <div class="lg:col-span-8 lg:col-start-4">
+          <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
+            Schwäbisch Hall hat 43.000 Einwohner und die Haller Löwenbräu.
+            Eppingen hat 23.000 und die Palmbräu. Beide brauen vor Ort.
+            Heilbronn hat 133.000 Einwohner und lässt auswärts brauen.
+          </p>
+        </div>
+      </div>
+
+      <!--
+        Schluss. Die Frage steht wie die beiden Zwischenpointen an der linken
+        Kante, aber in Kapitelsatz-Größe: Der Abschnitt hat zwei Höhepunkte, die
+        Überschrift oben und diese Frage. Damit schließt sich die Klammer.
+
+        Die Antwort darunter sitzt in derselben Textspalte wie jeder andere
+        Absatz (col-start-4) und in derselben Größe. Eine frühere Fassung stellte
+        sie in eine eigene Nebenspalte und verkleinerte sie auf text-lg — nach
+        der stärksten Frage der Seite wurde der Text dadurch zur Fußnote.
+      -->
+      <div class="mt-20 border-t border-cream/10 pt-14 lg:mt-28 lg:pt-20">
+        <p
+          class="font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
+        >
+          Muss das so bleiben?
+        </p>
+
+        <div class="mt-12 grid gap-x-10 lg:mt-16 lg:grid-cols-12">
+          <div class="lg:col-span-8 lg:col-start-4">
+            <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
+              Wir glauben nicht. Tugässer ist noch keine Brauerei — kein Bier,
+              kein Sudhaus, kein Businessplan. Erst mal ist es eine Frage an
+              diese Stadt: Gibt es hier genug Leute, die das ändern wollen?
+            </p>
+            <p
+              class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
+            >
+              Wenn du dazugehörst, findest du uns auf
+              <a
+                href="https://www.instagram.com/tugaesser/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-cream underline decoration-brand-500 decoration-2 underline-offset-4 transition-colors duration-150 hover:text-brand-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+                >Instagram</a
+              >. Da fängt es gerade an.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+      Transparenzhinweis nach Art. 50 Abs. 4 EU AI Act. Zwei verschiedene Fälle,
+      deshalb **ein Satz je Bild**: Beim Auftaktbild ist nur die Person
+      synthetisch, beim Dämmerungsbild das ganze Bild — und „vollständig“
+      schließt die Person dort bereits ein. Eine frühere Fassung hängte einen
+      dritten Satz an, der die Person für *beide* Bilder nannte und damit für das
+      Dämmerungsbild dasselbe zweimal sagte.
+
+      Beides steht zusätzlich im jeweiligen Alt-Text. Nicht kürzen und nicht
+      unauffälliger machen — wird ein Bild getauscht, muss der zugehörige Satz
+      mitgeführt oder bewusst gestrichen werden.
     -->
     <footer class="mx-auto max-w-[1600px] border-t border-cream/10 px-5 py-5 sm:px-8">
-      <p class="max-w-2xl font-mono text-[11px] leading-[1.7] text-cream/55">
-        Foto: Frank Beck. Die abgebildete Person ist nicht real, sondern mit
-        künstlicher Intelligenz erzeugt.
+      <p class="max-w-3xl font-mono text-[11px] leading-[1.7] text-cream/55">
+        Auftaktbild: Foto Frank Beck, die abgebildete Person ist mit künstlicher
+        Intelligenz erzeugt. Das Bild des Marktplatzes in der Dämmerung ist
+        vollständig mit künstlicher Intelligenz erzeugt.
       </p>
     </footer>
 
     <script>
       (() => {
-        const scrolly = document.getElementById('scrolly');
-        const hero = document.getElementById('hero');
-        const bar = document.getElementById('bar');
-        const phase = document.getElementById('phase');
-        const hint = document.getElementById('hint');
-        const nudge = document.getElementById('nudge');
         const lead = document.getElementById('lead');
         const clock = document.getElementById('clock');
 
@@ -285,118 +503,6 @@
         tick();
         setInterval(tick, 15000);
 
-        // Stationen der Sequenz. x/y sind Prozentwerte der sichtbaren Bildfläche,
-        // s der Zoomfaktor. Die Reihenfolge erzählt: Rathaus -> Person tritt ins
-        // Bild -> Gedankenblase -> Totale.
-        // s = Zoomfaktor, tx/ty = Verschiebung in Prozent der Bildfläche (vor
-        // der Skalierung, denn translate wirkt im skalierten Raum).
-        //
-        // Der Startzoom ist bewusst auf ~2× gedeckelt: die Vorlage ist nur
-        // 1600×900, darüber wird sie sichtbar weich. Mit einem höher
-        // aufgelösten Original darf s hier deutlich größer werden.
-        const STOPS_LG = [
-          { p: 0.0, s: 2.05, tx: 22, ty: 2, label: 'Rathaus' },
-          { p: 0.33, s: 1.72, tx: 6, ty: -5, label: 'Wer träumt da?' },
-          { p: 0.62, s: 1.34, tx: -10, ty: 8, label: 'Der Traum' },
-          { p: 0.85, s: 1.0, tx: 0, ty: 0, label: 'Heilbronn' },
-          { p: 1.0, s: 1.0, tx: 0, ty: 0, label: 'Heilbronn' },
-        ];
-
-        // Im Hochformat ist die Totale unmöglich: ein 16:9-Bild füllt einen
-        // schmalen Schirm nur als Ausschnitt. Dafür gibt es dort seitlich viel
-        // Spielraum – die Sequenz schwenkt quer statt auszuzoomen und endet auf
-        // Frau plus Gedankenblase statt auf dem ganzen Bild.
-        //
-        // Grenze für beide Sätze: |tx| ≤ 100·(s−1)/(2s) bezogen auf die
-        // Bildbreite, sonst schiebt man den Bildrand ins Bild. Bei s = 1 heißt
-        // das im Querformat tx = 0; im Hochformat gibt es Spielraum, weil das
-        // Bild dort ohnehin seitlich übersteht.
-        const STOPS_SM = [
-          { p: 0.0, s: 1.2, tx: 18, ty: 0, label: 'Rathaus' },
-          { p: 0.33, s: 1.1, tx: -6, ty: 0, label: 'Wer träumt da?' },
-          { p: 0.62, s: 1.15, tx: -26, ty: 0, label: 'Der Traum' },
-          { p: 0.85, s: 1.0, tx: -12, ty: 0, label: 'Heilbronn' },
-          { p: 1.0, s: 1.0, tx: -12, ty: 0, label: 'Heilbronn' },
-        ];
-
-        const wide = window.matchMedia('(min-width: 1024px)');
-        let STOPS = wide.matches ? STOPS_LG : STOPS_SM;
-
-        const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-        // Weiche Ein-/Ausblendung zwischen zwei Stationen, damit die Fahrt nicht
-        // an jeder Station sichtbar knickt.
-        const smooth = (t) => t * t * (3 - 2 * t);
-
-        let currentLabel = '';
-
-        const render = (p) => {
-          let i = 0;
-          while (i < STOPS.length - 2 && p > STOPS[i + 1].p) i++;
-          const a = STOPS[i];
-          const b = STOPS[i + 1];
-          const t = smooth(clamp((p - a.p) / (b.p - a.p), 0, 1));
-
-          const s = a.s + (b.s - a.s) * t;
-          const tx = a.tx + (b.tx - a.tx) * t;
-          const ty = a.ty + (b.ty - a.ty) * t;
-
-          hero.style.transform =
-            `scale(${s.toFixed(4)}) translate(${tx.toFixed(3)}%, ${ty.toFixed(3)}%)`;
-
-          bar.style.width = `${(p * 100).toFixed(2)}%`;
-
-          const label = t < 0.5 ? a.label : b.label;
-          if (label !== currentLabel) {
-            currentLabel = label;
-            phase.textContent = label;
-          }
-          // Sobald gescrollt wird, hat der Hinweis seinen Zweck erfüllt.
-          const cue = p > 0.04 ? '0' : '1';
-          hint.style.opacity = cue;
-          nudge.style.opacity = cue;
-        };
-
-        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-        let ticking = false;
-        const onScroll = () => {
-          if (ticking) return;
-          ticking = true;
-          requestAnimationFrame(() => {
-            ticking = false;
-            if (reduced.matches) return;
-            const travel = scrolly.offsetHeight - window.innerHeight;
-            const p = travel > 0
-              ? clamp(-scrolly.getBoundingClientRect().top / travel, 0, 1)
-              : 1;
-            render(p);
-          });
-        };
-
-        const start = () => {
-          if (reduced.matches) {
-            render(1);
-            bar.style.width = '100%';
-            hint.style.opacity = '0';
-            nudge.style.opacity = '0';
-            return;
-          }
-          render(0);
-          addEventListener('scroll', onScroll, { passive: true });
-          addEventListener('resize', onScroll);
-          onScroll();
-        };
-        start();
-        reduced.addEventListener('change', start);
-
-        // Beim Wechsel zwischen Quer- und Hochformat gilt der jeweils andere
-        // Satz Stationen – sonst zeigt die Sequenz nach einer Drehung ins Leere.
-        wide.addEventListener('change', (e) => {
-          STOPS = e.matches ? STOPS_LG : STOPS_SM;
-          currentLabel = '';
-          start();
-        });
-
         // Text erst einblenden, wenn er tatsächlich im Blick ist.
         new IntersectionObserver(
           (entries, obs) => {
@@ -408,6 +514,7 @@
           },
           { threshold: 0.25 }
         ).observe(lead);
+
       })();
     </script>
   </body>

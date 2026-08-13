@@ -13,10 +13,110 @@ Design-Schleife).
 
 ## Aktueller Stand
 
-**Teaser-Seite**: `index.html`, eine Bildschirmhöhe, Claim „Tugässer, schaffen
-wir's." / „Man wird ja wohl noch träumen dürfen." plus Instagram-CTA auf
+**Teaser-Seite**: `index.html` — Hero-Foto, Claim „Tugässer, schaffen wir's." /
+„Man wird ja wohl noch träumen dürfen." plus Instagram-CTA auf
 [@tugaesser](https://www.instagram.com/tugaesser/). Keine Navigation, keine
 Unterseiten, kein Impressum.
+
+**Abschnitt „02 Bestandsaufnahme“** (`#bestand`, seit 13.08.2026): das Fahnenbild,
+dann **nur Text**. Überschrift „Nach dem Traum schauen wir jetzt nüchtern ins
+Glas.“ — ohne Komma, das nach einer vorangestellten Adverbialbestimmung nicht
+gesetzt wird; die Pause macht der Zeilenumbruch. Leitfrage rechts daneben, drei
+Textblöcke (Damals / Heute / Anderswo),
+dazwischen zwei Zwischenpointen, am Ende die Frage „Muss das so bleiben?“.
+
+Das „nur Text“ ist das Ergebnis von zwei verworfenen Fassungen und **keine
+Lücke, die noch zu füllen wäre**:
+
+1. Die erste zerlegte den Inhalt in Zeitleiste, Tabelle und Zahlenkacheln —
+   faktisch korrekt und tonlos, vom Auftraggeber als „holprig und KI-mäßig“
+   zurückgewiesen.
+2. Die zweite hängte ein Karussell mit historischen Zeugnissen an (Cluss-Schild,
+   Rosenau-Bierkasten, Schuchmann-Aktie). Urteil: „bringt nichts“, wieder raus.
+
+Der Fließtext geht auf den Caption-Entwurf in `social_media_postserie.md`
+zurück, der auch den Instagram-Post trägt. **Diesen Abschnitt nicht wieder in
+Faktenraster zerlegen und nicht ungefragt bebildern.**
+
+### Typoskala des Abschnitts — vier Größen, keine fünfte
+
+| Rolle | Größe | Wo |
+|---|---|---|
+| Rail-Label | `text-[11px]` mono | Marginalie links („Damals“, „Heute“, „Anderswo“) |
+| Fließtext | `clamp(1.125rem,1.7vw,1.375rem)` | **jeder** Absatz, ausnahmslos |
+| Zwischenpointe | `clamp(1.85rem,3.6vw,2.9rem)` | die Sätze zwischen den Blöcken |
+| Kapitelsatz | `clamp(2.25rem,5.2vw,4rem)` | H2 oben und „Muss das so bleiben?“ |
+
+Der Grund für die Tabelle: Eine frühere Fassung setzte den Schlussabsatz auf
+`text-lg`, weil er in einer Nebenspalte stand. Damit wurde der Text ausgerechnet
+nach der stärksten Frage der Seite kleiner und las sich wie eine Fußnote. Beim
+Auftraggeber ist das sofort aufgefallen. **Größenwechsel nur mit sichtbarem
+Grund** — Fließtext ist überall gleich groß, auch im Schluss.
+
+### Satzweise
+
+Zwölfspaltiges Raster. Links eine schmale Rail (`lg:col-span-3`) mit dem
+Zwischentitel, rechts der Text (`lg:col-span-8 lg:col-start-4`). Die
+Zwischenpointen und die Schlussfrage brechen aus dem Einzug aus und stehen an
+der linken Kante. Daraus entsteht die Rhythmik: an der Kante spricht die Marke,
+eingerückt steht die Sachlage.
+
+Alle Textspalten liegen auf derselben Achse (`col-start-4`) — auch die Antwort
+im Schluss. Vorsicht bei `col-start` plus `col-span`: `col-start-6` mit
+`col-span-8` läuft über zwölf Spalten hinaus und schert nach rechts aus.
+
+Die Seite erzählt die Phasen **chronologisch**, parallel zur Instagram-Postserie:
+oben der Traum bei Nacht, darunter die Bestandsaufnahme bei Tag. Neue Phasen
+kommen unten dazu; der Auftakt bleibt der Auftakt.
+
+Inhaltlicher Arbeitsstand und Bildmaterial liegen im Schwesterrepo unter
+`../its_my_life/projects/Ventures/project_tugaesser/` — vor allem
+`social_media_postserie.md`, `bildrecherche_historisches_material.md` und
+`hero_motiv_bestandsaufnahme.md`.
+
+Inhaltliche Leitplanken für diesen Abschnitt, nicht wegoptimieren:
+
+- **Das Eröffnungsbild zeigt dieselbe Frau wie der Auftakt**, eine Phase weiter:
+  oben träumt sie mit Gedankenblase in der Nacht, hier steht sie nachdenklich in
+  der Dämmerung vor zwei Tugässer-Fahnen. Die Figur trägt die Serie — nicht
+  gegen ein beliebiges anderes Motiv tauschen.
+- **Keine fremden Brauereizeichen im Bild, auch keine erfundenen.** Eine frühere
+  Fassung zeigte verwitterte Fahnen erfundener Brauereien; das aktuelle Bild
+  kommt ganz ohne aus und ist damit unkritisch. Erst recht keine realen Logos
+  ergänzen: Cluss und Kronenbräu sind lebende Marken, und das Bild wirbt für
+  eine Marke, ist also Nutzung im geschäftlichen Verkehr.
+- **Der Zuschnitt des Dämmerungsbildes ist eng.** Oben die Fahnen, unten die
+  Frau; `sm:object-[center_25%]` opfert Boden und Fahnenspitzen, nicht den
+  Schriftzug und nicht ihr Gesicht. Nach jeder Höhenänderung im Screenshot
+  prüfen, ob „Tugässer Bräu“ noch vollständig lesbar ist.
+- **Käthchen, Cluss und Kronenbräu werden nicht abgewertet.** Sie erhalten reale
+  Heilbronner Markengeschichte. Der Abschnitt trennt Produktionsort und
+  Markenherkunft sachlich; der Block „Heute“ sagt mit „Das ist kein Vorwurf“
+  explizit, dass hier niemand angegriffen wird. Der Satz bleibt drin.
+- **Cluss hat bis Ende 1995 in Heilbronn gebraut, nicht bis 1982.** 1982 ging nur
+  die Aktienmehrheit an Dinkelacker; die Stilllegung beschloss eine
+  außerordentliche Hauptversammlung im November 1995. Eine frühere Fassung des
+  Textes hatte das falsch.
+- **Das Ende der Adlerbrauerei Würzburger 1938 ist eine Enteignung**, keine
+  gewöhnliche Übernahme: Die Eigentümerfamilie war jüdisch. Der Text benennt das
+  in einem Satz. Entweder so stehen lassen oder die Brauerei ganz weglassen —
+  eine bloße Jahreszahl „bis 1938“ in einer Aufzählung wäre die schlechteste
+  Variante. Der damalige Erwerber (Cluss) wird bewusst nicht genannt; das wäre
+  ein Angriff auf eine lebende Marke in einem Werbetext.
+- **Die Brauereiliste ist unvollständig, und der Text sagt das.** „Fünf
+  Brauereien sind namentlich belegt“ — die Oberamtsbeschreibung von 1865 nennt
+  acht. Nicht zu „alle Heilbronner Brauereien“ verschärfen. Faktenbasis:
+  `../its_my_life/projects/Ventures/project_tugaesser/brauereien_standorte_jahre.md`.
+- **Die Aussage zur fehlenden Stadtbrauerei bleibt auf öffentlich auftretende
+  Betriebe begrenzt** („keine öffentlich erkennbare Stadtbrauerei“). Nicht
+  dokumentierte Klein- und Privatbrauer werden nicht pauschal ausgeschlossen.
+- Die frühere Formulierung „jede Stadt dieser Größe hat eine Brauerei“ ist zu
+  pauschal und wurde bewusst durch den belegbaren Vergleich mit Schwäbisch Hall
+  und Eppingen ersetzt.
+- **Bilder unterhalb des Auftakts bekommen `loading="lazy"` plus `width`/`height`.**
+  Das reserviert den Platz und verhindert Layoutsprünge. Achtung beim Prüfen: Ein
+  fullPage-Screenshot ohne vorheriges Scrollen zeigt lazy-Bilder als Leerfläche —
+  das ist ein Artefakt, kein Fehler. Erst durchscrollen, dann screenshotten.
 
 ## Design-Richtung
 
@@ -34,39 +134,63 @@ wie Linear oder Vercel, nicht Gastro-Websites. Konkret heißt das hier:
 - **Rot ist der einzige Akzent** und wird sparsam gesetzt (Statuspunkt,
   Fortschritt, Label). Alles andere ist `night`/`cream`.
 
-### Die Scroll-Sequenz
+### Der Hero — statisch, seit die Scroll-Sequenz raus ist
 
-Das Herzstück. `#scrolly` liefert nur den Scrollweg (300vh, ab `lg` 420vh), das
-`sticky` Kind bleibt stehen. Der Fortschritt 0…1 fährt das Bild durch vier
-Stationen: **Rathaus → die Frau tritt ins Bild → die Gedankenblase → Totale.**
-Danach fährt der Textblock ein. Das Skript steht inline, ohne Abhängigkeiten.
+Bis 12.08.2026 lief hier eine 420vh lange Scroll-Sequenz: `#scrolly` lieferte
+den Scrollweg, ein `sticky` Kind blieb stehen, und der Fortschritt 0…1 fuhr das
+Bild per `transform` durch vier Stationen (Rathaus → Frau → Gedankenblase →
+Totale). **Sie ist bewusst entfernt.** Die Seite bekommt weitere Abschnitte, und
+drei leere Bildschirme davor hätten jeden davon praktisch unerreichbar gemacht.
+Wer sie zurückholen will, findet sie in der Git-Historie — aber der Grund für
+die Entfernung gilt dann immer noch.
 
-Beim Anfassen zu beachten:
+Was an ihre Stelle getreten ist:
 
-- **`transform` statt `object-position`**, und das Bild muss **über den Rahmen
-  hinausragen** (`h-full w-auto min-w-full max-w-none shrink-0`). `object-cover`
-  auf voller Breite beschneidet *vor* der Transformation — der überstehende
-  Bildteil ist dann weg und Schwenks laufen ins Leere. **`shrink-0` ist
-  zwingend**, sonst staucht Flexbox das Bild wieder auf Containerbreite.
-- **Grenze für die Stationen:** `|tx| ≤ 100·(s−1)/(2s)`, bezogen auf die
-  *Bildbreite* (nicht die Containerbreite — das Bild ist breiter). Darüber
-  schiebt man den Bildrand ins Bild. Im Querformat heißt das bei `s = 1`
-  zwingend `tx = 0`.
-- **Zwei Stationssätze.** `STOPS_LG` zoomt aus bis zur Totale. `STOPS_SM` kann
-  das nicht: ein 16:9-Bild füllt einen Hochformat-Schirm nur als Ausschnitt, die
-  Totale ist dort unmöglich. Dafür gibt es seitlich viel Spielraum — mobil
-  schwenkt die Sequenz quer und endet auf Frau plus Gedankenblase. Der Wechsel
-  hängt an `matchMedia('(min-width: 1024px)')` und wird bei Drehung neu gesetzt.
-- **Der Zoom ist auf ~2× gedeckelt**, weil die Vorlage nur 1600×900 hat. Mit
-  einem höher aufgelösten Original darf `s` deutlich größer werden — dann wird
-  der Einstieg wieder dramatischer.
-- **`prefers-reduced-motion`**: `#scrolly` schrumpft per `motion-reduce:h-screen`
-  auf eine Bildschirmhöhe und die Sequenz springt auf den Endzustand — sonst
-  scrollte man durch drei leere Bildschirme, ohne dass etwas passiert. Der
-  Text-Reveal startet nur unter `motion-safe:`, ist also ohne Animation sofort
-  lesbar.
+- **Eine `<figure>` mit `object-cover`.** Darunter eine `<figcaption>` in Mono
+  als Bildunterschrift („Heilbronn, Marktplatz“) — sie ersetzt die frühere
+  Fortschrittsleiste und hält den industriellen Charakter der Seite.
+- **Kein `aspect-[16/9]` zusammen mit `max-h`.** Das war der erste Versuch und
+  ist falsch: aspect-ratio schrumpft bei gekappter Höhe auch die *Breite* mit,
+  und rechts steht ein schwarzer Balken. Feste Höhe plus `w-full`.
+- **Die Höhe ist gedeckelt, und das ist Absicht.** Bei vollem 16:9 ist das Bild
+  auf 1440×900 ganze 810 px hoch und schiebt den Claim komplett unter die Falz;
+  man sähe nur ein Foto. 78dvh lässt die Überschrift anreißen.
+- **`object-[center_28%]` ab `sm`, nicht `center`.** `object-cover` schneidet
+  oben und unten gleichmäßig ab — und oben sitzt die Gedankenblase mit dem
+  Bierdeckel, also die eigentliche Botschaft. Der Fokus wandert nach oben, der
+  Verlust fällt auf den Mantelsaum unten. **Wer die Höhe ändert, muss diesen
+  Wert nachziehen und im Screenshot prüfen, ob die Blase noch ganz drin ist.**
+### Bildhöhe: Orientierung, nicht Breite
+
+**Die wichtigste Regel für beide Bilder.** Im Hochformat steht `aspect-[3/2]`,
+im Querformat eine `dvh`-Höhe (`landscape:h-[78dvh]` bzw. `landscape:h-[62dvh]`).
+
+Der Grund: `object-cover` skaliert ein Querformat-Bild auf die Containerhöhe,
+also **schneidet jede zusätzliche Höhe seitlich Bild weg**. Die früheren festen
+`62dvh` auf dem Handy ließen von 16:9 nur rund 40 Prozent der Bildbreite übrig —
+das Rathaus war praktisch verschwunden, sichtbar blieb ein schmaler Ausschnitt.
+Mit 3:2 sind es rund 84 Prozent.
+
+- **Nicht auf einen Breiten-Breakpoint zurückbauen.** Mit `sm:` (640px) fiel ein
+  hochkant gehaltenes Tablet zurück in die hohe Variante und zeigte wieder nur
+  54 Prozent der Bildbreite. Nicht die Breite ist das Problem, die Orientierung
+  ist es: Ein 768px-Tablet im Hochformat hat dieselbe Not wie ein Handy.
+- **So misst man es**, statt zu schätzen: Für jedes Bild
+  `Containerhöhe × (naturalWidth / naturalHeight)` rechnen — das ist die Breite
+  nach dem Skalieren — und die Containerbreite dazu ins Verhältnis setzen.
+  Erwartungswert im Hochformat rund 84 Prozent, im Querformat 96–100.
+- **Prüfbreiten:** 320, 360, 390, 430, 768 hoch sowie 1024 quer, 1440 und 1920.
+  Ein Handy im Querformat (844×390) gehört dazu, weil dort `landscape:` greift.
+
+- **`object-position` im Hochformat sitzt rechts der Mitte** (`62%` bzw. `64%`),
+  weil in beiden Bildern die Frau und das Markenzeichen — Gedankenblase hier,
+  Fahnen dort — rechts stehen. Im Querformat gilt stattdessen die vertikale
+  Justage (`center 28%` / `center 25%`).
+- **`dvh`, nicht `vh`** — iOS Safari rechnet `vh` ohne seine Toolbars.
 - **Ortszeit Heilbronn** in der Kopfleiste über `Intl.DateTimeFormat` mit
   `timeZone: 'Europe/Berlin'` — echte Zeitzone, kein fester Offset.
+- **Der Text-Reveal in `#lead`** hängt weiterhin an einem IntersectionObserver
+  und startet nur unter `motion-safe:`, ist also ohne Animation sofort lesbar.
 
 Ebenfalls offen und für jede Design-Arbeit relevant:
 
@@ -198,13 +322,15 @@ damit die geänderte CSS live frisch geladen wird.
   Schatten, Bildgrößen.
 - Mindestens **2 Vergleichsrunden**, nicht nach dem ersten Screenshot aufhören.
 - **Immer beide Breiten screenshotten** (`WIDTH=390` und Default). Quer- und
-  Hochformat fahren verschiedene Stationssätze — ein Fehler in einem Satz ist im
-  anderen unsichtbar.
-- **Ein Screenshot der Startposition sagt nichts über die Sequenz.** Für die
-  Scroll-Fahrt ein Puppeteer-Skript schreiben, das auf `p = 0 / 0.33 / 0.62 /
-  0.85 / 1` scrollt und je ein Bild plus `#hero.style.transform` festhält.
-  Schwarze Ränder im Bild bedeuten immer: `tx`/`ty` überschreiten die Grenze
-  oben, oder das Bild wurde wieder auf Containerbreite gestaucht.
+  Hochformat nutzen verschiedene `object-position`-Werte — ein Fehler im einen
+  ist im anderen unsichtbar. Bei Änderungen am Hero zusätzlich `WIDTH=1920
+  HEIGHT=1080`: der Zuschnitt fällt je nach Fensterhöhe anders aus.
+- **Ein schwarzer Balken neben dem Bild** heißt fast immer, dass eine
+  `aspect-ratio` gegen eine Höhenbegrenzung arbeitet und die Breite mitschrumpft.
+- Ein Puppeteer-Lauf, der `console`- und `pageerror`-Events sowie alle Requests
+  mitschreibt, prüft in einem Rutsch JS-Fehler und die Zusage, dass die Seite
+  nichts von fremden Hosts lädt. Das Skript muss **im Projektordner** liegen —
+  `puppeteer` steckt in dessen `node_modules`, aus `/tmp` findet Node es nicht.
 
 ## Fallstricke
 
