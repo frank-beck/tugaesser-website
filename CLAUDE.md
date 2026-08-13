@@ -42,10 +42,24 @@ Faktenraster zerlegen und nicht ungefragt bebildern.**
 
 | Rolle | Größe | Wo |
 |---|---|---|
-| Rail-Label | `text-[11px]` mono | Marginalie links („Damals“, „Heute“, „Anderswo“) |
+| Phasen-Kicker | `text-[13px]` mono | „01 Traumphase“, „02 Bestandsaufnahme“ |
+| Rail-Label | `text-[12px]` mono | Marginalie links („Damals“, „Heute“, „Anderswo“) |
 | Fließtext | `clamp(1.125rem,1.7vw,1.375rem)` | **jeder** Absatz, ausnahmslos |
 | Zwischenpointe | `clamp(1.85rem,3.6vw,2.9rem)` | die Sätze zwischen den Blöcken |
 | Kapitelsatz | `clamp(2.25rem,5.2vw,4rem)` | H2 oben und „Muss das so bleiben?“ |
+
+### Mono-Label: zwei Größen nach Rolle
+
+- **11px = Seitenrahmen.** Kopfzeile, Bildunterschrift, Footer. Das ist Chrome,
+  es soll leise sein.
+- **12–13px = Inhalt.** Phasen-Kicker und Rail-Label gehören zum Text und tragen
+  die Gliederung der Seite.
+
+Dazu die Deckkraft: **nichts Textliches unter `cream/55`.** Vorher standen
+Rail-Label und die Ziffern „01“/„02“ auf `cream/35` — auf dem Nachtblau ein
+Kontrast von 2,91 und damit unter dem WCAG-AA-Minimum von 4,5. `cream/55` liegt
+bei 5,58. Kurios war vor allem, dass die *Ziffer* blasser war als das Wort
+daneben: Das Zählende war das Unsichtbarste an der Aufzählung.
 
 Der Grund für die Tabelle: Eine frühere Fassung setzte den Schlussabsatz auf
 `text-lg`, weil er in einer Nebenspalte stand. Damit wurde der Text ausgerechnet
@@ -65,9 +79,45 @@ Alle Textspalten liegen auf derselben Achse (`col-start-4`) — auch die Antwort
 im Schluss. Vorsicht bei `col-start` plus `col-span`: `col-start-6` mit
 `col-span-8` läuft über zwölf Spalten hinaus und schert nach rechts aus.
 
+## Phasenreihenfolge und Kopfleiste
+
 Die Seite erzählt die Phasen **chronologisch**, parallel zur Instagram-Postserie:
-oben der Traum bei Nacht, darunter die Bestandsaufnahme bei Tag. Neue Phasen
-kommen unten dazu; der Auftakt bleibt der Auftakt.
+oben der Traum bei Nacht, darunter die Bestandsaufnahme in der Dämmerung. Neue
+Phasen kommen unten dazu; der Auftakt bleibt der Auftakt.
+
+**Die Reihenfolge nicht umdrehen.** Der Blog-Reflex „das Neueste nach oben“ ist
+am 13.08.2026 geprüft und verworfen worden. Blogposts sind unabhängige
+Einzelstücke, diese Phasen sind Kapitel eines Arguments:
+
+- Dieselbe Frau träumt oben nachts und denkt unten in der Dämmerung nach.
+  Umgedreht liefe die Figur rückwärts durch ihre eigene Geschichte — und die
+  wiederkehrende Figur ist das stärkste Mittel der Seite.
+- Abschnitt 02 beginnt mit „Nach dem Traum“ und verweist damit nach oben.
+- Das `og:image` zeigt das Auftaktmotiv. Wer den Link aus WhatsApp oder der
+  Instagram-Bio anklickt, bekommt den Traum versprochen.
+
+**Stattdessen löst die Kopfleiste das Problem.** Sie ist der Phasenindex: links
+die Marke, in der Mitte die Phasen als Sprungmarken, rechts Ort und Uhrzeit. Ein
+Klick führt zum Neuesten, die Erzählung bleibt in ihrer Reihenfolge.
+
+- **Jede neue Phase braucht dort einen Eintrag.** Sonst wächst die Seite nach
+  unten, ohne dass man sie erreicht — genau das Problem, das die Leiste löst.
+- Sprungziel ist das **Bild**, das die Phase eröffnet (`id="phase-NN"` plus
+  `data-phase` auf der `<figure>`), nicht der Textabschnitt. Sonst überspringt
+  der Sprung das Motiv.
+- `scroll-mt-[3.25rem]` auf den Zielen: Die Leiste ist fixiert und 46px hoch,
+  ohne Versatz landet das Bild darunter. Gemessen kommt es 6px unter der Leiste
+  an. Wird die Leiste höher, muss der Wert mit.
+- Die Markierung der aktuellen Phase läuft über `aria-current="true"`, gesetzt
+  vom Skript und zugleich Hook für die Einfärbung (`aria-[current=true]:`).
+  Kein zweiter Zustand in einer CSS-Klasse, der auseinanderlaufen könnte.
+- **Bewusst Scrollposition statt IntersectionObserver:** Die Phasen sind mehrere
+  Bildschirme hoch, also sind oft zwei gleichzeitig im Blick, und ein Observer
+  müsste raten. Die Regel ist stattdessen eindeutig — es gilt die letzte Phase,
+  deren Oberkante die Unterkante der Leiste passiert hat.
+- Unterhalb `sm` stehen nur die Ziffern, und die Uhr entfällt: „01 Traumphase
+  02 Bestandsaufnahme“ plus Marke plus Uhr passt bei 390px nicht in eine Zeile.
+  Die Uhr ist Dekor, die Navigation nicht.
 
 Inhaltlicher Arbeitsstand und Bildmaterial liegen im Schwesterrepo unter
 `../its_my_life/projects/Ventures/project_tugaesser/` — vor allem
