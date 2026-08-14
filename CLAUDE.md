@@ -119,6 +119,31 @@ Klick führt zum Neuesten, die Erzählung bleibt in ihrer Reihenfolge.
   02 Bestandsaufnahme“ plus Marke plus Uhr passt bei 390px nicht in eine Zeile.
   Die Uhr ist Dekor, die Navigation nicht.
 
+## Aktionsleiste unten
+
+Das Gegenstück zur Kopfleiste: eine fixierte Leiste am unteren Rand mit dem
+Instagram-Knopf. Vorher stand der Knopf nur in Abschnitt 01 und war ab der
+Bestandsaufnahme aus dem Blick — wer den ganzen Text las, hätte zum Handeln
+zurückscrollen müssen. Die Seite hat genau ein Ziel, und das gehört erreichbar.
+
+- **Gefüllt rot, nicht umrandet.** Rot ist der einzige Akzent der Seite und wird
+  sparsam gesetzt; die eine Handlung, um die es geht, ist genau der Platz dafür.
+  Der Knopf in Abschnitt 01 bleibt umrandet — er ist Teil des Satzbilds, die
+  Leiste ist Bedienung. Beide nebeneinander stehen zu lassen ist Absicht, keine
+  Doppelung.
+- **Sie fährt erst ein, wenn der Auftakt durchgescrollt ist** (gemessen: sobald
+  die Unterkante von `#phase-01` den oberen Rand passiert). Über dem Hero
+  verdeckte sie das Motiv, und ein Handlungsaufruf, bevor jemand weiß, worum es
+  geht, hat keinen Zug. Soll sie von Anfang an stehen, reicht es, den
+  IntersectionObserver zu entfernen und `data-sichtbar="true"` fest zu setzen.
+- **Der Footer hat `pb-32`, nicht `py-5`.** Sonst deckt die Leiste den
+  KI-Transparenzhinweis zu — ausgerechnet den Text, der sichtbar sein muss.
+  Gemessen bleiben 57px Luft. Wird die Leiste höher, muss der Wert mit.
+- **`pb-[env(safe-area-inset-bottom)]`**: Auf iPhones ohne Knopf läge die Leiste
+  sonst unter dem Home-Indikator.
+- Ohne JavaScript bleibt die Leiste verborgen. Vertretbar, weil der
+  Instagram-Knopf in Abschnitt 01 im HTML steht und immer funktioniert.
+
 Inhaltlicher Arbeitsstand und Bildmaterial liegen im Schwesterrepo unter
 `../its_my_life/projects/Ventures/project_tugaesser/` — vor allem
 `social_media_postserie.md`, `bildrecherche_historisches_material.md` und
@@ -352,6 +377,20 @@ WIDTH=390 HEIGHT=844 node screenshot.mjs http://localhost:3000 mobile
 ```
 
 Es gibt **keine Tests** und keinen Linter in diesem Projekt.
+
+## Social-Media-Produktion liegt nicht hier
+
+Vorlagen und Generatoren für Instagram-Posts und Reels stehen im privaten
+Schwesterrepo unter
+`../its_my_life/projects/Ventures/project_tugaesser/instagram_produktion/`.
+
+Dieses Repo ist öffentlich und wird über GitHub Pages ausgeliefert. Weder die
+Heilbronn-Fotos noch das Produktionsmaterial gehören in ein öffentliches
+Webverzeichnis — sie waren kurzzeitig hier und wurden am 14.08.2026 samt
+Historie entfernt. Nicht zurückholen.
+
+Die einzige verbleibende Verbindung zu Instagram ist der Link auf das Profil
+(Abschnitt 01 und Aktionsleiste unten).
 
 **`npm run build:css` nach jeder Klassenänderung in `index.html` ausführen** —
 Tailwind ist lokal gebaut, nicht per CDN, und `tailwind.css` ist committed. Der

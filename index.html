@@ -72,7 +72,7 @@
       jedes Besuchers dorthin. Erzeugt von fetch-fonts.mjs.
     -->
     <link rel="stylesheet" href="fonts/fonts.css" />
-    <link rel="stylesheet" href="tailwind.css?v=6109fec4" />
+    <link rel="stylesheet" href="tailwind.css?v=2935aee7" />
   </head>
 
   <body class="bg-night font-body text-cream antialiased">
@@ -537,13 +537,76 @@
       unauffälliger machen — wird ein Bild getauscht, muss der zugehörige Satz
       mitgeführt oder bewusst gestrichen werden.
     -->
-    <footer class="mx-auto max-w-[1600px] border-t border-cream/10 px-5 py-5 sm:px-8">
+    <!--
+      pb-32 statt py-5: Die Aktionsleiste liegt fixiert darüber und deckte den
+      Transparenzhinweis sonst zu — ausgerechnet den Text, der sichtbar sein
+      muss. Wird die Leiste höher, muss der Wert mit.
+    -->
+    <footer
+      class="mx-auto max-w-[1600px] border-t border-cream/10 px-5 pb-32 pt-5 sm:px-8"
+    >
       <p class="max-w-3xl font-mono text-[11px] leading-[1.7] text-cream/55">
         Auftaktbild: Foto Frank Beck, die abgebildete Person ist mit künstlicher
         Intelligenz erzeugt. Das Bild des Marktplatzes in der Dämmerung ist
         vollständig mit künstlicher Intelligenz erzeugt.
       </p>
     </footer>
+
+    <!--
+      Aktionsleiste — das Gegenstück zur Kopfleiste am unteren Rand.
+
+      Die Seite hat genau ein Ziel: Follower. Der Instagram-Knopf stand vorher
+      nur in Abschnitt 01 und war ab der Bestandsaufnahme aus dem Blick — wer
+      den ganzen Text las, hätte zum Handeln zurückscrollen müssen.
+
+      **Gefüllt statt umrandet.** Rot ist der einzige Akzent der Seite und wird
+      sparsam gesetzt; die eine Handlung, um die es hier geht, ist genau der
+      Platz dafür. Der Knopf in Abschnitt 01 bleibt umrandet und damit
+      redaktionell — er ist Teil des Satzbilds, diese Leiste ist Bedienung.
+
+      Sie blendet sich erst ein, wenn der Auftakt durchgescrollt ist. Über dem
+      Hero verdeckte sie das Motiv, und ein Handlungsaufruf, bevor jemand weiß,
+      worum es geht, hat ohnehin keinen Zug.
+
+      `env(safe-area-inset-bottom)`: Auf iPhones ohne Knopf läge die Leiste
+      sonst unter dem Home-Indikator. Der Footer bekommt entsprechend
+      Bodenfreiheit, sonst deckt die Leiste den KI-Hinweis zu.
+    -->
+    <div
+      id="aktionsleiste"
+      class="fixed inset-x-0 bottom-0 z-20 translate-y-full border-t border-cream/10 bg-night/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-md transition-transform duration-300 ease-out data-[sichtbar=true]:translate-y-0"
+    >
+      <div
+        class="mx-auto flex max-w-[1600px] items-center justify-between gap-5 px-5 py-3 sm:px-8"
+      >
+        <p
+          class="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-cream/55 md:block"
+        >
+          Ein neues Bier belebt Heilbronn
+        </p>
+
+        <a
+          href="https://www.instagram.com/tugaesser/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex w-full items-center justify-center gap-3 bg-brand-500 px-5 py-3.5 font-mono text-[12px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:bg-brand-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:bg-brand-600 md:w-auto"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            class="h-4 w-4 shrink-0"
+            aria-hidden="true"
+          >
+            <rect x="3" y="3" width="18" height="18" />
+            <circle cx="12" cy="12" r="4.1" />
+            <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
+          </svg>
+          <span>Folg uns auf Instagram</span>
+        </a>
+      </div>
+    </div>
 
     <script>
       (() => {
@@ -620,6 +683,29 @@
           markieren();
           addEventListener('scroll', anstossen, { passive: true });
           addEventListener('resize', anstossen, { passive: true });
+        }
+
+        /*
+          Aktionsleiste einblenden, sobald der Auftakt durchgescrollt ist.
+
+          Beobachtet wird der Hero selbst: Solange er noch zu sehen ist, bleibt
+          die Leiste unten weg und verdeckt das Motiv nicht. Ein
+          IntersectionObserver reicht hier — anders als bei der Phasenmarkierung
+          gibt es nur eine Schwelle, nichts zu entscheiden.
+
+          Ohne JavaScript bleibt die Leiste verborgen. Das ist vertretbar: Der
+          Instagram-Knopf in Abschnitt 01 steht im HTML und funktioniert immer.
+        */
+        const leiste = document.getElementById('aktionsleiste');
+        const hero = document.getElementById('phase-01');
+
+        if (leiste && hero) {
+          new IntersectionObserver(
+            ([eintrag]) => {
+              leiste.dataset.sichtbar = String(!eintrag.isIntersecting);
+            },
+            { threshold: 0 }
+          ).observe(hero);
         }
       })();
     </script>
