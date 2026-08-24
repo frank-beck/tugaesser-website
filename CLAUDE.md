@@ -287,8 +287,9 @@ GitHub-Seite. Ein Push auf `main` geht live. Repo:
 [frank-beck/tugaesser-website](https://github.com/frank-beck/tugaesser-website)
 (öffentlich, weil Pages bei GitHub Free keine privaten Repos ausliefert).
 
-Domain: **tugässer.de**, im DNS `xn--tugsser-7wa.de`, Registrar INWX.
-`tugaesser.de` (ASCII, ebenfalls INWX) leitet per 301 darauf weiter.
+Kanonische Domain: **tugaesser.de**, Registrar INWX, DNS bei Cloudflare.
+`tugässer.de` (im DNS `xn--tugsser-7wa.de`) leitet per dauerhaftem Redirect
+darauf weiter. Der Markenname bleibt „Tugässer“.
 
 Daraus folgt für die tägliche Arbeit:
 
@@ -319,9 +320,8 @@ nicht erst. Unter 300 KB bleiben, sonst fällt die Vorschau still aus.
 
 - **Nach Änderungen an Claim, Marke oder Bild das OG-Bild neu erzeugen** — es ist
   eine Kopie, die sonst stillschweigend veraltet.
-- Die Domain steht in allen Meta-Tags als **Punycode** (`xn--tugsser-7wa.de`).
-  Die Umlautform ist hübscher, aber manche Crawler stolpern darüber, und das
-  Vorschaubild muss zuverlässig laden.
+- Die Domain steht in allen Meta-Tags als **ASCII** (`tugaesser.de`). So ist sie
+  leicht zu tippen und funktioniert zuverlässig in Vorschauen und Crawlern.
 - **WhatsApp und Facebook cachen die Vorschau lange.** Nach Änderungen über den
   [Sharing Debugger](https://developers.facebook.com/tools/debug/) „Scrape Again"
   auslösen, sonst sieht man tagelang den alten Stand.
