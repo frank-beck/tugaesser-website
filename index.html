@@ -70,7 +70,7 @@
       jedes Besuchers dorthin. Erzeugt von fetch-fonts.mjs.
     -->
     <link rel="stylesheet" href="fonts/fonts.css" />
-    <link rel="stylesheet" href="tailwind.css?v=c4e34233" />
+    <link rel="stylesheet" href="tailwind.css?v=e7a4ec88" />
   </head>
 
   <body class="bg-night font-body text-cream antialiased">
@@ -265,21 +265,11 @@
               Neugierig?
             </p>
             <!--
-              Zwei Knöpfe, beide umrandet: Das Satzbild bleibt redaktionell, das
-              gefüllte Rot bleibt der Leiste vorbehalten. Die Rangfolge macht
-              stattdessen die Randstärke — „Mach mit“ steht auf voller Deckkraft,
-              Instagram auf cream/25. Ohne diesen Knopf sähe niemand einen
-              Mitmach-Aufruf, bevor er den Auftakt durchgescrollt hat; die Leiste
-              unten fährt erst danach ein.
+              Nur Instagram. „Mach mit“ stand hier, solange die Aktionsleiste
+              erst nach dem Auftakt einfuhr — jetzt steht sie von Anfang an, und
+              auf dem Handy lägen beide Knöpfe direkt übereinander.
             -->
-            <div class="mt-3.5 flex flex-wrap items-center gap-3">
-              <a
-                href="https://mitmachen.tugaesser.de"
-                class="inline-flex items-center border border-cream px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:bg-cream hover:text-night focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:bg-cream/85"
-              >
-                Mach mit
-              </a>
-
+            <div class="mt-3.5">
               <a
                 href="https://www.instagram.com/tugaesser/"
                 target="_blank"
@@ -816,14 +806,27 @@
 
             <!--
               Der Abschluss der Argumentation ist der stärkste Ort für die
-              Handlung: Wer bis hierher gelesen hat, weiß, worum es geht.
-              Umrandet wie in Abschnitt 01 — das gefüllte Rot bleibt der Leiste.
+              Handlung: Wer bis hierher gelesen hat, weiß, worum es geht. Deshalb
+              hier derselbe plastische Knopf wie in der Leiste und nicht die
+              zurückhaltende Umrandung — hinter dem Trennstrich endet das
+              Satzbild, ab hier ist es Bedienung.
             -->
             <a
               href="https://mitmachen.tugaesser.de"
-              class="mt-10 inline-flex items-center border border-cream px-7 py-4 font-mono text-[12px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:bg-cream hover:text-night focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:bg-cream/85"
+              class="group mt-10 inline-flex min-h-[58px] items-center gap-2.5 bg-gradient-to-b from-brand-500 to-brand-700 px-9 font-mono text-[13px] uppercase tracking-[0.18em] text-cream shadow-[inset_0_1px_0_0_rgba(244,239,231,0.32),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_6px_16px_-4px_rgba(0,0,0,0.65)] transition-[transform,box-shadow] duration-150 hover:-translate-y-px hover:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.38),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_10px_22px_-6px_rgba(0,0,0,0.75)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:translate-y-px active:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.2),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_3px_9px_-4px_rgba(0,0,0,0.6)]"
             >
               Mach mit
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="square"
+              class="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+              aria-hidden="true"
+            >
+              <path d="M4 12h15M13 6l6 6-6 6" />
+            </svg>
             </a>
           </div>
         </div>
@@ -872,10 +875,15 @@
       nicht in eine Zeile, und untereinander wäre die Leiste doppelt so hoch —
       dann deckt sie den Text zu, den sie überlagert.
 
-      Sie blendet sich erst ein, wenn der Auftakt durchgescrollt ist. Über dem
-      Hero verdeckte sie das Motiv, und ein Handlungsaufruf, bevor jemand weiß,
-      worum es geht, hat ohnehin keinen Zug. Damit der Aufruf trotzdem sofort da
-      ist, steht „Mach mit“ zusätzlich in Abschnitt 01 im Satzbild.
+      **Sie steht von Anfang an.** Vorher fuhr sie erst ein, wenn der Auftakt
+      durchgescrollt war — mit dem Argument, ein Handlungsaufruf habe keinen Zug,
+      bevor jemand weiß, worum es geht. Seit der Zeitungsartikel Leute herschickt,
+      stimmt die Annahme nicht mehr: Wer kommt, weiß es schon und soll nicht erst
+      scrollen müssen. Der Preis ist, dass sie den unteren Rand des Hero-Motivs
+      überlagert. Bewusst in Kauf genommen.
+
+      Nebeneffekt: Ohne JavaScript war die Leiste früher unsichtbar. Jetzt steht
+      sie im HTML und funktioniert immer.
 
       `env(safe-area-inset-bottom)`: Auf iPhones ohne Knopf läge die Leiste
       sonst unter dem Home-Indikator. Der Footer bekommt entsprechend
@@ -883,7 +891,7 @@
     -->
     <div
       id="aktionsleiste"
-      class="fixed inset-x-0 bottom-0 z-20 translate-y-full border-t border-cream/10 bg-night/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-md transition-transform duration-300 ease-out data-[sichtbar=true]:translate-y-0"
+      class="fixed inset-x-0 bottom-0 z-20 border-t border-cream/10 bg-night/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-md"
     >
       <div
         class="mx-auto flex max-w-[1600px] items-center justify-between gap-5 px-5 py-3 sm:px-8"
@@ -895,11 +903,33 @@
         </p>
 
         <div class="flex w-full items-center gap-2.5 md:w-auto">
+          <!--
+            Plastisch statt flach: Verlauf nach unten, helle Kante oben,
+            geworfener Schatten. Beim Zeigen hebt er sich, beim Drücken sinkt er
+            ein. Das ist der einzige Knopf der Seite mit dieser Behandlung — es
+            ist die eine Handlung, um die es geht.
+
+            Der Verlauf läuft von brand-500 nach brand-700, nicht von brand-400
+            aus: Auf brand-400 kommt cream nur auf 3,4:1 und fiele unter das
+            WCAG-AA-Minimum. Deshalb reagiert auch der Hover über Schatten und
+            Versatz, nicht über eine hellere Fläche.
+          -->
           <a
             href="https://mitmachen.tugaesser.de"
-            class="flex min-h-[46px] flex-1 items-center justify-center gap-3 bg-brand-500 px-5 font-mono text-[12px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:bg-brand-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:bg-brand-600 md:flex-none md:px-7"
+            class="group flex min-h-[52px] flex-1 items-center justify-center gap-2.5 bg-gradient-to-b from-brand-500 to-brand-700 px-6 font-mono text-[13px] uppercase tracking-[0.18em] text-cream shadow-[inset_0_1px_0_0_rgba(244,239,231,0.32),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_6px_16px_-4px_rgba(0,0,0,0.65)] transition-[transform,box-shadow] duration-150 hover:-translate-y-px hover:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.38),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_10px_22px_-6px_rgba(0,0,0,0.75)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:translate-y-px active:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.2),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_3px_9px_-4px_rgba(0,0,0,0.6)] md:flex-none md:px-8"
           >
             Mach mit
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="square"
+              class="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+              aria-hidden="true"
+            >
+              <path d="M4 12h15M13 6l6 6-6 6" />
+            </svg>
           </a>
 
           <a
@@ -907,7 +937,7 @@
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Folg uns auf Instagram"
-            class="flex min-h-[46px] w-[46px] shrink-0 items-center justify-center gap-3 border border-cream/25 font-mono text-[12px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:border-cream hover:bg-cream hover:text-night focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:bg-cream/85 md:w-auto md:px-5"
+            class="flex min-h-[52px] w-[52px] shrink-0 items-center justify-center gap-3 border border-cream/25 font-mono text-[12px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:border-cream hover:bg-cream hover:text-night focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:bg-cream/85 md:w-auto md:px-5"
           >
             <svg
               viewBox="0 0 24 24"
@@ -1005,27 +1035,11 @@
         }
 
         /*
-          Aktionsleiste einblenden, sobald der Auftakt durchgescrollt ist.
-
-          Beobachtet wird der Hero selbst: Solange er noch zu sehen ist, bleibt
-          die Leiste unten weg und verdeckt das Motiv nicht. Ein
-          IntersectionObserver reicht hier — anders als bei der Phasenmarkierung
-          gibt es nur eine Schwelle, nichts zu entscheiden.
-
-          Ohne JavaScript bleibt die Leiste verborgen. Das ist vertretbar: Der
-          Instagram-Knopf in Abschnitt 01 steht im HTML und funktioniert immer.
+          Hier stand ein IntersectionObserver, der die Aktionsleiste erst
+          einblendete, sobald der Auftakt durchgescrollt war. Er ist weg: Die
+          Leiste steht jetzt von Anfang an im HTML und braucht kein Skript mehr.
+          Begründung im Kommentar an der Leiste selbst.
         */
-        const leiste = document.getElementById('aktionsleiste');
-        const hero = document.getElementById('phase-01');
-
-        if (leiste && hero) {
-          new IntersectionObserver(
-            ([eintrag]) => {
-              leiste.dataset.sichtbar = String(!eintrag.isIntersecting);
-            },
-            { threshold: 0 }
-          ).observe(hero);
-        }
       })();
     </script>
   </body>

@@ -14,10 +14,10 @@ Design-Schleife).
 ## Aktueller Stand
 
 **Teaser-Seite**: `index.html` — Hero-Foto, Claim „Tugässer, schaffen wir's." /
-„Man wird ja wohl noch träumen dürfen." plus „Mach mit" auf
-[mitmachen.tugaesser.de](https://mitmachen.tugaesser.de) und Instagram-CTA auf
-[@tugaesser](https://www.instagram.com/tugaesser/). Keine Navigation, keine
-Unterseiten, kein Impressum.
+„Man wird ja wohl noch träumen dürfen." plus Instagram-CTA auf
+[@tugaesser](https://www.instagram.com/tugaesser/). Die Handlung der Seite ist
+„Mach mit" auf [mitmachen.tugaesser.de](https://mitmachen.tugaesser.de), in der
+Aktionsleiste unten. Keine Navigation, keine Unterseiten, kein Impressum.
 
 **Abschnitt „03 Die Idee" spricht seit 25.08.2026 in der Gegenwart.** Solange die
 Mitmachseite Ausblick war, hieß es dort „In den nächsten Wochen bekommt diese
@@ -141,29 +141,40 @@ tritt aber optisch zurück.
 - **Gefüllt rot, nicht umrandet — und zwar „Mach mit".** Rot ist der einzige
   Akzent der Seite und wird sparsam gesetzt; die eine Handlung, um die es geht,
   ist genau der Platz dafür. Instagram steht daneben umrandet.
-- **Unter `md` schrumpft Instagram auf sein Symbol** (46×46). „Mach mit" und
+- **Plastisch, nicht flach.** Verlauf `from-brand-500 to-brand-700`, eine helle
+  Kante innen oben und eine dunkle innen unten, dazu ein geworfener Schatten.
+  Beim Zeigen hebt der Knopf sich um 1px und der Schatten wächst, beim Drücken
+  sinkt er ein. Ein Pfeil rechts macht sichtbar, dass es weitergeht. Das ist der
+  **einzige** Knopf der Seite mit dieser Behandlung — sonst wäre es kein Signal
+  mehr.
+- **Der Verlauf beginnt bei brand-500, nicht bei brand-400.** Auf `brand-400`
+  kommt cream nur auf 3,4:1 und fällt unter das WCAG-AA-Minimum von 4,5. Aus
+  demselben Grund reagiert der Hover über Schatten und Versatz statt über eine
+  hellere Fläche.
+- **Unter `md` schrumpft Instagram auf sein Symbol** (52×52). „Mach mit" und
   „Folg uns auf Instagram" nebeneinander passen bei 390px nicht in eine Zeile,
   und untereinander wäre die Leiste doppelt so hoch — dann deckt sie den Text
   zu, den sie überlagert.
-- Die Knöpfe in Abschnitt 01 bleiben **beide umrandet** — sie sind Teil des
-  Satzbilds, die Leiste ist Bedienung. Die Rangfolge macht dort die Randstärke:
-  „Mach mit" auf `border-cream`, Instagram auf `border-cream/25`. Beide
-  nebeneinander stehen zu lassen ist Absicht, keine Doppelung.
-- **„Mach mit" steht an drei Stellen**: in Abschnitt 01 (weil die Leiste erst
-  nach dem Auftakt einfährt und vorher niemand einen Aufruf sähe), in der Leiste
-  und am Ende von Abschnitt 03, wo die Argumentation schließt.
-- **Sie fährt erst ein, wenn der Auftakt durchgescrollt ist** (gemessen: sobald
-  die Unterkante von `#phase-01` den oberen Rand passiert). Über dem Hero
-  verdeckte sie das Motiv, und ein Handlungsaufruf, bevor jemand weiß, worum es
-  geht, hat keinen Zug. Soll sie von Anfang an stehen, reicht es, den
-  IntersectionObserver zu entfernen und `data-sichtbar="true"` fest zu setzen.
+- **Sie steht von Anfang an** (seit 25.08.2026). Vorher fuhr sie erst ein, wenn
+  `#phase-01` durchgescrollt war — mit dem Argument, ein Handlungsaufruf habe
+  keinen Zug, bevor jemand weiß, worum es geht. Seit der Zeitungsartikel Leute
+  herschickt, stimmt die Annahme nicht mehr: Wer kommt, weiß es schon. Der Preis
+  ist, dass sie den unteren Rand des Hero-Motivs überlagert; bewusst in Kauf
+  genommen. Der IntersectionObserver ist ersatzlos entfallen.
+- **In Abschnitt 01 steht nur noch Instagram.** Dort stand kurzzeitig auch ein
+  „Mach mit" — als Ausgleich dafür, dass die Leiste erst später einfuhr. Seit sie
+  von Anfang an steht, lägen auf dem Handy beide Knöpfe direkt übereinander.
+  Nicht wieder einbauen, ohne vorher am 390px-Screenshot zu prüfen.
+- **„Mach mit" steht an zwei Stellen**: in der Leiste und am Ende von
+  Abschnitt 03, wo die Argumentation schließt. Der zweite ist derselbe plastische
+  Knopf — hinter dem Trennstrich endet das Satzbild, ab dort ist es Bedienung.
 - **Der Footer hat `pb-32`, nicht `py-5`.** Sonst deckt die Leiste den
-  KI-Transparenzhinweis zu — ausgerechnet den Text, der sichtbar sein muss.
-  Gemessen bleiben 57px Luft. Wird die Leiste höher, muss der Wert mit.
+  KI-Transparenzhinweis zu — ausgerechnet den Text, der sichtbar sein muss. Bei
+  52px Knopfhöhe plus `py-3` ist die Leiste 76px hoch, es bleiben 52px Luft.
+  Wird sie höher, muss der Wert mit.
 - **`pb-[env(safe-area-inset-bottom)]`**: Auf iPhones ohne Knopf läge die Leiste
   sonst unter dem Home-Indikator.
-- Ohne JavaScript bleibt die Leiste verborgen. Vertretbar, weil der
-  Instagram-Knopf in Abschnitt 01 im HTML steht und immer funktioniert.
+- Die Leiste braucht **kein JavaScript** mehr und steht auch ohne im HTML.
 
 Inhaltlicher Arbeitsstand und Bildmaterial liegen im Schwesterrepo unter
 `../its_my_life/projects/Ventures/project_tugaesser/` — vor allem
