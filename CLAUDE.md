@@ -14,9 +14,16 @@ Design-Schleife).
 ## Aktueller Stand
 
 **Teaser-Seite**: `index.html` — Hero-Foto, Claim „Tugässer, schaffen wir's." /
-„Man wird ja wohl noch träumen dürfen." plus Instagram-CTA auf
+„Man wird ja wohl noch träumen dürfen." plus „Mach mit" auf
+[mitmachen.tugaesser.de](https://mitmachen.tugaesser.de) und Instagram-CTA auf
 [@tugaesser](https://www.instagram.com/tugaesser/). Keine Navigation, keine
 Unterseiten, kein Impressum.
+
+**Abschnitt „03 Die Idee" spricht seit 25.08.2026 in der Gegenwart.** Solange die
+Mitmachseite Ausblick war, hieß es dort „In den nächsten Wochen bekommt diese
+Seite zwei Dinge" und „Bis die Anmeldung steht, läuft alles über Instagram". Beides
+ist überholt — die Marginalie heißt jetzt „Was jetzt geht" statt „Was kommt".
+Wenn sich an der Mitmachseite etwas ändert, gehört dieser Abschnitt mitgeprüft.
 
 **Abschnitt „02 Bestandsaufnahme“** (`#bestand`, seit 13.08.2026): das Fahnenbild,
 dann **nur Text**. Überschrift „Nach dem Traum schauen wir jetzt nüchtern ins
@@ -121,16 +128,30 @@ Klick führt zum Neuesten, die Erzählung bleibt in ihrer Reihenfolge.
 
 ## Aktionsleiste unten
 
-Das Gegenstück zur Kopfleiste: eine fixierte Leiste am unteren Rand mit dem
-Instagram-Knopf. Vorher stand der Knopf nur in Abschnitt 01 und war ab der
+Das Gegenstück zur Kopfleiste: eine fixierte Leiste am unteren Rand mit der
+Handlung. Vorher stand der Knopf nur in Abschnitt 01 und war ab der
 Bestandsaufnahme aus dem Blick — wer den ganzen Text las, hätte zum Handeln
-zurückscrollen müssen. Die Seite hat genau ein Ziel, und das gehört erreichbar.
+zurückscrollen müssen. Die Seite hat ein Ziel, und das gehört erreichbar.
 
-- **Gefüllt rot, nicht umrandet.** Rot ist der einzige Akzent der Seite und wird
-  sparsam gesetzt; die eine Handlung, um die es geht, ist genau der Platz dafür.
-  Der Knopf in Abschnitt 01 bleibt umrandet — er ist Teil des Satzbilds, die
-  Leiste ist Bedienung. Beide nebeneinander stehen zu lassen ist Absicht, keine
-  Doppelung.
+**Seit 25.08.2026 heißt dieses Ziel „Mach mit", nicht mehr „Follower".** Die
+Mitmachseite unter `mitmachen.tugaesser.de` steht; der Eintrag dort ist die
+Handlung, um die es geht. Instagram ist die zweite Wahl und bleibt sichtbar,
+tritt aber optisch zurück.
+
+- **Gefüllt rot, nicht umrandet — und zwar „Mach mit".** Rot ist der einzige
+  Akzent der Seite und wird sparsam gesetzt; die eine Handlung, um die es geht,
+  ist genau der Platz dafür. Instagram steht daneben umrandet.
+- **Unter `md` schrumpft Instagram auf sein Symbol** (46×46). „Mach mit" und
+  „Folg uns auf Instagram" nebeneinander passen bei 390px nicht in eine Zeile,
+  und untereinander wäre die Leiste doppelt so hoch — dann deckt sie den Text
+  zu, den sie überlagert.
+- Die Knöpfe in Abschnitt 01 bleiben **beide umrandet** — sie sind Teil des
+  Satzbilds, die Leiste ist Bedienung. Die Rangfolge macht dort die Randstärke:
+  „Mach mit" auf `border-cream`, Instagram auf `border-cream/25`. Beide
+  nebeneinander stehen zu lassen ist Absicht, keine Doppelung.
+- **„Mach mit" steht an drei Stellen**: in Abschnitt 01 (weil die Leiste erst
+  nach dem Auftakt einfährt und vorher niemand einen Aufruf sähe), in der Leiste
+  und am Ende von Abschnitt 03, wo die Argumentation schließt.
 - **Sie fährt erst ein, wenn der Auftakt durchgescrollt ist** (gemessen: sobald
   die Unterkante von `#phase-01` den oberen Rand passiert). Über dem Hero
   verdeckte sie das Motiv, und ein Handlungsaufruf, bevor jemand weiß, worum es

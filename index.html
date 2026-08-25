@@ -70,7 +70,7 @@
       jedes Besuchers dorthin. Erzeugt von fetch-fonts.mjs.
     -->
     <link rel="stylesheet" href="fonts/fonts.css" />
-    <link rel="stylesheet" href="tailwind.css?v=cf3236ff" />
+    <link rel="stylesheet" href="tailwind.css?v=c4e34233" />
   </head>
 
   <body class="bg-night font-body text-cream antialiased">
@@ -264,27 +264,44 @@
             >
               Neugierig?
             </p>
-            <a
-              href="https://www.instagram.com/tugaesser/"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="mt-3.5 inline-flex items-center gap-3 border border-cream/25 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:border-cream hover:bg-cream hover:text-night focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:bg-cream/85"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                class="h-4 w-4"
-                aria-hidden="true"
+            <!--
+              Zwei Knöpfe, beide umrandet: Das Satzbild bleibt redaktionell, das
+              gefüllte Rot bleibt der Leiste vorbehalten. Die Rangfolge macht
+              stattdessen die Randstärke — „Mach mit“ steht auf voller Deckkraft,
+              Instagram auf cream/25. Ohne diesen Knopf sähe niemand einen
+              Mitmach-Aufruf, bevor er den Auftakt durchgescrollt hat; die Leiste
+              unten fährt erst danach ein.
+            -->
+            <div class="mt-3.5 flex flex-wrap items-center gap-3">
+              <a
+                href="https://mitmachen.tugaesser.de"
+                class="inline-flex items-center border border-cream px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:bg-cream hover:text-night focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:bg-cream/85"
               >
-                <rect x="3" y="3" width="18" height="18" />
-                <circle cx="12" cy="12" r="4.1" />
-                <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
-              </svg>
-              <span>Folg uns</span>
-              <span class="opacity-60">@tugaesser</span>
-            </a>
+                Mach mit
+              </a>
+
+              <a
+                href="https://www.instagram.com/tugaesser/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-3 border border-cream/25 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:border-cream hover:bg-cream hover:text-night focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:bg-cream/85"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  class="h-4 w-4"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="3" width="18" height="18" />
+                  <circle cx="12" cy="12" r="4.1" />
+                  <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
+                </svg>
+                <span>Folg uns</span>
+                <span class="opacity-60">@tugaesser</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -740,24 +757,25 @@
         Wie kommen wir zusammen?
       </p>
 
-      <!-- Was kommt -->
+      <!-- Was jetzt geht — hiess "Was kommt", solange die Mitmachseite Ausblick war -->
       <div class="mt-14 grid gap-x-10 gap-y-4 lg:mt-16 lg:grid-cols-12">
         <p
           class="font-mono text-[12px] uppercase tracking-[0.22em] text-cream/55 lg:col-span-3"
         >
-          Was kommt
+          Was jetzt geht
         </p>
         <div class="lg:col-span-8 lg:col-start-4">
           <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
-            In den nächsten Wochen bekommt diese Seite zwei Dinge. Erstens eine
-            Anmeldung: Du trägst ein, was du einbringen kannst und willst —
-            mitdenken, mitbrauen, Geräte, Räume, oder einfach probieren und
-            hinterher ehrlich sagen, was du davon hältst.
+            Dafür gibt es ab jetzt zwei Wege. Erstens die Anmeldung: Du trägst
+            ein, was du einbringen kannst und willst — mitdenken, mitbrauen,
+            Geräte, Räume, oder einfach probieren und hinterher ehrlich sagen,
+            was du davon hältst. Vereine und Betriebe können sich genauso
+            eintragen wie einzelne Leute.
           </p>
           <p
             class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
           >
-            Zweitens eine offene Ideensammlung. Dort kommt alles hinein, was dir
+            Zweitens die offene Ideensammlung. Dort kommt alles hinein, was dir
             dazu einfällt: wie es am Ende aussehen soll, was dafür gebraucht
             wird, was wir vermeiden sollten. Aus allen Einträgen entsteht eine
             erste sortierte Liste der nötigen Schritte. Das Zusammenfassen
@@ -784,7 +802,9 @@
             <p
               class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
             >
-              Bis die Anmeldung steht, läuft alles über
+              Beides steht offen — eintragen kostet zwei Minuten, die
+              Ideensammlung nicht mal deinen Namen. Was sonst passiert, siehst du
+              auf
               <a
                 href="https://www.instagram.com/tugaesser/"
                 target="_blank"
@@ -793,6 +813,18 @@
                 >Instagram</a
               >.
             </p>
+
+            <!--
+              Der Abschluss der Argumentation ist der stärkste Ort für die
+              Handlung: Wer bis hierher gelesen hat, weiß, worum es geht.
+              Umrandet wie in Abschnitt 01 — das gefüllte Rot bleibt der Leiste.
+            -->
+            <a
+              href="https://mitmachen.tugaesser.de"
+              class="mt-10 inline-flex items-center border border-cream px-7 py-4 font-mono text-[12px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:bg-cream hover:text-night focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:bg-cream/85"
+            >
+              Mach mit
+            </a>
           </div>
         </div>
       </div>
@@ -829,18 +861,21 @@
     <!--
       Aktionsleiste — das Gegenstück zur Kopfleiste am unteren Rand.
 
-      Die Seite hat genau ein Ziel: Follower. Der Instagram-Knopf stand vorher
-      nur in Abschnitt 01 und war ab der Bestandsaufnahme aus dem Blick — wer
-      den ganzen Text las, hätte zum Handeln zurückscrollen müssen.
+      **Das Ziel hat gewechselt.** Bis die Mitmachseite stand, war Instagram die
+      einzige Handlung; seither ist es der Eintrag auf mitmachen.tugaesser.de.
+      Deshalb trägt „Mach mit“ jetzt das gefüllte Rot — den einzigen Akzent der
+      Seite, sparsam gesetzt und der einen Handlung vorbehalten. Instagram steht
+      umrandet daneben und ist damit zweite Wahl, nicht weg.
 
-      **Gefüllt statt umrandet.** Rot ist der einzige Akzent der Seite und wird
-      sparsam gesetzt; die eine Handlung, um die es hier geht, ist genau der
-      Platz dafür. Der Knopf in Abschnitt 01 bleibt umrandet und damit
-      redaktionell — er ist Teil des Satzbilds, diese Leiste ist Bedienung.
+      Auf schmalen Bildschirmen schrumpft der Instagram-Knopf auf sein Symbol.
+      „Mach mit“ und „Folg uns auf Instagram“ nebeneinander passen bei 390px
+      nicht in eine Zeile, und untereinander wäre die Leiste doppelt so hoch —
+      dann deckt sie den Text zu, den sie überlagert.
 
       Sie blendet sich erst ein, wenn der Auftakt durchgescrollt ist. Über dem
       Hero verdeckte sie das Motiv, und ein Handlungsaufruf, bevor jemand weiß,
-      worum es geht, hat ohnehin keinen Zug.
+      worum es geht, hat ohnehin keinen Zug. Damit der Aufruf trotzdem sofort da
+      ist, steht „Mach mit“ zusätzlich in Abschnitt 01 im Satzbild.
 
       `env(safe-area-inset-bottom)`: Auf iPhones ohne Knopf läge die Leiste
       sonst unter dem Home-Indikator. Der Footer bekommt entsprechend
@@ -859,26 +894,36 @@
           Ein neues Bier belebt Heilbronn
         </p>
 
-        <a
-          href="https://www.instagram.com/tugaesser/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="flex w-full items-center justify-center gap-3 bg-brand-500 px-5 py-3.5 font-mono text-[12px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:bg-brand-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:bg-brand-600 md:w-auto"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            class="h-4 w-4 shrink-0"
-            aria-hidden="true"
+        <div class="flex w-full items-center gap-2.5 md:w-auto">
+          <a
+            href="https://mitmachen.tugaesser.de"
+            class="flex min-h-[46px] flex-1 items-center justify-center gap-3 bg-brand-500 px-5 font-mono text-[12px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:bg-brand-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:bg-brand-600 md:flex-none md:px-7"
           >
-            <rect x="3" y="3" width="18" height="18" />
-            <circle cx="12" cy="12" r="4.1" />
-            <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
-          </svg>
-          <span>Folg uns auf Instagram</span>
-        </a>
+            Mach mit
+          </a>
+
+          <a
+            href="https://www.instagram.com/tugaesser/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Folg uns auf Instagram"
+            class="flex min-h-[46px] w-[46px] shrink-0 items-center justify-center gap-3 border border-cream/25 font-mono text-[12px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:border-cream hover:bg-cream hover:text-night focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:bg-cream/85 md:w-auto md:px-5"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              class="h-4 w-4 shrink-0"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="18" height="18" />
+              <circle cx="12" cy="12" r="4.1" />
+              <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
+            </svg>
+            <span class="hidden md:inline">Folg uns</span>
+          </a>
+        </div>
       </div>
     </div>
 
