@@ -143,14 +143,33 @@ tritt aber optisch zurück.
   ist genau der Platz dafür. Instagram steht daneben umrandet.
 - **Plastisch, nicht flach.** Verlauf `from-brand-500 to-brand-700`, eine helle
   Kante innen oben und eine dunkle innen unten, dazu ein geworfener Schatten.
-  Beim Zeigen hebt der Knopf sich um 1px und der Schatten wächst, beim Drücken
-  sinkt er ein. Ein Pfeil rechts macht sichtbar, dass es weitergeht. Das ist der
-  **einzige** Knopf der Seite mit dieser Behandlung — sonst wäre es kein Signal
-  mehr.
+  Beim Drücken sinkt er ein. Ein Pfeil rechts macht sichtbar, dass es weitergeht.
+  Das ist der **einzige** Knopf der Seite mit dieser Behandlung — sonst wäre es
+  kein Signal mehr.
 - **Der Verlauf beginnt bei brand-500, nicht bei brand-400.** Auf `brand-400`
-  kommt cream nur auf 3,4:1 und fällt unter das WCAG-AA-Minimum von 4,5. Aus
-  demselben Grund reagiert der Hover über Schatten und Versatz statt über eine
-  hellere Fläche.
+  kommt cream nur auf 3,01:1 und fällt unter das WCAG-AA-Minimum von 4,5. Auch
+  brand-500 liegt mit 4,65:1 nur knapp darüber — **die Fläche hat nach oben
+  keinen Spielraum**, der Hover kann nicht über Aufhellen gehen.
+- **Der Hover kehrt die Farben um** (seit 26.08.2026): Fläche wird `cream`,
+  Schrift wird `brand-700`, 7,97:1. Der Knopf wird für den Moment zum
+  Bierdeckel-Papier. Kein Weichzeichner, kein Hub — der Farbwechsel ist das
+  Signal, und er schaltet hart um: Die Transition umfasst absichtlich nur
+  `transform` und `box-shadow`.
+
+  **Zwei verworfene Wege, damit sie nicht wiederkommen.** Erst hob sich der
+  Knopf um 1 px und ein schwarzer Schlagschatten wuchs — auf `night` ist das
+  dunkel auf dunkel, im Screenshot-Vergleich war praktisch **kein Unterschied**
+  zu sehen. Dann ein weicher Schein in Markenrot: deutlich sichtbar, aber ein
+  Fremdkörper. Auf einer Seite ohne einen einzigen Radius, mit harten Kanten und
+  Mono-Versalien, gehört keine diffuse Leuchtwolke.
+
+  **Die Lehre für den nächsten Effekt hier:** „deutlich" und „passend" sind zwei
+  Prüfungen, nicht eine. Der Screenshot beantwortet nur die erste. Für die
+  zweite hilft, die Kandidaten nebeneinanderzulegen — dort fällt sofort auf, was
+  nicht dazugehört.
+- **Hover und Tastaturfokus bleiben unterscheidbar.** Beim Hover wird die
+  **Fläche** cream, beim Fokus nur ein abgesetzter Rahmen um die weiterhin rote
+  Fläche. Am Screenshot geprüft.
 - **Unter `md` schrumpft Instagram auf sein Symbol** (52×52). „Mach mit" und
   „Folg uns auf Instagram" nebeneinander passen bei 390px nicht in eine Zeile,
   und untereinander wäre die Leiste doppelt so hoch — dann deckt sie den Text

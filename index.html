@@ -70,7 +70,7 @@
       jedes Besuchers dorthin. Erzeugt von fetch-fonts.mjs.
     -->
     <link rel="stylesheet" href="fonts/fonts.css" />
-    <link rel="stylesheet" href="tailwind.css?v=e7a4ec88" />
+    <link rel="stylesheet" href="tailwind.css?v=8131939f" />
   </head>
 
   <body class="bg-night font-body text-cream antialiased">
@@ -813,7 +813,7 @@
             -->
             <a
               href="https://mitmachen.tugaesser.de"
-              class="group mt-10 inline-flex min-h-[58px] items-center gap-2.5 bg-gradient-to-b from-brand-500 to-brand-700 px-9 font-mono text-[13px] uppercase tracking-[0.18em] text-cream shadow-[inset_0_1px_0_0_rgba(244,239,231,0.32),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_6px_16px_-4px_rgba(0,0,0,0.65)] transition-[transform,box-shadow] duration-150 hover:-translate-y-px hover:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.38),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_10px_22px_-6px_rgba(0,0,0,0.75)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:translate-y-px active:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.2),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_3px_9px_-4px_rgba(0,0,0,0.6)]"
+              class="group mt-10 inline-flex min-h-[58px] items-center gap-2.5 bg-gradient-to-b from-brand-500 to-brand-700 px-9 font-mono text-[13px] uppercase tracking-[0.18em] text-cream shadow-[inset_0_1px_0_0_rgba(244,239,231,0.32),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_6px_16px_-4px_rgba(0,0,0,0.65)] transition-[transform,box-shadow] duration-150 hover:from-cream hover:to-cream hover:text-brand-700 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.9),inset_0_-1px_0_0_rgba(0,0,0,0.18),0_6px_16px_-4px_rgba(0,0,0,0.65)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:translate-y-px active:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.2),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_3px_9px_-4px_rgba(0,0,0,0.6)]"
             >
               Mach mit
             <svg
@@ -822,7 +822,7 @@
               stroke="currentColor"
               stroke-width="2"
               stroke-linecap="square"
-              class="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+              class="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-1"
               aria-hidden="true"
             >
               <path d="M4 12h15M13 6l6 6-6 6" />
@@ -910,13 +910,28 @@
             ist die eine Handlung, um die es geht.
 
             Der Verlauf läuft von brand-500 nach brand-700, nicht von brand-400
-            aus: Auf brand-400 kommt cream nur auf 3,4:1 und fiele unter das
-            WCAG-AA-Minimum. Deshalb reagiert auch der Hover über Schatten und
-            Versatz, nicht über eine hellere Fläche.
+            aus: Auf brand-400 kommt cream nur auf 3,01:1 und fiele unter das
+            WCAG-AA-Minimum von 4,5:1. Auch brand-500 liegt mit 4,65:1 nur knapp
+            darüber — **die Fläche hat nach oben keinen Spielraum.**
+
+            Der Hover kehrt deshalb die beiden Farben um, statt aufzuhellen:
+            Fläche wird cream, Schrift wird brand-700 — 7,97:1. Beides sind
+            Farben, die die Seite ohnehin trägt; der Knopf wird für den Moment
+            zum Bierdeckel-Papier.
+
+            Zwei Wege, die hier zuerst standen und beide verworfen sind: Ein
+            schwarzer Schlagschatten, der wächst, ist auf night unsichtbar —
+            dunkel auf dunkel. Und ein weicher Schein in Markenrot war zwar
+            deutlich, gehörte aber nicht hierher: Auf einer Seite ohne einen
+            einzigen Radius ist eine diffuse Leuchtwolke ein Fremdkörper.
+
+            **Kein Weichzeichner, kein Hub.** Der Farbwechsel ist das Signal,
+            und er schaltet hart um statt zu überblenden — die Transition
+            umfasst bewusst nur transform und box-shadow.
           -->
           <a
             href="https://mitmachen.tugaesser.de"
-            class="group flex min-h-[52px] flex-1 items-center justify-center gap-2.5 bg-gradient-to-b from-brand-500 to-brand-700 px-6 font-mono text-[13px] uppercase tracking-[0.18em] text-cream shadow-[inset_0_1px_0_0_rgba(244,239,231,0.32),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_6px_16px_-4px_rgba(0,0,0,0.65)] transition-[transform,box-shadow] duration-150 hover:-translate-y-px hover:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.38),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_10px_22px_-6px_rgba(0,0,0,0.75)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:translate-y-px active:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.2),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_3px_9px_-4px_rgba(0,0,0,0.6)] md:flex-none md:px-8"
+            class="group flex min-h-[52px] flex-1 items-center justify-center gap-2.5 bg-gradient-to-b from-brand-500 to-brand-700 px-6 font-mono text-[13px] uppercase tracking-[0.18em] text-cream shadow-[inset_0_1px_0_0_rgba(244,239,231,0.32),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_6px_16px_-4px_rgba(0,0,0,0.65)] transition-[transform,box-shadow] duration-150 hover:from-cream hover:to-cream hover:text-brand-700 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.9),inset_0_-1px_0_0_rgba(0,0,0,0.18),0_6px_16px_-4px_rgba(0,0,0,0.65)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:translate-y-px active:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.2),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_3px_9px_-4px_rgba(0,0,0,0.6)] md:flex-none md:px-8"
           >
             Mach mit
             <svg
@@ -925,7 +940,7 @@
               stroke="currentColor"
               stroke-width="2"
               stroke-linecap="square"
-              class="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+              class="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-1"
               aria-hidden="true"
             >
               <path d="M4 12h15M13 6l6 6-6 6" />
