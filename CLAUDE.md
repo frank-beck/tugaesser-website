@@ -126,22 +126,14 @@ Klick führt zum Neuesten, die Erzählung bleibt in ihrer Reihenfolge.
   02 Bestandsaufnahme“ plus Marke plus Uhr passt bei 390px nicht in eine Zeile.
   Die Uhr ist Dekor, die Navigation nicht.
 
-## Wo „Mach mit" steht — zwei Orte, nie beide
+## Wo „Mach mit" steht — an beiden Orten
 
-**Entscheidend ist die Eingabeart, nicht die Breite** (`maus:` in
-`tailwind.config.js` = `pointer: fine` **und** `min-width: 768px`):
+Der Knopf steht **oben in der Kopfleiste und unten in der Aktionsleiste**, auf
+allen Geräten. Nicht entweder/oder: Der obere ist die Absicherung für den
+unteren.
 
-| Gerät | „Mach mit" |
-|---|---|
-| Handy, Tablet, alles ohne Zeiger | in der **Kopfleiste oben** |
-| Zeiger und Fenster ≥ 768 px | in der **Aktionsleiste unten** |
-
-**Warum nicht einfach `md:`:** Ein iPhone im Querformat ist 844 px breit und läge
-über der Breakpoint-Grenze — es bekäme die untere Leiste zurück, die dort kaputt
-ist. `pointer: fine` trifft genau die Geräte, auf denen sie funktioniert.
-
-**Warum es die Trennung überhaupt gibt** (26.08.2026): Auf dem iPhone verschwand
-die untere Leiste beim Scrollen und blieb weg. Am Gerät gemessen:
+**Warum es den oberen gibt** (26.08.2026): Auf dem iPhone verschwand die untere
+Leiste beim Scrollen und blieb weg. Am Gerät gemessen:
 
 ```
 innerHeight      749
@@ -155,24 +147,37 @@ hier und ist wieder entfernt — sie konnte per Konstruktion nicht greifen. **Wa
 das Gerät nicht herausgibt, kann kein Skript ausgleichen.**
 
 `fixed top-0` ist davon nicht betroffen; die Kopfleiste saß auf jedem Gerätefoto
-korrekt. Deshalb wandert die Handlung dorthin, statt unten repariert zu werden.
+korrekt. Der untere Balken bleibt also samt seiner iOS-Schwäche, und der obere
+Knopf sorgt dafür, dass die Anmeldung trotzdem jederzeit erreichbar ist.
 
-**Nicht wieder nach unten verlegen, ohne auf einem echten iPhone zu scrollen.**
-Puppeteer und schmale Viewports zeigen den Fehler nicht — dort sieht die Seite
-tadellos aus. Genau deshalb ist er lange unbemerkt geblieben.
+**Den oberen Knopf nicht entfernen**, ohne den unteren auf einem echten iPhone zu
+prüfen. Puppeteer und schmale Viewports zeigen den Fehler nicht — dort sieht die
+Seite tadellos aus. Genau deshalb blieb er lange unbemerkt.
 
-**Zusammengehörige Werte:** Die Kopfleiste ist mit Knopf 55 px hoch, ohne 46 px.
-`pt-[55px] md:pt-[46px]` am Auftaktbild und die `scroll-mt`-Werte der drei Phasen
-hängen daran und müssen mitwandern, sonst liegt die Leiste auf dem Foto.
+**Zusammengehörige Werte:** Die Kopfleiste ist mit Knopf überall 55 px hoch
+(vorher 46). `pt-[55px]` am Auftaktbild und die drei `scroll-mt-[55px]` hängen
+daran und müssen mitwandern, sonst liegt die Leiste auf dem Foto.
 
-Auf dem Handy ist Instagram damit nicht mehr dauerhaft sichtbar — es steht dort
-weiterhin in Abschnitt 01 und 03. Bewusst: Platz für beides ist in der Kopfleiste
-nicht, und „Mach mit" ist die Handlung, um die es geht.
+## Knopfform
+
+- **Leicht abgerundet** (`rounded`, 4 px), seit 26.08.2026. Die Seite war vorher
+  vollständig radiusfrei; das gilt weiter für alle Flächen, Rahmen und Bilder —
+  **nur die Knöpfe und das Instagram-Zeichen sind ausgenommen.**
+- **Kein Pfeil.** Am „Mach mit" saß rechts ein Pfeil nach rechts. Er ist entfernt:
+  Er zeigt in keine Richtung, die es auf der Seite gibt, und trägt keine Aussage.
+- **Unten sind beide Knöpfe gleich breit.** „Mach mit" und „Folg uns" teilen sich
+  die Zeile hälftig (`flex-1`), ab `md` beide `min-w-[190px]`. Auf 390 px bleiben
+  rechnerisch 2 px Differenz durch Subpixel-Rundung — optisch nicht zu sehen.
+  Damit „Mach mit" dort nicht über seinen Anteil hinauswächst, sind Innenabstand
+  und Laufweite auf schmalen Bildschirmen kleiner (`px-3`, `tracking-[0.12em]`).
+- **„Folg uns" trägt immer Text und Zeichen.** Vorher schrumpfte er unter `md`
+  auf ein 52×52-Symbol. Das Instagram-Zeichen hat abgerundete Ecken
+  (`rx="5.4"`) — ohne sie war es ein Kasten mit Kreis, nicht wiedererkennbar.
 
 ## Aktionsleiste unten
 
-Gilt für Geräte mit Zeiger (siehe oben). Das Gegenstück zur Kopfleiste: eine
-fixierte Leiste am unteren Rand mit der Handlung. Vorher stand der Knopf nur in Abschnitt 01 und war ab der
+Das Gegenstück zur Kopfleiste: eine fixierte Leiste am unteren Rand mit der
+Handlung. Vorher stand der Knopf nur in Abschnitt 01 und war ab der
 Bestandsaufnahme aus dem Blick — wer den ganzen Text las, hätte zum Handeln
 zurückscrollen müssen. Die Seite hat ein Ziel, und das gehört erreichbar.
 

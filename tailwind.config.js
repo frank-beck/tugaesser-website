@@ -73,23 +73,4 @@ module.exports = {
       },
     },
   },
-
-  plugins: [
-    // `maus:` — echter Zeiger UND genug Platz.
-    //
-    // Steuert, wo „Mach mit" steht. Die untere Aktionsleiste ist auf iOS
-    // unbrauchbar (Begründung am Knopf in der Kopfleiste), also gibt es sie nur
-    // dort, wo `position: fixed; bottom: 0` verlässlich sitzt.
-    //
-    // Bewusst nicht nur `md:`. Ein iPhone im Querformat ist 844 px breit und
-    // läge damit über der Breakpoint-Grenze — es bekäme die kaputte Leiste
-    // zurück. `pointer: fine` trennt nach Eingabeart statt nach Breite und
-    // trifft genau die Geräte, auf denen es funktioniert.
-    //
-    // Die Breitenbedingung bleibt trotzdem: Am Schreibtisch mit schmalem
-    // Fenster wäre die Leiste zwar korrekt, aber zu eng.
-    ({ addVariant }) => {
-      addVariant('maus', '@media (pointer: fine) and (min-width: 768px)');
-    },
-  ],
 };

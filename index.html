@@ -70,7 +70,7 @@
       jedes Besuchers dorthin. Erzeugt von fetch-fonts.mjs.
     -->
     <link rel="stylesheet" href="fonts/fonts.css" />
-    <link rel="stylesheet" href="tailwind.css?v=30dbd6f6" />
+    <link rel="stylesheet" href="tailwind.css?v=92230d37" />
   </head>
 
   <body class="bg-night font-body text-cream antialiased">
@@ -102,7 +102,7 @@
       class="fixed inset-x-0 top-0 z-20 border-b border-cream/10 bg-night/70 backdrop-blur-md"
     >
       <div
-        class="mx-auto flex max-w-[1600px] items-center justify-between gap-3 px-5 py-2 font-mono text-[11px] uppercase tracking-[0.18em] sm:px-8 md:gap-4 md:py-3.5"
+        class="mx-auto flex max-w-[1600px] items-center justify-between gap-3 px-5 py-2 font-mono text-[11px] uppercase tracking-[0.18em] sm:px-8 md:gap-4"
       >
         <a
           href="#phase-01"
@@ -143,7 +143,7 @@
         </nav>
 
         <!--
-          „Mach mit" oben, aber nur auf schmalen Bildschirmen.
+          „Mach mit" auch oben — zusätzlich zur Leiste unten, nicht statt ihr.
 
           Die untere Aktionsleiste ist dort unbrauchbar: iOS Safari meldet einen
           Viewport, der hoeher ist als das, was es tatsaechlich anzeigt. Ein
@@ -154,29 +154,19 @@
           auch kein Skript sie ausgleichen.
 
           `fixed top-0` ist davon nicht betroffen — die Kopfleiste sass auf jedem
-          Geraetefoto korrekt. Deshalb wandert die Handlung dorthin, statt sie
-          unten zu reparieren.
+          Geraetefoto korrekt. Dieser Knopf ist deshalb die Absicherung: Die
+          untere Leiste bleibt, rutscht auf dem iPhone beim Scrollen aber weg.
+          Solange oben einer steht, ist die Anmeldung trotzdem immer erreichbar.
 
-          **Nicht wieder nach unten verlegen**, ohne vorher auf einem echten
-          iPhone zu scrollen. Puppeteer und schmale Viewports zeigen den Fehler
-          nicht, die Seite sieht dort tadellos aus.
+          **Diesen Knopf nicht entfernen**, ohne den unteren auf einem echten
+          iPhone zu pruefen. Puppeteer und schmale Viewports zeigen den Fehler
+          nicht — dort sieht die Seite tadellos aus.
         -->
         <a
           href="https://mitmachen.tugaesser.de"
-          class="group flex min-h-[38px] shrink-0 items-center gap-1.5 bg-gradient-to-b from-brand-500 to-brand-700 px-3.5 text-cream shadow-[inset_0_1px_0_0_rgba(244,239,231,0.32),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_3px_10px_-3px_rgba(0,0,0,0.7)] transition-[transform,box-shadow] duration-150 hover:from-cream hover:to-cream hover:text-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:translate-y-px maus:hidden"
+          class="group flex min-h-[38px] shrink-0 items-center gap-1.5 rounded bg-gradient-to-b from-brand-500 to-brand-700 px-3.5 text-cream shadow-[inset_0_1px_0_0_rgba(244,239,231,0.32),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_3px_10px_-3px_rgba(0,0,0,0.7)] transition-[transform,box-shadow] duration-150 hover:from-cream hover:to-cream hover:text-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:translate-y-px"
         >
           Mach mit
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="square"
-            class="h-3.5 w-3.5 shrink-0"
-            aria-hidden="true"
-          >
-            <path d="M4 12h15M13 6l6 6-6 6" />
-          </svg>
         </a>
 
         <span class="hidden text-cream/55 sm:inline">
@@ -206,7 +196,7 @@
       nicht als globales body-padding: Nur der Auftakt beginnt am Seitenanfang,
       alle folgenden Abschnitte liegen ohnehin unter der Leiste.
     -->
-    <figure id="phase-01" data-phase class="relative scroll-mt-[55px] pt-[55px] md:scroll-mt-[3.25rem] md:pt-[46px]">
+    <figure id="phase-01" data-phase class="relative scroll-mt-[55px] pt-[55px]">
       <!--
         Zwei Zuschnitte statt einer Sequenz.
 
@@ -324,7 +314,7 @@
                   class="h-4 w-4"
                   aria-hidden="true"
                 >
-                  <rect x="3" y="3" width="18" height="18" />
+                  <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.4" />
                   <circle cx="12" cy="12" r="4.1" />
                   <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
                 </svg>
@@ -357,7 +347,7 @@
     <figure
       id="phase-02"
       data-phase
-      class="relative scroll-mt-[55px] border-t border-cream/10 md:scroll-mt-[3.25rem]"
+      class="relative scroll-mt-[55px] border-t border-cream/10"
     >
       <!--
         Flacher als der Auftakt oben (dort 78dvh): Dieses Bild eröffnet einen
@@ -609,7 +599,7 @@
     <figure
       id="phase-03"
       data-phase
-      class="relative scroll-mt-[55px] border-t border-cream/10 md:scroll-mt-[3.25rem]"
+      class="relative scroll-mt-[55px] border-t border-cream/10"
     >
       <!--
         Gleiche Höhen wie Abschnitt 02 (3:2 hochkant, 62dvh quer) — beide sind
@@ -853,20 +843,9 @@
             -->
             <a
               href="https://mitmachen.tugaesser.de"
-              class="group mt-10 inline-flex min-h-[58px] items-center gap-2.5 bg-gradient-to-b from-brand-500 to-brand-700 px-9 font-mono text-[13px] uppercase tracking-[0.18em] text-cream shadow-[inset_0_1px_0_0_rgba(244,239,231,0.32),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_6px_16px_-4px_rgba(0,0,0,0.65)] transition-[transform,box-shadow] duration-150 hover:from-cream hover:to-cream hover:text-brand-700 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.9),inset_0_-1px_0_0_rgba(0,0,0,0.18),0_6px_16px_-4px_rgba(0,0,0,0.65)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:translate-y-px active:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.2),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_3px_9px_-4px_rgba(0,0,0,0.6)]"
+              class="group mt-10 inline-flex min-h-[58px] items-center gap-2.5 rounded bg-gradient-to-b from-brand-500 to-brand-700 px-9 font-mono text-[13px] uppercase tracking-[0.18em] text-cream shadow-[inset_0_1px_0_0_rgba(244,239,231,0.32),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_6px_16px_-4px_rgba(0,0,0,0.65)] transition-[transform,box-shadow] duration-150 hover:from-cream hover:to-cream hover:text-brand-700 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.9),inset_0_-1px_0_0_rgba(0,0,0,0.18),0_6px_16px_-4px_rgba(0,0,0,0.65)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:translate-y-px active:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.2),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_3px_9px_-4px_rgba(0,0,0,0.6)]"
             >
               Mach mit
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="square"
-              class="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-1"
-              aria-hidden="true"
-            >
-              <path d="M4 12h15M13 6l6 6-6 6" />
-            </svg>
             </a>
           </div>
         </div>
@@ -931,7 +910,7 @@
     -->
     <div
       id="aktionsleiste"
-      class="fixed inset-x-0 bottom-0 z-20 hidden border-t border-cream/10 bg-night/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-md maus:block"
+      class="fixed inset-x-0 bottom-0 z-20 border-t border-cream/10 bg-night/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-md"
     >
       <div
         class="mx-auto flex max-w-[1600px] items-center justify-between gap-5 px-5 py-3 sm:px-8"
@@ -971,20 +950,9 @@
           -->
           <a
             href="https://mitmachen.tugaesser.de"
-            class="group flex min-h-[52px] flex-1 items-center justify-center gap-2.5 bg-gradient-to-b from-brand-500 to-brand-700 px-6 font-mono text-[13px] uppercase tracking-[0.18em] text-cream shadow-[inset_0_1px_0_0_rgba(244,239,231,0.32),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_6px_16px_-4px_rgba(0,0,0,0.65)] transition-[transform,box-shadow] duration-150 hover:from-cream hover:to-cream hover:text-brand-700 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.9),inset_0_-1px_0_0_rgba(0,0,0,0.18),0_6px_16px_-4px_rgba(0,0,0,0.65)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:translate-y-px active:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.2),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_3px_9px_-4px_rgba(0,0,0,0.6)] md:flex-none md:px-8"
+            class="group flex min-h-[52px] flex-1 items-center justify-center gap-2.5 rounded bg-gradient-to-b from-brand-500 to-brand-700 px-3 font-mono text-[13px] uppercase tracking-[0.12em] text-cream sm:tracking-[0.18em] sm:px-6 shadow-[inset_0_1px_0_0_rgba(244,239,231,0.32),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_6px_16px_-4px_rgba(0,0,0,0.65)] transition-[transform,box-shadow] duration-150 hover:from-cream hover:to-cream hover:text-brand-700 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.9),inset_0_-1px_0_0_rgba(0,0,0,0.18),0_6px_16px_-4px_rgba(0,0,0,0.65)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:translate-y-px active:shadow-[inset_0_1px_0_0_rgba(244,239,231,0.2),inset_0_-1px_0_0_rgba(0,0,0,0.35),0_3px_9px_-4px_rgba(0,0,0,0.6)] md:min-w-[190px] md:flex-none md:px-8"
           >
             Mach mit
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="square"
-              class="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-1"
-              aria-hidden="true"
-            >
-              <path d="M4 12h15M13 6l6 6-6 6" />
-            </svg>
           </a>
 
           <a
@@ -992,7 +960,7 @@
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Folg uns auf Instagram"
-            class="flex min-h-[52px] w-[52px] shrink-0 items-center justify-center gap-3 border border-cream/25 font-mono text-[12px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:border-cream hover:bg-cream hover:text-night focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:bg-cream/85 md:w-auto md:px-5"
+            class="flex min-h-[52px] flex-1 items-center justify-center gap-2.5 rounded border border-cream/25 px-3 font-mono text-[12px] uppercase tracking-[0.12em] sm:tracking-[0.18em] text-cream transition-colors duration-150 hover:border-cream hover:bg-cream hover:text-night focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream active:bg-cream/85 md:min-w-[190px] md:flex-none md:px-5"
           >
             <svg
               viewBox="0 0 24 24"
@@ -1002,11 +970,11 @@
               class="h-4 w-4 shrink-0"
               aria-hidden="true"
             >
-              <rect x="3" y="3" width="18" height="18" />
+              <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.4" />
               <circle cx="12" cy="12" r="4.1" />
               <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
             </svg>
-            <span class="hidden md:inline">Folg uns</span>
+            <span>Folg uns</span>
           </a>
         </div>
       </div>
@@ -1104,9 +1072,9 @@
           749, Leiste rechnerisch bei 749, sichtbar nur ihre Oberkante. Was das
           Gerät nicht herausgibt, kann kein Skript ausgleichen.
 
-          Die Leiste erscheint jetzt nur noch auf Geräten mit echtem Zeiger
-          (`maus:` in tailwind.config.js); auf dem Handy sitzt „Mach mit" oben
-          in der Kopfleiste, wo `fixed` verlässlich ist.
+          Die Leiste bleibt trotzdem überall stehen — auf dem iPhone rutscht sie
+          beim Scrollen weg, aber „Mach mit" steht zusätzlich oben in der
+          Kopfleiste, wo `fixed` verlässlich ist.
         */
       })();
     </script>
