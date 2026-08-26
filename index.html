@@ -88,7 +88,7 @@
       jedes Besuchers dorthin. Erzeugt von fetch-fonts.mjs.
     -->
     <link rel="stylesheet" href="fonts/fonts.css" />
-    <link rel="stylesheet" href="tailwind.css?v=b846cd92" />
+    <link rel="stylesheet" href="tailwind.css?v=a452599d" />
   </head>
 
   <body class="bg-night font-body text-cream antialiased">
@@ -315,6 +315,7 @@
           -->
           <div class="mx-auto h-full max-w-[1600px] px-5 py-5 sm:px-8 sm:py-8">
             <p
+              data-parallax-satz
               class="max-w-[15ch] font-display text-[clamp(1.25rem,3.1vw,2.5rem)] font-bold leading-[1.04] tracking-[-0.035em] text-cream [text-shadow:0_2px_24px_rgba(10,13,20,0.85),0_1px_4px_rgba(10,13,20,0.6)]"
             >
               Ein Bier aus Heilbronn.<br />Für Heilbronn.
@@ -418,7 +419,7 @@
           >
             <div class="h-px w-full bg-cream/10" aria-hidden="true"></div>
             <p
-              class="mt-7 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/40"
+              class="mt-7 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/55"
             >
               Bleib dran
             </p>
@@ -558,8 +559,11 @@
 
           <h2
             class="mt-7 font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
+            data-zeilen
           >
-            Nach dem Traum<br />schauen wir jetzt<br />nüchtern ins Glas.
+            <span>Nach dem Traum</span>
+            <span>schauen wir jetzt</span>
+            <span>nüchtern ins Glas.</span>
           </h2>
         </div>
 
@@ -610,8 +614,10 @@
 
       <p
         class="mt-16 font-display text-[clamp(1.85rem,3.6vw,2.9rem)] font-bold leading-[1.1] tracking-[-0.035em] text-cream lg:mt-24"
+        data-zeilen
       >
-        Aus vielen wurden wenige,<br />aus wenigen keine.
+        <span>Aus vielen wurden wenige,</span>
+        <span>aus wenigen keine.</span>
       </p>
 
       <!-- Heute -->
@@ -644,8 +650,10 @@
 
       <p
         class="mt-16 font-display text-[clamp(1.85rem,3.6vw,2.9rem)] font-bold leading-[1.1] tracking-[-0.035em] text-cream lg:mt-24"
+        data-zeilen
       >
-        Heilbronner Bier gibt es.<br />Nur nicht aus Heilbronn.
+        <span>Heilbronner Bier gibt es.</span>
+        <span>Nur nicht aus Heilbronn.</span>
       </p>
 
       <!-- Anderswo -->
@@ -772,8 +780,10 @@
 
           <h2
             class="mt-7 font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
+            data-zeilen
           >
-            Drei Jahre<br />gebrodelt.
+            <span>Drei Jahre</span>
+            <span>gebrodelt.</span>
           </h2>
         </div>
 
@@ -804,10 +814,18 @@
         </div>
       </div>
 
+      <!--
+        Fester Umbruch statt `text-balance`: Der Satz trägt den Zeilen-Effekt
+        mit, und der braucht ansprechbare Zeilen. Der Umbruch sitzt an der
+        Sinnfuge — „Irgendwann und irgendwie“ ist das Zögern, „muss man ja
+        anfangen“ der Entschluss.
+      -->
       <p
-        class="mt-14 text-balance font-display text-[clamp(1.85rem,3.6vw,2.9rem)] font-bold leading-[1.05] tracking-[-0.035em] text-cream lg:mt-16"
+        class="mt-14 font-display text-[clamp(1.85rem,3.6vw,2.9rem)] font-bold leading-[1.05] tracking-[-0.035em] text-cream lg:mt-16"
+        data-zeilen
       >
-        Irgendwann und irgendwie muss man ja anfangen.
+        <span>Irgendwann und irgendwie</span>
+        <span>muss man ja anfangen.</span>
       </p>
 
       <!-- Was da ist -->
@@ -984,8 +1002,10 @@
 
           <h2
             class="mt-7 font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
+            data-zeilen
           >
-            Was fehlt,<br />bringst du mit.
+            <span>Was fehlt,</span>
+            <span>bringst du mit.</span>
           </h2>
         </div>
 

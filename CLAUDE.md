@@ -441,13 +441,75 @@ Inhaltliche Leitplanken für diesen Abschnitt, nicht wegoptimieren:
   fullPage-Screenshot ohne vorheriges Scrollen zeigt lazy-Bilder als Leerfläche —
   das ist ein Artefakt, kein Fehler. Erst durchscrollen, dann screenshotten.
 
+## Bewegung beim Scrollen
+
+Seit 26.08.2026 hat die Seite drei scroll-gebundene Effekte. **Alle liegen in
+`src/input.css` und sind dort ausführlich begründet** — mit Messwerten, mit den
+Sackgassen, die davor standen, und mit den Grenzen, die nicht überschritten
+werden dürfen. Wer daran arbeitet, liest zuerst dort.
+
+| Was | Wo | Kurz |
+|---|---|---|
+| Der Satz auf dem Auftaktbild bleibt zurück | `[data-parallax-satz]` | 72 px über den Scrollweg |
+| Zeilen großer Sätze richten sich aus | `[data-zeilen]` | gestaffelt bis 46 % der Zeilenbreite, endet bündig |
+| Der Grund wird heller | `body`, beide Leisten | `#0A0D14` → `#0E2143` linear über die Seite |
+
+Gemeinsame Bauweise, die für jeden weiteren Effekt gelten soll:
+
+- **CSS-only über `animation-timeline`**, kein Scroll-Handler. Die Bewegung liegt
+  im Compositor, es gibt kein Zurückrechnen pro Scroll-Ereignis.
+- **`@supports (animation-timeline: …)` um jeden Effekt.** Wo der Browser das
+  nicht kennt, steht die Seite still wie vorher — nicht kaputt, nur ruhig.
+- **`prefers-reduced-motion: no-preference` um jeden Effekt**, die Aufhellung
+  eingeschlossen.
+- **`view()` misst gegen den nächsten Scrollport.** Ein `overflow: hidden` im
+  Elternpfad hängt die Timeline still um — beim ersten Parallax-Versuch stand
+  der Fortschritt darum messbar konstant bei 0,5. `clip` erzeugt keinen
+  Scrollport und ist deshalb das Mittel der Wahl, wenn etwas abgefangen werden
+  muss.
+- **Kein `0%` in `animation-range`.** cssnano kürzt es zu `0`, und Chrome parst
+  den Bereich dann nur halb.
+
+### Die Fotos bewegen sich nicht, und das bleibt so
+
+Der naheliegendste Parallax — das Bild langsamer als die Seite — ist gebaut,
+gemessen und wieder entfernt worden. Bei ±15 % Ausschlag:
+
+| Bild | Ruhelage | Endlage | Ergebnis |
+|---|---|---|---|
+| 01 Auftakt | 28 % | 43 % | Gedankenblase oben angeschnitten |
+| 02 Dämmerung | 25 % | 40 % | „Tugässer“ auf der linken Fahne weg |
+| 04 Gruppe | 62 % | 47/77 % | unkritisch |
+
+Der sichere Weg beträgt rund vier Prozentpunkte, das sind bei 1440×900 etwa
+5 px — unsichtbar. Mehr gäbe es nur über eine Überhöhung des Bildes, und weil
+`object-cover` auf die Höhe skaliert, kostet die direkt Bildbreite. **Wer den
+Effekt auf den Fotos will, braucht andere Bilder mit mehr Rand, nicht anderen
+Code.**
+
+### Die Aufhellung hat eine harte Grenze
+
+Zielfarbe ist `#0E2143` (navy-800 aus der Markenpalette). Weiter geht es nicht,
+ohne WCAG AA zu verlieren: Der limitierende Wert ist `cream/55` und liegt dort
+bei 5,12:1, auf navy-700 bei 4,75, auf `#223454` nur noch bei 4,45. **Wer die
+Zielfarbe aufhellt, rechnet cream/55 gegen den neuen Grund nach.**
+
+Daraus folgt zweierlei:
+
+- **`bg-night` am `<body>` ist nur noch Startwert und Fallback**, nicht mehr die
+  Farbe der ganzen Seite.
+- **Die beiden Leisten tragen dieselben Farben doppelt** — einmal als
+  Tailwind-Klasse (`bg-night/70`, `bg-night/85`) für den Fallback, einmal in
+  ihren Keyframes. Beim Ändern beide Stellen nachziehen.
+
 ## Design-Richtung
 
 **Stark, editorial, Swiss-industrial** — die Referenz sind Entwickler-Werkzeuge
 wie Linear oder Vercel, nicht Gastro-Websites. Konkret heißt das hier:
 
 - **Das Foto ist eine eigene Fläche, kein Hintergrund.** Es wird nicht
-  abgedunkelt, nicht überblendet, nicht behandelt. Das war eine ausdrückliche
+  abgedunkelt, nicht überblendet, nicht behandelt — und es bewegt sich beim
+  Scrollen nicht, siehe „Bewegung beim Scrollen“. Das war eine ausdrückliche
   Korrektur — nicht zurückdrehen. **Eine einzige Ausnahme:** der Satz „Ein Bier
   aus Heilbronn. Für Heilbronn." auf dem Auftaktbild, oben begründet. Er liegt
   auf dem Foto, aber das Foto bleibt darunter unverändert — der Text trägt seine

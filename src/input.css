@@ -1,3 +1,245 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+  PARALLAX — auf dem Satz über dem Auftaktfoto, NICHT auf den Fotos selbst.
+
+  WARUM NICHT AUF DEN FOTOS. Das war der erste Versuch, und er ist an den Bildern
+  gescheitert, nicht an der Technik. Gemessen am 26.08.2026:
+
+  | Bild | Ruhelage | Endlage bei ±15 % | Ergebnis |
+  |---|---|---|---|
+  | 01 Auftakt | 28 % | 43 % | Gedankenblase oben angeschnitten |
+  | 02 Dämmerung | 25 % | 40 % | „Tugässer“ auf der linken Fahne weg, nur „Bräu“ bleibt |
+  | 04 Gruppe | 62 % | 47 %/77 % | unkritisch |
+
+  Der Grund ist der Zuschnitt: Alle drei sind 16:9-Aufnahmen in flacheren
+  Containern, und `object-position` ist bereits bis an die Kante justiert — 28 %
+  beim Auftakt sind gerade so viel, dass die Blase hineinpasst, bei 34 % bleiben
+  rund 5 px Luft. Der verfügbare Weg ist damit rund 4 Prozentpunkte, das sind bei
+  1440×900 etwa 5 px. Einen Effekt, den man nicht sieht, baut man nicht ein.
+
+  **Mehr Weg gäbe es nur über eine Überhöhung des Bildes** — und weil
+  `object-cover` auf die Höhe skaliert, kostet die direkt Bildbreite. Das ist der
+  in CLAUDE.md unter „Bildhöhe: Orientierung, nicht Breite“ dokumentierte Fehler,
+  bei dem vom Rathaus fast nichts übrig blieb. Wer den Effekt auf den Fotos
+  wirklich will, braucht andere Bilder mit mehr Rand, nicht anderen Code.
+
+  WAS STATTDESSEN LÄUFT: Der Satz auf dem Auftaktbild bleibt beim Scrollen hinter
+  dem Foto zurück. Das ist derselbe Tiefeneindruck — zwei Ebenen, die sich
+  verschieden schnell bewegen — und er kostet keinen Bildpunkt, weil sich Text
+  über freiem Nachthimmel bewegt.
+
+  DIE TIMELINE HÄNGT AN DER `<figure>`, nicht am Bildcontainer. Der trägt
+  `overflow-hidden` und ist damit selbst ein Scroll-Container; ein `view()`
+  darin gemessen steht messbar konstant bei 0,5, egal wie weit man scrollt. Die
+  `<figure>` liegt außerhalb und wird gegen das Dokument gemessen.
+
+  `animation-range: cover 50%`: Der Auftakt ist beim Laden schon sichtbar und
+  steht rechnerisch bei 52,9 % des `cover`-Bereichs. Ohne diesen Startpunkt
+  begänne die Bewegung mitten drin, und der Satz stünde beim Laden bereits
+  versetzt. So beginnt sie dort, wo der Besucher tatsächlich einsteigt.
+  Ausgeschrieben wird nur der 50-%-Wert: cssnano kürzt `cover 0%` zu `cover 0`,
+  was Chrome nur halb parst.
+
+  Ohne Browser-Unterstützung greift `@supports` nicht und alles steht still.
+  `prefers-reduced-motion` schaltet den Effekt ab.
+*/
+@keyframes parallax-satz {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 72px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    #phase-01 {
+      view-timeline: --auftakt block;
+    }
+
+    [data-parallax-satz] {
+      animation: parallax-satz linear both;
+      animation-timeline: --auftakt;
+      animation-range: cover 50% cover 100%;
+    }
+  }
+}
+
+/*
+  DIE ZEILEN GROSSER SÄTZE RICHTEN SICH BEIM SCROLLEN AUS.
+
+  Jede Zeile startet deutlich nach rechts versetzt — gestaffelt bis knapp zur
+  halben Zeilenbreite — und rückt auf die gemeinsame linke Kante. Aus der Treppe
+  wird ein Block, fertig etwa dann, wenn der Satz die Bildschirmmitte erreicht.
+
+  DER VERSATZ IST IN PROZENT DER ZEILENBREITE, nicht in `em`. Eine frühere
+  Fassung rechnete in Geviert: 0,5 em sind rund ein Buchstabe, und mehr ging
+  nicht, weil die Zeile sonst aus dem Seitenrand ragte. Prozent lösen das
+  doppelt — der Versatz skaliert mit der Zeilenlänge statt mit der Schriftgröße,
+  und er geht nach rechts in den freien Raum der Spalte statt nach links über
+  die Kante.
+
+  DAS CLIPPING GEHÖRT AN DIE `<section>`. Auf schmalen Bildschirmen füllt eine
+  Zeile die Spalte fast aus und ragt im Startzustand über den Rand. Zwei
+  Sackgassen davor, damit sie niemand wiederholt: `overflow-x: clip` am `body`
+  propagiert auf den Viewport und ändert nichts; am `html` zieht `clip` die
+  vertikale Achse mit, und mit `overflow-y: auto` dagegen scrollte die Seite
+  messbar nur noch 392 px weit. An der Section wirkt es — und `clip` erzeugt
+  anders als `hidden` keinen Scroll-Container, der die `view()`-Timelines
+  umhängen würde.
+
+  DIE ZEILEN SIND `<span>`, KEIN `<br />`. Ein Umbruch lässt sich nicht einzeln
+  ansprechen. `display: block` steht bewusst **außerhalb** der beiden Abfragen
+  unten: Ohne Browser-Unterstützung und bei reduzierter Bewegung müssen die
+  Zeilen trotzdem Zeilen bleiben, sonst läuft der Satz einzeilig durch.
+
+  NICHT AM AUFTAKT-H1: Der hat bereits seinen Einfahr-Effekt über den
+  IntersectionObserver in `#lead`. Zwei Bewegungen auf demselben Satz wären eine
+  zu viel.
+
+  `animation-range: entry 30% cover 45%` — die Ausrichtung ist abgeschlossen,
+  wenn der Satz etwa die Bildschirmmitte erreicht. Wer den Wert ändert: kein
+  `0%` verwenden, cssnano kürzt das zu `0` und Chrome parst den Bereich dann nur
+  halb.
+*/
+[data-zeilen] > span {
+  display: block;
+}
+
+@keyframes zeile-ausrichten {
+  from {
+    transform: translate3d(var(--zeilenversatz, 0), var(--zeilenabstand, 0), 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    [data-zeilen] {
+      view-timeline: --satz block;
+      /*
+        DAS CLIPPING GEHÖRT AN DEN SATZ, nicht an die Section. An der Section
+        abgefangen lief die versetzte Zeile quer in die Nebenspalte und legte
+        sich im Startzustand über die Leitfrage rechts („nüchtern ins Glas.“ über
+        „Heilbronn hat Biergeschichte.“). Am Satz endet sie an seiner eigenen
+        Spaltenkante und fährt von dort herein.
+
+        `overflow-clip-margin` ist nötig, weil `overflow-x: clip` die vertikale
+        Achse mitzieht: Ohne den Puffer schnitte die Box die Unterlängen ab, und
+        bei `leading-[0.98]` steht das „g“ in „Glas.“ knapp an der Kante.
+      */
+      overflow: clip;
+      overflow-clip-margin: 0.35em;
+    }
+
+    [data-zeilen] > span {
+      --zeilenversatz: 12%;
+      animation: zeile-ausrichten linear both;
+      animation-timeline: --satz;
+      animation-range: entry 30% cover 45%;
+    }
+
+    [data-zeilen] > span:nth-child(2) {
+      --zeilenversatz: 30%;
+      --zeilenabstand: 0.16em;
+    }
+
+    [data-zeilen] > span:nth-child(3) {
+      --zeilenversatz: 46%;
+      --zeilenabstand: 0.32em;
+    }
+  }
+}
+
+/*
+  DIE SEITE WIRD BEIM RUNTERSCROLLEN HELLER.
+
+  Sie geht denselben Weg wie ihre Bilder: Nacht über dem Rathaus, Dämmerung mit
+  den Fahnen, Vormittag mit der Gruppe. Bisher trugen das nur die Fotos, während
+  der Grund darunter von oben bis unten gleich schwarz blieb — das helle
+  Tageslichtbild in Phase 04 stand damit auf Nachtschwarz, ein harter Bruch.
+  Jetzt wandert der Grund mit.
+
+  DIE ZIELFARBE IST NAVY-800 AUS DER MARKENPALETTE, kein erfundener Ton: das
+  Tiefblau vom Bierdeckel. Die Seite hellt also in ihre eigene zweite Farbe auf.
+
+  **Weiter geht es nicht, und das ist gerechnet, nicht geschätzt.** Der
+  limitierende Wert ist `cream/55` — Mono-Labels, Bildunterschriften,
+  Rail-Beschriftungen:
+
+  | Grund | cream/100 | cream/75 | cream/55 |
+  |---|---|---|---|
+  | `#0A0D14` night (oben) | 16,98 | 9,67 | 5,59 ✓ |
+  | `#0E2143` navy-800 (unten) | 13,93 | 8,35 | 5,12 ✓ |
+  | `#122A57` navy-700 | 12,28 | 7,53 | 4,75 ✓ |
+  | `#223454` | 10,87 | 6,86 | **4,45 ✗** |
+
+  Bei navy-700 wäre bei 4,75 Schluss, hier bleibt bewusst Puffer. **Wer die
+  Zielfarbe aufhellt, rechnet cream/55 gegen den neuen Grund nach** — unter
+  4,5:1 fällt die Seite aus WCAG AA.
+
+  DIE BEIDEN LEISTEN MÜSSEN MITWANDERN. Sie liegen mit `bg-night/70` und `/85`
+  über dem Grund; bliebe ihre Farbe stehen, stünden unten zwei dunkle Balken auf
+  hellerem Grund. Ihre Keyframes tragen dieselben Farben mit derselben Deckkraft
+  wie die Tailwind-Klassen, die sie überschreiben — beim Ändern beide Stellen
+  nachziehen.
+
+  `scroll()` statt `view()`: Der Verlauf hängt am Scrollstand des Dokuments, nicht
+  an der Sichtbarkeit eines Elements. Er läuft linear über die ganze Seite; die
+  Phasen sind unterschiedlich lang, und Stufen je Abschnitt würden an den Kanten
+  springen.
+
+  Bei reduzierter Bewegung bleibt der Grund durchgehend `night`, also der
+  Zustand, den auch jeder Browser ohne Unterstützung sieht.
+*/
+@keyframes tag-werden {
+  from {
+    background-color: #0a0d14;
+  }
+  to {
+    background-color: #0e2143;
+  }
+}
+
+@keyframes tag-werden-kopf {
+  from {
+    background-color: rgb(10 13 20 / 0.7);
+  }
+  to {
+    background-color: rgb(14 33 67 / 0.7);
+  }
+}
+
+@keyframes tag-werden-fuss {
+  from {
+    background-color: rgb(10 13 20 / 0.85);
+  }
+  to {
+    background-color: rgb(14 33 67 / 0.85);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    body {
+      animation: tag-werden linear both;
+      animation-timeline: scroll();
+    }
+
+    #kopfleiste {
+      animation: tag-werden-kopf linear both;
+      animation-timeline: scroll();
+    }
+
+    #aktionsleiste {
+      animation: tag-werden-fuss linear both;
+      animation-timeline: scroll();
+    }
+  }
+}
