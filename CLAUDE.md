@@ -19,11 +19,128 @@ Design-Schleife).
 „Mach mit" auf [mitmachen.tugaesser.de](https://mitmachen.tugaesser.de), in der
 Aktionsleiste unten. Keine Navigation, keine Unterseiten, kein Impressum.
 
-**Abschnitt „03 Die Idee" spricht seit 25.08.2026 in der Gegenwart.** Solange die
+### Der Auftakt sagt in Klartext, worum es geht (seit 26.08.2026)
+
+Bis dahin stand im Abschnitt 01 nur der Claim und der Traumsatz daneben. Beides
+ist Ton, keines nennt die Sache. Wer aus dem Zeitungsartikel kam, fand ein Foto,
+ein Wortspiel und einen roten Knopf „Mach mit" — mitmachen wobei?
+
+Die Auskunft steht deshalb jetzt an zwei Orten, in der Reihenfolge, in der man
+sie liest. Sie folgt der Instagram-Bio, **absichtlich fast wortgleich**: Zeitung,
+Profil und Seite sollen dieselbe Auskunft geben, sonst muss der Leser sie sich
+zusammensuchen.
+
+| Wo | Was |
+|---|---|
+| **Auf dem Auftaktbild** | Ein Bier aus Heilbronn. Für Heilbronn. |
+| **Rechts im Auftakt** | Kein Konzern, kein Chef. — Wer mitmacht, entscheidet mit. Bisher gibt es nur die Idee. Ob daraus ein Bier wird, liegt an dir. |
+
+- **Jeder Satz steht genau einmal.** Der Bildsatz stand zuerst zusätzlich im
+  Textblock und in der Aktionsleiste — dreimal auf einem Bildschirm. Wer hier
+  etwas ergänzt, prüft zuerst, wo es sonst noch steht.
+- **Diese Sätze nicht durch Stimmung ersetzen.** Sie sind die einzige Stelle
+  oberhalb der Bestandsaufnahme, an der die Seite in Klartext sagt, was Tugässer
+  ist. Alles darunter erklärt, belegt und lädt ein — aber das liest niemand, der
+  nach zehn Sekunden nicht weiß, worum es geht.
+- **„liegt an dir", nicht „hängt an dieser Stadt".** „Hängt" klingt schwerfällig,
+  und „diese Stadt" ist unpersönlich — der Satz ist ein Aufruf und spricht an,
+  wen er meint. Die Du-Form ist ohnehin die Anrede der Seite und zugleich der
+  geschlechtsneutrale Weg ohne Doppelnennung.
+- **„Bisher gibt es nur die Idee", nicht „nur einen Traum"** — links steht schon
+  „Traumphase" und „träumen dürfen"; ein drittes Mal Traum auf einem Bildschirm
+  ist zu viel. Ebenso stand hier zuerst zweimal „entscheidet" in drei Sätzen.
+- **Der Traumsatz steht links unter der H1**, nicht mehr in der rechten Spalte.
+  Er gehört mit dem Claim zusammen (beide vom Bierdeckel), und rechts wird der
+  Platz für den Klartext gebraucht.
+- **Der Text darf aus derselben Typoskala nicht ausbrechen**: Leitsatz in der
+  Größe der Leitfragen aus 02/03 (`clamp(1.35rem,2.2vw,1.8rem)`), Absatz in
+  Fließtextgröße. Keine fünfte Größe.
+- **Kein „Mach mit" im Auftakt** — begründet weiter unten; auf dem Handy stünden
+  zwei rote Knöpfe knapp übereinander.
+
+### Der Satz auf dem Auftaktbild
+
+**Das ist die eine Ausnahme von „Text liegt nie auf dem Foto"** (26.08.2026, auf
+Ansage des Auftraggebers: „Ich denke das ist der Spruch, der catcht"). Der Grund
+ist messbar: Auf 1440×900 endet das Foto samt Bildunterschrift bei 803 px, der
+Textblock beginnt bei 940 — wer nicht scrollt, sah **nur ein Foto**.
+
+Alles andere an der Regel gilt weiter. **Das Foto selbst bleibt unbehandelt:**
+kein Gradient über der Fläche, keine Abdunklung, kein Blend-Modus. Lesbar wird
+der Text nur an sich selbst, über einen weichen `text-shadow` in Nachtblau — der
+liegt im Text und kostet keinen Bildpunkt Helligkeit.
+
+- **Oben links, weil dort in jedem Zuschnitt Nachthimmel liegt.** Die
+  Gedankenblase steht rechts oben, die Frau rechts unten, das Rathaus mittig —
+  das ist die einzige Ecke, die in allen Formaten frei bleibt. Hoch- und
+  Querformat zeigen wegen `object-position` verschiedene Ausschnitte, also
+  **beide prüfen**. Gemessen bleibt der Satz überall im Bild: bei 320 px am
+  engsten (bis x=217 von 320, y=117 von 268).
+- **Im 1600er-Raster, nicht am Fensterrand.** Der Overlay-Wrapper trägt
+  `mx-auto max-w-[1600px] px-5 sm:px-8` wie Kopfleiste und Bildunterschrift.
+  Ohne das begann der Satz auf 1920 bei 32 px, während alles andere bei 192 px
+  steht — sichtbar schief.
+- **Kleiner als die H1 darunter** (`clamp(1.25rem,3.1vw,2.5rem)`). Der Claim
+  bleibt die größte Schrift der Seite, sonst kämpfen zwei Sätze um denselben
+  Rang.
+- **Der Ecken-Tick oben links ist dafür entfallen.** Er saß bei `top-20` und lag
+  ab `sm` mitten im Satz. Verschieben half nicht: Auf 1440 reicht der Satz von 32
+  bis 115 px, auf 390 von 20 bis 62 — in einem der Formate stand er immer im Weg.
+  Diese Ecke markiert jetzt der Text; unten rechts bleibt der Tick.
+
+Den anderen Weg (Hero-Höhe von 78dvh kappen, damit der Textblock anreißt)
+**nicht gehen**: Bei 68dvh wären oben 55 px statt 30 px weggeschnitten, und dort
+sitzt die Gedankenblase mit dem Bierdeckel.
+
+### Vier Phasen seit 26.08.2026
+
+Traum → Bestandsaufnahme → Die Idee → Mitmachen. Bis dahin trug „03“ beides: die
+Idee samt Inventur **und** den Aufruf zum Eintragen. Das war ein Abschnitt mit
+zwei Themen und ohne Schluss — die Kopfleiste versprach „Die Idee“, der Text
+endete beim Anmeldeformular.
+
+**Die Trennung folgt der Instagram-Serie, nicht einer Layout-Laune.** Dort sind es
+zwei Posts: das Idee-Reel (`tugaesser-reel-03-die-idee.mp4`, Inventur „Name ✓
+Idee ✓ Stadt ✓ / Rezept ? Kessel ? Ort ? Leute ?“ plus offener Aufruf) und der
+Mitmach-Post. Website und Profil erzählen dieselben Phasen in derselben
+Reihenfolge; wer beides sieht, soll dieselbe Gliederung wiedererkennen. Wer die
+Phasen der Seite ändert, prüft `social_media_postserie.md` im Schwesterrepo mit.
+
+Die Naht lag schon im Text: **„Wie kommen wir zusammen?"** war die zweite
+Zwischenpointe und ist jetzt der Kapitelschluss von 03 — in Kapitelsatz-Größe an
+der linken Kante wie „Muss das so bleiben?" in Abschnitt 02, aber **ohne Antwort
+darunter**. Die Antwort ist das Bild der Mannschaft, das unmittelbar folgt. Ein
+erklärender Absatz dort würde ihm die Arbeit abnehmen.
+
+- **Abschnitt 04 heißt „Was fehlt, bringst du mit."** — der Satz kommt aus dem
+  Idee-Reel und antwortet Zeile für Zeile auf die Inventur, mit der 03 schließt
+  (kein Rezept, kein Kessel, kein Ort, keine Mannschaft). Nicht gegen etwas
+  Allgemeines tauschen, der Rückbezug ist der ganze Witz.
+- **Das Gruppenbild ist von 03 nach 04 gewandert.** Über der Inventur war es ein
+  Widerspruch: Der Text sagt dort „keine Mannschaft, die das zusammen macht“,
+  während das Bild genau diese Mannschaft zeigt. Die Tageszeitfolge Nacht →
+  Dämmerung → Vormittag bleibt dabei intakt.
+- **03 ist die einzige Phase ohne eigenes Bild.** Das ist eine offene Stelle,
+  keine Gestaltungsabsicht. Sobald ein Motiv vorliegt: `<figure id="phase-03"
+  data-phase class="scroll-mt-[55px] …">` davorsetzen, `loading="lazy"` plus
+  `width`/`height` nicht vergessen, und `data-phase` samt `scroll-mt` von der
+  `<section id="idee">` dorthin verschieben — der Link in der Kopfleiste zeigt
+  dann auf `#phase-03` statt auf `#idee`.
+- **Das Skript braucht dafür keine Änderung.** Es sammelt alle `[data-phase]` in
+  DOM-Reihenfolge ein; ob das Element eine `<figure>` oder eine `<section>` ist,
+  spielt keine Rolle.
+
+**Abschnitt „04 Mitmachen" spricht seit 25.08.2026 in der Gegenwart.** Solange die
 Mitmachseite Ausblick war, hieß es dort „In den nächsten Wochen bekommt diese
 Seite zwei Dinge" und „Bis die Anmeldung steht, läuft alles über Instagram". Beides
 ist überholt — die Marginalie heißt jetzt „Was jetzt geht" statt „Was kommt".
 Wenn sich an der Mitmachseite etwas ändert, gehört dieser Abschnitt mitgeprüft.
+
+**Die Phase hieß am 26.08.2026 für ein paar Stunden „03 Mitmachen".** Das war der
+Versuch, den Namenskonflikt durch Umbenennen zu lösen, statt den Abschnitt zu
+teilen — und er hat ihn nur verschoben: Unter dem Kicker „Mitmachen" stand dann
+die Herkunftsgeschichte. Die Trennung in zwei Phasen ist die Lösung, das
+Umbenennen war es nicht.
 
 **Abschnitt „02 Bestandsaufnahme“** (`#bestand`, seit 13.08.2026): das Fahnenbild,
 dann **nur Text**. Überschrift „Nach dem Traum schauen wir jetzt nüchtern ins
@@ -49,7 +166,7 @@ Faktenraster zerlegen und nicht ungefragt bebildern.**
 
 | Rolle | Größe | Wo |
 |---|---|---|
-| Phasen-Kicker | `text-[13px]` mono | „01 Traumphase“, „02 Bestandsaufnahme“ |
+| Phasen-Kicker | `text-[13px]` mono | „01 Traumphase“ … „04 Mitmachen“ |
 | Rail-Label | `text-[12px]` mono | Marginalie links („Damals“, „Heute“, „Anderswo“) |
 | Fließtext | `clamp(1.125rem,1.7vw,1.375rem)` | **jeder** Absatz, ausnahmslos |
 | Zwischenpointe | `clamp(1.85rem,3.6vw,2.9rem)` | die Sätze zwischen den Blöcken |
@@ -109,6 +226,11 @@ Klick führt zum Neuesten, die Erzählung bleibt in ihrer Reihenfolge.
 
 - **Jede neue Phase braucht dort einen Eintrag.** Sonst wächst die Seite nach
   unten, ohne dass man sie erreicht — genau das Problem, das die Leiste löst.
+- **Die Namen stehen erst ab `lg`, die Uhr erst ab `xl`.** Mit vier Phasen messen
+  Marke, Einträge und Knopf bei 1024 px zusammen rund 870 px; mit der Uhr wären
+  es 1000 und die Zeile bräche um. Vorher standen beide ab `sm` — das ging mit
+  drei Phasen gerade noch. Bei einer fünften Phase ist diese Rechnung erneut
+  fällig.
 - Sprungziel ist das **Bild**, das die Phase eröffnet (`id="phase-NN"` plus
   `data-phase` auf der `<figure>`), nicht der Textabschnitt. Sonst überspringt
   der Sprung das Motiv.
@@ -324,9 +446,12 @@ Inhaltliche Leitplanken für diesen Abschnitt, nicht wegoptimieren:
 **Stark, editorial, Swiss-industrial** — die Referenz sind Entwickler-Werkzeuge
 wie Linear oder Vercel, nicht Gastro-Websites. Konkret heißt das hier:
 
-- **Das Foto ist eine eigene Fläche, kein Hintergrund.** Es liegt nie Text
-  darüber und wird nicht abgedunkelt. Das war eine ausdrückliche Korrektur —
-  nicht zurückdrehen.
+- **Das Foto ist eine eigene Fläche, kein Hintergrund.** Es wird nicht
+  abgedunkelt, nicht überblendet, nicht behandelt. Das war eine ausdrückliche
+  Korrektur — nicht zurückdrehen. **Eine einzige Ausnahme:** der Satz „Ein Bier
+  aus Heilbronn. Für Heilbronn." auf dem Auftaktbild, oben begründet. Er liegt
+  auf dem Foto, aber das Foto bleibt darunter unverändert — der Text trägt seine
+  Lesbarkeit selbst.
 - **Micro-Borders statt Flächen:** 1px `cream/10` als Raster, Ecken-Ticks am
   Bild. Keine Karten, keine Radien, keine Schatten.
 - **Typo trägt die Hierarchie:** Grotesk-Display sehr groß mit `-0.045em`
@@ -446,6 +571,12 @@ nicht erst. Unter 300 KB bleiben, sonst fällt die Vorschau still aus.
 
 - **Nach Änderungen an Claim, Marke oder Bild das OG-Bild neu erzeugen** — es ist
   eine Kopie, die sonst stillschweigend veraltet.
+- **`og:description` sagt seit 26.08.2026 die Sache, das OG-Bild weiter den
+  Traum.** In der Beschreibung stand „Man wird ja wohl noch träumen dürfen." —
+  schön, aber in einer WhatsApp-Vorschau erfährt so niemand, worum es geht. Jetzt
+  steht dort der Dreisatz aus dem Auftakt. Das Bild trägt weiterhin den Claim;
+  zusammen ergibt das Stimmung plus Auskunft. Wer beides gleichschaltet, verliert
+  eins von beidem.
 - Die Domain steht in allen Meta-Tags als **ASCII** (`tugaesser.de`). So ist sie
   leicht zu tippen und funktioniert zuverlässig in Vorschauen und Crawlern.
 - **WhatsApp und Facebook cachen die Vorschau lange.** Nach Änderungen über den

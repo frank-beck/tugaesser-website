@@ -19,9 +19,16 @@
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <title>Tugässer Bräu — Ein neues Bier belebt Heilbronn</title>
+    <!--
+      Die Beschreibungen nennen seit 26.08.2026 die Sache, nicht die Stimmung.
+      Vorher stand hier und in og:description „Man wird ja wohl noch träumen
+      dürfen.“ — schön, aber in einer WhatsApp-Vorschau erfährt davon niemand,
+      worum es geht. Wer den Link aus dem Zeitungsartikel weiterschickt, soll in
+      der Vorschau die Auskunft mitschicken.
+    -->
     <meta
       name="description"
-      content="Tugässer Bräu — ein neues Bier belebt Heilbronn."
+      content="Ein Bier aus Heilbronn, für Heilbronn. Kein Konzern, kein Chef — wer mitmacht, entscheidet mit. Noch ist Tugässer nur eine Idee: Mach mit."
     />
 
     <!--
@@ -42,7 +49,7 @@
     />
     <meta
       property="og:description"
-      content="Man wird ja wohl noch träumen dürfen."
+      content="Ein Bier aus Heilbronn, für Heilbronn. Kein Konzern, kein Chef — wer mitmacht, entscheidet mit."
     />
     <meta
       property="og:image"
@@ -63,7 +70,7 @@
     />
     <meta
       name="twitter:description"
-      content="Man wird ja wohl noch träumen dürfen."
+      content="Ein Bier aus Heilbronn, für Heilbronn. Kein Konzern, kein Chef — wer mitmacht, entscheidet mit."
     />
     <meta
       name="twitter:image"
@@ -81,7 +88,7 @@
       jedes Besuchers dorthin. Erzeugt von fetch-fonts.mjs.
     -->
     <link rel="stylesheet" href="fonts/fonts.css" />
-    <link rel="stylesheet" href="tailwind.css?v=92230d37" />
+    <link rel="stylesheet" href="tailwind.css?v=b846cd92" />
   </head>
 
   <body class="bg-night font-body text-cream antialiased">
@@ -101,12 +108,17 @@
       nach unten, ohne dass man sie erreicht.
 
       Sprungziel ist jeweils das Bild, das die Phase eröffnet (`#phase-01`,
-      `#phase-02`), nicht der Textabschnitt: Sonst überspränge der Sprung das
-      Motiv, das die Phase trägt.
+      `#phase-02`, `#phase-04`), nicht der Textabschnitt: Sonst überspränge der
+      Sprung das Motiv, das die Phase trägt. Ausnahme ist `03 Die Idee` — die
+      einzige Phase ohne eigenes Bild, sie springt auf `#idee`.
 
-      Auf Handys stehen nur die Ziffern — „01 Traumphase 02 Bestandsaufnahme“
-      plus Marke plus Uhr passt bei 390px nicht in eine Zeile. Die Uhr weicht
-      unterhalb `sm` ganz; sie ist Dekor, die Navigation nicht.
+      **Vier Phasen seit 26.08.2026.** „Die Idee“ und „Mitmachen“ waren bis dahin
+      ein Abschnitt; die Trennung folgt der Instagram-Serie, in der beide je
+      einen eigenen Post haben.
+
+      Unterhalb `lg` stehen nur die Ziffern — vier ausgeschriebene Namen plus
+      Marke, Knopf und Uhr passen erst ab rund 1000 px in eine Zeile. Die Uhr
+      weicht bis `xl` ganz; sie ist Dekor, die Navigation nicht.
     -->
     <header
       id="kopfleiste"
@@ -126,14 +138,14 @@
           gerade steht. Es ist zugleich Hook für die Einfärbung — kein zweiter
           Zustand in einer CSS-Klasse, der auseinanderlaufen könnte.
         -->
-        <nav aria-label="Phasen" class="flex items-center gap-5 sm:gap-8">
+        <nav aria-label="Phasen" class="flex items-center gap-4 sm:gap-5 lg:gap-7">
           <a
             href="#phase-01"
             data-phase-link="phase-01"
             class="flex items-center gap-2 text-cream/55 transition-colors duration-150 hover:text-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 aria-[current=true]:text-brand-400"
           >
             <span class="tabular-nums">01</span>
-            <span class="hidden sm:inline">Traumphase</span>
+            <span class="hidden lg:inline">Traumphase</span>
           </a>
           <a
             href="#phase-02"
@@ -141,15 +153,29 @@
             class="flex items-center gap-2 text-cream/55 transition-colors duration-150 hover:text-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 aria-[current=true]:text-brand-400"
           >
             <span class="tabular-nums">02</span>
-            <span class="hidden sm:inline">Bestandsaufnahme</span>
+            <span class="hidden lg:inline">Bestandsaufnahme</span>
           </a>
+          <!--
+            **Phase 03 springt auf den Textabschnitt, nicht auf ein Bild.** Sie
+            ist die einzige Phase ohne eigenes Motiv; sobald eines vorliegt,
+            wandert `data-phase` samt `id` auf dessen `<figure>` und dieser Link
+            wieder mit. Bis dahin trägt `#idee` beides.
+          -->
           <a
-            href="#phase-03"
-            data-phase-link="phase-03"
+            href="#idee"
+            data-phase-link="idee"
             class="flex items-center gap-2 text-cream/55 transition-colors duration-150 hover:text-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 aria-[current=true]:text-brand-400"
           >
             <span class="tabular-nums">03</span>
-            <span class="hidden sm:inline">Die Idee</span>
+            <span class="hidden lg:inline">Die Idee</span>
+          </a>
+          <a
+            href="#phase-04"
+            data-phase-link="phase-04"
+            class="flex items-center gap-2 text-cream/55 transition-colors duration-150 hover:text-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 aria-[current=true]:text-brand-400"
+          >
+            <span class="tabular-nums">04</span>
+            <span class="hidden lg:inline">Mitmachen</span>
           </a>
         </nav>
 
@@ -180,7 +206,13 @@
           Mach mit
         </a>
 
-        <span class="hidden text-cream/55 sm:inline">
+        <!--
+          Die Uhr weicht bis `xl`, vorher stand sie ab `sm`. Mit vier Phasen
+          brauchen die Namen den Platz: Bei 1024 px messen Marke, vier Einträge
+          und der Knopf zusammen rund 870 px — mit der Uhr wären es 1000 und die
+          Zeile bräche um. Die Uhr ist Dekor, die Navigation nicht.
+        -->
+        <span class="hidden text-cream/55 xl:inline">
           Heilbronn <time id="clock" class="ml-2 tabular-nums">--:--</time>
         </span>
       </div>
@@ -249,10 +281,56 @@
           class="h-full w-full object-cover object-[62%_center] landscape:object-[center_28%]"
         />
 
-        <!-- Ecken-Ticks -->
+        <!--
+          DER SATZ AUF DEM BILD — und damit eine bewusste Ausnahme von der Regel
+          „Das Foto ist eine eigene Fläche, kein Hintergrund“ (26.08.2026, auf
+          Ansage des Auftraggebers). Der Grund: Es ist der Satz, der fängt, und
+          über der Falz stand er sonst nirgends. Alles andere an der Regel gilt
+          weiter — **das Foto selbst bleibt unbehandelt**: kein Gradient über der
+          Fläche, keine Abdunklung, kein Blend-Modus.
+
+          Lesbar wird der Text stattdessen nur an sich selbst: ein weicher
+          `text-shadow` in Nachtblau. Er liegt im Text, nicht auf dem Bild, und
+          kostet keinen einzigen Bildpunkt Helligkeit.
+
+          Er sitzt oben links, weil dort in jedem Zuschnitt Nachthimmel liegt —
+          die Gedankenblase steht rechts oben, die Frau rechts unten, das Rathaus
+          mittig. Das ist die einzige Ecke, die in allen Formaten frei bleibt.
+          Wer die Position ändert, prüft sie im Hoch- **und** im Querformat: Die
+          beiden zeigen wegen `object-position` verschiedene Bildausschnitte.
+
+          Die Größe ist bewusst kleiner als die H1 darunter. Der Claim
+          („Tugässer, schaffen wir's.“) bleibt die größte Schrift der Seite,
+          sonst kämpfen zwei Sätze im selben Bildschirm um denselben Rang.
+
+          `pointer-events-none`: Der Text soll das Bild nicht anfassbar machen.
+        -->
+        <div class="pointer-events-none absolute inset-0">
+          <!--
+            `mx-auto max-w-[1600px] px-5 sm:px-8` ist dasselbe Raster wie
+            Kopfleiste, Bildunterschrift und Textabschnitte. Ohne das klebte der
+            Satz am Fensterrand: Auf 1920 begann er bei 32 px, während alles
+            andere bei 192 px steht — sichtbar schief, sobald das Fenster breiter
+            als 1600 px ist.
+          -->
+          <div class="mx-auto h-full max-w-[1600px] px-5 py-5 sm:px-8 sm:py-8">
+            <p
+              class="max-w-[15ch] font-display text-[clamp(1.25rem,3.1vw,2.5rem)] font-bold leading-[1.04] tracking-[-0.035em] text-cream [text-shadow:0_2px_24px_rgba(10,13,20,0.85),0_1px_4px_rgba(10,13,20,0.6)]"
+            >
+              Ein Bier aus Heilbronn.<br />Für Heilbronn.
+            </p>
+          </div>
+        </div>
+
+        <!--
+          Nur noch der Tick unten rechts. Oben links saß einer bei `top-20` — er
+          lag ab `sm` mitten im Satz auf dem Bild und las sich wie ein zufälliger
+          Strich daneben. Ihn tiefer oder höher zu rücken, half nicht: Auf 1440
+          reicht der zweizeilige Satz von 32 bis 115 px, auf 390 von 20 bis 62 —
+          der Tick hätte in einem der beiden Formate immer im Weg gestanden.
+          Diese Ecke markiert jetzt der Text.
+        -->
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-          <span class="absolute left-4 top-20 h-3 w-px bg-cream/25"></span>
-          <span class="absolute left-4 top-20 h-px w-3 bg-cream/25"></span>
           <span class="absolute bottom-4 right-4 h-3 w-px bg-cream/25"></span>
           <span class="absolute bottom-4 right-4 h-px w-3 bg-cream/25"></span>
         </div>
@@ -269,6 +347,23 @@
     <!--
       Der Text fährt ein, sobald er im Blick ist. Startzustand nur unter
       motion-safe, damit er ohne Animation sofort lesbar ist.
+
+      DIESER BLOCK IST DIE ANTWORT AUF „WORUM GEHT ES HIER?“ — und zwar seit
+      26.08.2026, weil er sie vorher nicht gab. Bis dahin stand hier nur der
+      Claim („Tugässer, schaffen wir's.“) und der Traumsatz daneben. Beides ist
+      Ton, keines nennt die Sache: Wer aus dem Zeitungsartikel kam, fand ein
+      Foto, ein Wortspiel und einen roten Knopf, auf dem „Mach mit“ steht —
+      mitmachen wobei?
+
+      Deshalb steht rechts jetzt derselbe Dreisatz, der auch die Instagram-Bio
+      trägt: was es ist, wie es gemacht wird, wo es steht. Er ist absichtlich
+      wortgleich gehalten — Zeitung, Profil und Seite sollen dieselbe Auskunft
+      geben, sonst muss der Leser sie sich zusammensuchen.
+
+      **Diese drei Sätze nicht durch Stimmung ersetzen.** Sie sind die einzige
+      Stelle oberhalb der Bestandsaufnahme, an der die Seite in Klartext sagt,
+      was Tugässer ist. Alles darunter erklärt, belegt und lädt ein — aber
+      niemand liest das, wer nach zehn Sekunden nicht weiß, worum es geht.
     -->
     <section
       id="lead"
@@ -287,23 +382,45 @@
           >
             Tugässer,<br />schaffen wir&rsquo;s.
           </h1>
-        </div>
 
-        <div class="flex flex-col justify-end lg:col-span-5">
+          <!--
+            Der Traumsatz steht jetzt hier, unter dem Claim, statt in der
+            rechten Spalte. Beide kommen vom Bierdeckel und gehören zusammen;
+            rechts wird der Platz für den Klartext gebraucht.
+          -->
           <p
-            class="max-w-sm text-lg leading-[1.65] text-cream/60 transition-[opacity,transform] duration-700 ease-out [transition-delay:240ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
+            class="mt-6 max-w-sm text-lg leading-[1.65] text-cream/60 transition-[opacity,transform] duration-700 ease-out [transition-delay:220ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
           >
             Man wird ja wohl noch träumen dürfen.
           </p>
+        </div>
+
+        <div class="flex flex-col justify-end lg:col-span-5">
+          <!--
+            Größe wie die Leitfragen in Abschnitt 02 und 03 — dieselbe Rolle,
+            dieselbe Stufe. Keine fünfte Textgröße.
+          -->
+          <p
+            class="max-w-md text-[clamp(1.35rem,2.2vw,1.8rem)] leading-[1.4] tracking-[-0.01em] text-cream transition-[opacity,transform] duration-700 ease-out [transition-delay:260ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
+          >
+            Kein Konzern, kein Chef.
+          </p>
+
+          <p
+            class="mt-6 max-w-md text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75 transition-[opacity,transform] duration-700 ease-out [transition-delay:340ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
+          >
+            Wer mitmacht, entscheidet mit. Bisher gibt es nur die Idee. Ob
+            daraus ein Bier wird, liegt an dir.
+          </p>
 
           <div
-            class="mt-9 transition-[opacity,transform] duration-700 ease-out [transition-delay:340ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
+            class="mt-9 transition-[opacity,transform] duration-700 ease-out [transition-delay:420ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
           >
             <div class="h-px w-full bg-cream/10" aria-hidden="true"></div>
             <p
               class="mt-7 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/40"
             >
-              Neugierig?
+              Bleib dran
             </p>
             <!--
               Nur Instagram. „Mach mit“ stand hier, solange die Aktionsleiste
@@ -590,78 +707,27 @@
       </div>
     </section>
 
-    <!--
-      Phase 03 — Die Idee.
-
-      DAS BILD SCHLIESST DIE SERIE: Dieselbe Frau, die oben nachts träumt und in
-      der Dämmerung nachdenkt, steht hier im Tageslicht — und nicht mehr allein.
-      Die Tageszeit trägt die Erzählung: Nacht, Dämmerung, Vormittag. Wer die
-      Reihenfolge umdreht oder das Motiv gegen ein beliebiges anderes tauscht,
-      nimmt der Seite ihr stärkstes Mittel.
-
-      Zurück auf den Marktplatz, also auf dieselbe Bühne wie der Auftakt. Der
-      Unterschied zwischen Abschnitt 01 und 03 ist damit nicht der Ort, sondern
-      die Zahl der Leute.
-
-      NIEMAND HÄLT EIN GLAS, und das bleibt so. Es gibt noch kein Bier; ein Bild
-      voller gefüllter Gläser wäre ein Produktversprechen, das die Seite
-      zwei Abschnitte lang ausdrücklich nicht gibt.
-    -->
-    <figure
-      id="phase-03"
-      data-phase
-      class="relative scroll-mt-[55px] border-t border-cream/10"
-    >
-      <!--
-        Gleiche Höhen wie Abschnitt 02 (3:2 hochkant, 62dvh quer) — beide sind
-        Abschnittseröffnungen mitten auf der Seite und müssen keinen Einstieg
-        tragen.
-
-        `object-[58%_center]` im Hochformat: Die Gruppe steht rechts der Mitte,
-        das Rathaus dahinter mittig. Bei zentriertem Ausschnitt fiel der rechte
-        Rand der Gruppe weg — und eine angeschnittene Gruppe ist genau das
-        Gegenteil dessen, was das Bild sagen soll. Im Querformat liegt der
-        Schnitt vertikal: `center 62%` opfert Himmel, nicht die Gesichter.
-      -->
-      <div class="relative aspect-[3/2] overflow-hidden landscape:aspect-auto landscape:h-[62dvh]">
-        <img
-          src="images/tugaesser-rathaus-marktplatz-team.jpg"
-          alt="Der Heilbronner Marktplatz am Vormittag mit dem Rathaus und seiner astronomischen Uhr; davor stehen sechs KI-generierte Menschen im Kreis, die Arme umeinander gelegt wie eine Mannschaft vor dem Anpfiff, darunter dieselbe Frau wie in den beiden Bildern zuvor"
-          width="1600"
-          height="900"
-          loading="lazy"
-          decoding="async"
-          class="h-full w-full object-cover object-[58%_center] landscape:object-[center_62%]"
-        />
-
-        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-          <span class="absolute left-4 top-4 h-3 w-px bg-night/30"></span>
-          <span class="absolute left-4 top-4 h-px w-3 bg-night/30"></span>
-          <span class="absolute bottom-4 right-4 h-3 w-px bg-night/30"></span>
-          <span class="absolute bottom-4 right-4 h-px w-3 bg-night/30"></span>
-        </div>
-      </div>
-
-      <figcaption
-        class="mx-auto flex max-w-[1600px] items-center gap-2.5 border-t border-cream/10 px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] text-cream/55 sm:px-8"
-      >
-        <span class="h-1.5 w-1.5 shrink-0 bg-brand-500" aria-hidden="true"></span>
-        Wie es ausgehen soll
-      </figcaption>
-    </figure>
 
     <!--
       Abschnitt 03 — Die Idee.
+
+      **Der Abschnitt endet seit 26.08.2026 mit einer Frage und nicht mehr mit
+      einem Aufruf.** Bis dahin hing die Anmeldung mit dran; das war ein
+      Abschnitt mit zwei Themen und ohne Schluss. Der Aufruf ist jetzt Phase 04,
+      die Begründung steht dort.
+
+      Was hier bleibt, ist die Herkunft und die Inventur — dieselbe Aussage wie
+      im Idee-Reel auf Instagram („Name ✓ Idee ✓ Stadt ✓ / Rezept ? Kessel ?
+      Ort ? Leute ?“), nur ausgeschrieben.
 
       Typoskala und Raster sind identisch zu Abschnitt 02 und dort ausführlich
       begründet: vier Größen, Rail links, Text auf col-start-4, Zwischenpointen
       an der linken Kante. Keine fünfte Größe, keine Faktenkacheln.
 
-      DIE ZWEITE ZWISCHENPOINTE IST EINE FRAGE, und zwar genau die, die der
-      folgende Block beantwortet. Hier stand zuerst eine Feststellung („Drei
-      Sachen hab ich. Vier nicht.“) — sie wiederholte nur, was der Absatz
-      darüber schon gesagt hatte, und lief ins Leere. Eine Frage an dieser
-      Stelle zieht in den nächsten Abschnitt hinein.
+      DIE ZWISCHENPOINTE VOR DER INVENTUR („Irgendwann und irgendwie muss man ja
+      anfangen.“) war einmal eine Feststellung („Drei Sachen hab ich. Vier
+      nicht.“) — sie wiederholte nur, was der Absatz darüber schon gesagt hatte,
+      und lief ins Leere.
 
       INHALT: Die Fassung geht auf die Antwort an die Heilbronner Stimme vom
       20.08.2026 zurück. Zwei Dinge daraus bleiben stehen, auch wenn sie sich
@@ -670,46 +736,33 @@
       Profil bisher nichts gibt.
 
       DIE SEITE SPRICHT „WIR“, AUCH HIER. Abschnitt 02 sagt „Nach dem Traum
-      schauen wir“ und „Wir glauben nicht“ — ein „ich“ in Abschnitt 03 wäre ein
-      Stimmbruch. Eine frühere Fassung begann mit „ist nicht auf meinem Mist
-      gewachsen“ und tat damit zweierlei Falsches: Sie wechselte die Person und
-      klang, als wolle sich jemand von der eigenen Sache distanzieren. „Gehört
-      keinem allein“ sagt dasselbe über die Herkunft und macht daraus das
-      Prinzip, um das es der Initiative geht.
+      schauen wir“ und „Wir glauben nicht“ — ein „ich“ wäre ein Stimmbruch. Eine
+      frühere Fassung begann mit „ist nicht auf meinem Mist gewachsen“ und tat
+      damit zweierlei Falsches: Sie wechselte die Person und klang, als wolle
+      sich jemand von der eigenen Sache distanzieren. „Gehört keinem allein“
+      sagt dasselbe über die Herkunft und macht daraus das Prinzip, um das es
+      der Initiative geht.
 
-      ANREDE IM BLOCK „WAS KOMMT“: Du-Form, und zwar aus zwei Gründen. Erstens
-      ist sie geschlechtsneutral, ohne dass Doppelnennungen oder Sonderzeichen
-      nötig wären — eine frühere Fassung schrieb „da schreibt jeder hinein, was
-      ihm einfällt“ und meinte damit sprachlich nur die Hälfte der Stadt.
-      Zweitens ist der Absatz ein Aufruf, kein Bericht; „man trägt ein“ hätte
-      ihn zur Beschreibung gemacht. Abschnitt 02 duzt bereits.
-
-      DIE DREIERREIHE IST GESTAFFELT: Ziel, Mittel, Risiko — „wie es am Ende
-      aussehen soll, was dafür gebraucht wird, was wir vermeiden sollten“. Sie
-      beginnt bewusst mit dem guten Ausgang; wer eine Ideensammlung mit dem
-      Bedarf eröffnet, bekommt Mängellisten. Eine frühere Fassung zählte „was
-      gebraucht wird, was zu beachten ist, was schiefgehen kann“ auf und stand
-      damit zu zwei Dritteln im Vorsichtsmodus. „Was zu beachten ist“ ist
-      gestrichen, weil es dasselbe Feld abdeckt wie „was wir vermeiden sollten“.
-
-      DER SCHLUSSSATZ DES BLOCKS LEBT VOM GEGENSATZ KI ↔ WIR. Er beantwortet
-      die stille Frage, ob die KI das Ganze übernimmt. „Die Arbeit danach machen
-      wir gemeinsam“ war eine erwogene Fassung und ist verworfen: „gemeinsam“
-      macht daraus eine Zusage, die der unmittelbar folgende Satz („ob das hier
-      trägt“) wieder offenlässt. Das kurze „wir“ schließt nach einem Absatz
-      voller Einladung ohnehin den Leser ein.
-
-      NICHT „Brainstorm“ schreiben. Im Deutschen gibt es „das Brainstorming“,
-      kein Substantiv „der Brainstorm“ — auf einer Seite, deren Markenname aus
-      eingedeutschtem Englisch besteht, fällt so etwas besonders auf.
-
-      NICHT verschärfen zu „wir bauen eine Brauerei“. Der Phasenplan ist an
-      dieser Stelle ausdrücklich offen, und Abschnitt 02 endet mit einer Frage,
-      keiner Ankündigung.
+      DIESER ABSCHNITT HAT ALS EINZIGE PHASE KEIN EIGENES BILD. Das Gruppenmotiv
+      stand bis zum 26.08.2026 darüber und ist zu Phase 04 gewandert, wo es
+      hingehört — über der Inventur widersprach es dem Text, der dort gerade
+      „keine Mannschaft“ sagt. Sobald ein Motiv für die Idee vorliegt, kommt es
+      als `<figure id="phase-03" data-phase>` mit `scroll-mt-[55px]` und
+      `loading="lazy"` vor diesen Abschnitt; der Eintrag in der Kopfleiste zeigt
+      dann dorthin statt auf den Text.    -->
+    <!--
+      `data-phase` und `scroll-mt-[55px]` stehen hier am Textabschnitt statt an
+      einer `<figure>`, weil Phase 03 als einzige kein Bild hat. Das Skript unten
+      sammelt alle `[data-phase]` in DOM-Reihenfolge ein und markiert die letzte,
+      deren Oberkante die Leiste passiert hat — dafür ist egal, ob das Element
+      ein Bild oder ein Abschnitt ist. Kommt ein Motiv dazu, wandern beide
+      Attribute auf dessen `<figure id="phase-03">` und der Link in der
+      Kopfleiste mit.
     -->
     <section
       id="idee"
-      class="mx-auto max-w-[1600px] border-t border-cream/10 px-5 py-20 sm:px-8 lg:py-28"
+      data-phase
+      class="mx-auto max-w-[1600px] scroll-mt-[55px] border-t border-cream/10 px-5 py-20 sm:px-8 lg:py-28"
     >
       <div class="grid gap-x-10 gap-y-10 lg:grid-cols-12">
         <div class="lg:col-span-7">
@@ -782,14 +835,171 @@
         </div>
       </div>
 
-      <p
-        class="mt-14 text-balance font-display text-[clamp(1.85rem,3.6vw,2.9rem)] font-bold leading-[1.05] tracking-[-0.035em] text-cream lg:mt-16"
+      <!--
+        SCHLUSS VON ABSCHNITT 03 — und zugleich die Naht zu Phase 04.
+
+        Die Frage stand hier als Zwischenpointe mitten im Text, damals lief der
+        Abschnitt danach direkt in die Anmeldung weiter. Seit 04 eine eigene
+        Phase ist, ist sie der Kapitelschluss und steht wie „Muss das so
+        bleiben?“ in Abschnitt 02 an der linken Kante in Kapitelsatz-Größe.
+
+        **Ohne Antwort darunter, anders als in 02.** Die Antwort ist das Bild
+        der Mannschaft, das unmittelbar folgt. Ein erklärender Absatz an dieser
+        Stelle würde ihm die Arbeit abnehmen.
+      -->
+      <div class="mt-20 border-t border-cream/10 pt-14 lg:mt-28 lg:pt-20">
+        <p
+          class="text-balance font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
+        >
+          Wie kommen wir zusammen?
+        </p>
+      </div>
+    </section>
+
+    <!--
+      Phase 04 — Mitmachen.
+
+      DAS BILD SCHLIESST DIE SERIE: Dieselbe Frau, die oben nachts träumt und in
+      der Dämmerung nachdenkt, steht hier im Tageslicht — und nicht mehr allein.
+      Die Tageszeit trägt die Erzählung: Nacht, Dämmerung, Vormittag. Wer die
+      Reihenfolge umdreht oder das Motiv gegen ein beliebiges anderes tauscht,
+      nimmt der Seite ihr stärkstes Mittel.
+
+      **Es stand bis 26.08.2026 über Abschnitt 03 und ist bewusst hierher
+      gewandert.** Über der Inventur war es ein Widerspruch: Der Text darunter
+      sagt „keine Mannschaft, die das zusammen macht“, während das Bild genau
+      diese Mannschaft zeigt. Hier antwortet es auf die Frage, mit der Abschnitt
+      03 schließt — „Wie kommen wir zusammen?“ —, und das ohne einen einzigen
+      Satz. Abschnitt 03 hat dafür vorerst kein eigenes Motiv; das ist eine
+      offene Stelle, keine Gestaltungsabsicht.
+
+      Zurück auf den Marktplatz, also auf dieselbe Bühne wie der Auftakt. Der
+      Unterschied zwischen Abschnitt 01 und 04 ist damit nicht der Ort, sondern
+      die Zahl der Leute.
+
+      NIEMAND HÄLT EIN GLAS, und das bleibt so. Es gibt noch kein Bier; ein Bild
+      voller gefüllter Gläser wäre ein Produktversprechen, das die Seite
+      drei Abschnitte lang ausdrücklich nicht gibt.
+    -->
+    <figure
+      id="phase-04"
+      data-phase
+      class="relative scroll-mt-[55px] border-t border-cream/10"
+    >
+      <!--
+        Gleiche Höhen wie Abschnitt 02 (3:2 hochkant, 62dvh quer) — beide sind
+        Abschnittseröffnungen mitten auf der Seite und müssen keinen Einstieg
+        tragen.
+
+        `object-[58%_center]` im Hochformat: Die Gruppe steht rechts der Mitte,
+        das Rathaus dahinter mittig. Bei zentriertem Ausschnitt fiel der rechte
+        Rand der Gruppe weg — und eine angeschnittene Gruppe ist genau das
+        Gegenteil dessen, was das Bild sagen soll. Im Querformat liegt der
+        Schnitt vertikal: `center 62%` opfert Himmel, nicht die Gesichter.
+      -->
+      <div class="relative aspect-[3/2] overflow-hidden landscape:aspect-auto landscape:h-[62dvh]">
+        <img
+          src="images/tugaesser-rathaus-marktplatz-team.jpg"
+          alt="Der Heilbronner Marktplatz am Vormittag mit dem Rathaus und seiner astronomischen Uhr; davor stehen sechs KI-generierte Menschen im Kreis, die Arme umeinander gelegt wie eine Mannschaft vor dem Anpfiff, darunter dieselbe Frau wie in den beiden Bildern zuvor"
+          width="1600"
+          height="900"
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover object-[58%_center] landscape:object-[center_62%]"
+        />
+
+        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+          <span class="absolute left-4 top-4 h-3 w-px bg-night/30"></span>
+          <span class="absolute left-4 top-4 h-px w-3 bg-night/30"></span>
+          <span class="absolute bottom-4 right-4 h-3 w-px bg-night/30"></span>
+          <span class="absolute bottom-4 right-4 h-px w-3 bg-night/30"></span>
+        </div>
+      </div>
+
+      <figcaption
+        class="mx-auto flex max-w-[1600px] items-center gap-2.5 border-t border-cream/10 px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] text-cream/55 sm:px-8"
       >
-        Wie kommen wir zusammen?
-      </p>
+        <span class="h-1.5 w-1.5 shrink-0 bg-brand-500" aria-hidden="true"></span>
+        Wie es ausgehen soll
+      </figcaption>
+    </figure>
+
+    <!--
+      Abschnitt 04 — Mitmachen.
+
+      DIE PHASE IST AM 26.08.2026 AUS ABSCHNITT 03 HERAUSGELÖST WORDEN. Vorher
+      trug „03“ beides: die Idee samt Inventur und den Aufruf zum Mitmachen. Das
+      war spätestens unstimmig, als die Marginalie von „Was kommt“ auf „Was jetzt
+      geht“ wechselte — ein Abschnitt, der erklärt, woher eine Idee stammt, und
+      im selben Atemzug zum Eintragen auffordert, hat zwei Themen und keinen
+      Schluss.
+
+      **Die Trennung folgt der Instagram-Serie**, nicht einer Layout-Laune: Dort
+      sind „Die Idee“ (Reel mit Inventur und offenem Aufruf) und das Mitmachen
+      zwei getrennte Posts. Website und Profil erzählen dieselben Phasen in
+      derselben Reihenfolge — wer beides sieht, soll dieselbe Gliederung
+      wiedererkennen.
+
+      Typoskala und Raster sind identisch zu 02 und 03: vier Größen, Rail links,
+      Text auf col-start-4, Zwischenpointen an der linken Kante.
+
+      ANREDE: Du-Form wie in 02 und 03. Sie ist geschlechtsneutral ohne
+      Doppelnennung oder Sonderzeichen, und der Abschnitt ist ein Aufruf, kein
+      Bericht.
+
+      DIE ÜBERSCHRIFT KOMMT AUS DEM IDEE-REEL („Was fehlt, bringt ihr mit.“) und
+      antwortet Zeile für Zeile auf die Inventur, mit der Abschnitt 03 endet:
+      kein Rezept, kein Kessel, kein Ort, keine Mannschaft. Nicht gegen etwas
+      Allgemeines tauschen — der Bezug nach oben ist der ganze Witz.
+
+      DIE DREIERREIHE IST GESTAFFELT: Ziel, Mittel, Risiko — „wie es am Ende
+      aussehen soll, was dafür gebraucht wird, was wir vermeiden sollten“. Sie
+      beginnt bewusst mit dem guten Ausgang; wer eine Ideensammlung mit dem
+      Bedarf eröffnet, bekommt Mängellisten. Eine frühere Fassung zählte „was
+      gebraucht wird, was zu beachten ist, was schiefgehen kann“ auf und stand
+      damit zu zwei Dritteln im Vorsichtsmodus. „Was zu beachten ist“ ist
+      gestrichen, weil es dasselbe Feld abdeckt wie „was wir vermeiden sollten“.
+
+      DER SCHLUSSSATZ DES BLOCKS LEBT VOM GEGENSATZ KI ↔ WIR. Er beantwortet die
+      stille Frage, ob die KI das Ganze übernimmt. „Die Arbeit danach machen wir
+      gemeinsam“ war eine erwogene Fassung und ist verworfen: „gemeinsam“ macht
+      daraus eine Zusage, die der folgende Satz („ob das hier trägt“) wieder
+      offenlässt.
+
+      NICHT „Brainstorm“ schreiben. Im Deutschen gibt es „das Brainstorming“,
+      kein Substantiv „der Brainstorm“.
+
+      NICHT verschärfen zu „wir bauen eine Brauerei“. Der Phasenplan ist an
+      dieser Stelle ausdrücklich offen.
+    -->
+    <section
+      id="mitmachen"
+      class="mx-auto max-w-[1600px] border-t border-cream/10 px-5 py-20 sm:px-8 lg:py-28"
+    >
+      <div class="grid gap-x-10 gap-y-10 lg:grid-cols-12">
+        <div class="lg:col-span-7">
+          <p class="font-mono text-[13px] uppercase tracking-[0.22em] text-brand-400">
+            <span class="text-cream/55">04</span> &nbsp;Mitmachen
+          </p>
+
+          <h2
+            class="mt-7 font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
+          >
+            Was fehlt,<br />bringst du mit.
+          </h2>
+        </div>
+
+        <div class="flex flex-col justify-end lg:col-span-5">
+          <p
+            class="max-w-md text-[clamp(1.35rem,2.2vw,1.8rem)] leading-[1.5] text-cream/85"
+          >
+            Zwei Wege stehen offen: die Anmeldung und die Ideensammlung.
+          </p>
+        </div>
+      </div>
 
       <!-- Was jetzt geht — hiess "Was kommt", solange die Mitmachseite Ausblick war -->
-      <div class="mt-14 grid gap-x-10 gap-y-4 lg:mt-16 lg:grid-cols-12">
+      <div class="mt-20 grid gap-x-10 gap-y-4 border-t border-cream/10 pt-10 lg:mt-28 lg:grid-cols-12 lg:pt-12">
         <p
           class="font-mono text-[12px] uppercase tracking-[0.22em] text-cream/55 lg:col-span-3"
         >
@@ -797,8 +1007,8 @@
         </p>
         <div class="lg:col-span-8 lg:col-start-4">
           <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
-            Dafür gibt es ab jetzt zwei Wege. Erstens die Anmeldung: Du trägst
-            ein, was du einbringen kannst und willst — mitdenken, mitbrauen,
+            Der erste ist die Anmeldung: Du trägst ein, was du einbringen kannst
+            und willst — mitdenken, mitbrauen,
             Geräte, Räume, oder einfach probieren und hinterher ehrlich sagen,
             was du davon hältst. Vereine und Betriebe können sich genauso
             eintragen wie einzelne Leute.
@@ -806,7 +1016,7 @@
           <p
             class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
           >
-            Zweitens die offene Ideensammlung. Dort kommt alles hinein, was dir
+            Der zweite ist die offene Ideensammlung. Dort kommt alles hinein, was dir
             dazu einfällt: wie es am Ende aussehen soll, was dafür gebraucht
             wird, was wir vermeiden sollten. Aus allen Einträgen entsteht eine
             erste sortierte Liste der nötigen Schritte. Das Zusammenfassen
@@ -930,8 +1140,20 @@
       <div
         class="mx-auto flex max-w-[1600px] items-center justify-between gap-5 px-5 py-3 sm:px-8"
       >
+        <!--
+          Die Zeile sagt seit 26.08.2026 die Sache statt des Claims. Vorher
+          stand hier „Ein neues Bier belebt Heilbronn“ — genau das, was der
+          Bierdeckel im Auftaktbild ohnehin schon zeigt, und damit die einzige
+          Textzeile über der Falz an eine Wiederholung verschenkt. Auf 1440×900
+          endet das Foto samt Bildunterschrift bei 803 px, der Klartext im
+          Auftakt beginnt bei 940 — wer nicht scrollt, sieht sonst nur ein Foto.
+
+          Erst ab `lg` sichtbar, nicht ab `md`: Der Satz ist rund 340 px breit,
+          daneben stehen zwei Knöpfe à 190 px. Bei 768 px reicht die Zeile
+          nicht.
+        -->
         <p
-          class="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-cream/55 md:block"
+          class="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-cream/55 lg:block"
         >
           Ein neues Bier belebt Heilbronn
         </p>
