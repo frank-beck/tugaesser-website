@@ -4,6 +4,20 @@
 // verbindlichen Werte ersetzen. Siehe CLAUDE.md → Brand Assets.
 module.exports = {
   content: ['./index.html'],
+  // Hover-Zustaende nur dort, wo es einen Zeiger gibt. Ohne das haengt auf
+  // Touch-Geraeten nach dem Antippen der Hover-Zustand fest, bis woanders
+  // getippt wird — der "Mach mit"-Knopf bliebe also cremefarben stehen.
+  //
+  // Unbedenklich, weil kein Hover auf dieser Seite Information traegt: Es gibt
+  // kein Element, das erst beim Zeigen erscheint. Alle Hover-Zustaende sind
+  // Farbe, Rahmen oder ein 4-px-Versatz des Pfeils. Faellt das auf dem Handy
+  // weg, fehlt nichts.
+  //
+  // **Vor dem Ergaenzen eines Hovers, der etwas ein- oder ausblendet, hier
+  // zurueckdenken** — der waere auf Touch dann unerreichbar.
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     extend: {
       colors: {

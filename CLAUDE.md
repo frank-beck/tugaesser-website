@@ -484,6 +484,16 @@ damit die geänderte CSS live frisch geladen wird.
   Deklaration CSS-ungültig, der Browser verwirft sie stillschweigend und fällt
   auf die nächste Familie zurück — im Screenshot sieht man nur „irgendwie falsche
   Schrift", nicht die Ursache.
+- **Hover-Zustände greifen nur mit Zeiger** (`future.hoverOnlyWhenSupported`,
+  seit 26.08.2026). Ohne das bleibt auf Touch-Geräten der Hover nach dem
+  Antippen kleben, bis woanders getippt wird — der „Mach mit"-Knopf stünde also
+  cremefarben da. Unbedenklich, solange **kein Hover Information trägt**: Es
+  gibt derzeit kein Element, das erst beim Zeigen erscheint; alle Hover-Zustände
+  sind Farbe, Rahmen oder ein 4-px-Pfeilversatz. **Wer einen Hover ergänzt, der
+  etwas ein- oder ausblendet, macht ihn auf dem Handy unerreichbar.** Gegen
+  beide Gerätearten geprüft, indem `hover: none` und `pointer: coarse` emuliert
+  wurden — ein schmaler Viewport allein prüft das nicht, der meldet weiterhin
+  einen Zeiger.
 - **`text-current/60` funktioniert nicht.** Tailwind kann `currentColor` nicht
   mit Deckkraft mischen; die Klasse fällt wirkungslos aus. Stattdessen
   `opacity-60` auf das Element.
