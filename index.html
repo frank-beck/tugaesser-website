@@ -6,7 +6,18 @@
 <html lang="de" class="motion-safe:scroll-smooth">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--
+      `viewport-fit=cover` ist die Voraussetzung dafür, dass `env(safe-area-inset-*)`
+      überhaupt einen Wert liefert. Ohne diesen Zusatz stehen alle vier auf 0 —
+      das `pb-[env(safe-area-inset-bottom)]` an der Aktionsleiste war also
+      wirkungslos, obwohl der Kommentar dort das Gegenteil behauptete.
+      Aufgefallen beim Vergleich mit sobw-lager, wo die untere Leiste
+      funktioniert und dieser Zusatz gesetzt ist.
+    -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>Tugässer Bräu — Ein neues Bier belebt Heilbronn</title>
     <meta
       name="description"
@@ -907,6 +918,10 @@
       `env(safe-area-inset-bottom)`: Auf iPhones ohne Knopf läge die Leiste
       sonst unter dem Home-Indikator. Der Footer bekommt entsprechend
       Bodenfreiheit, sonst deckt die Leiste den KI-Hinweis zu.
+
+      **Wirkt nur mit `viewport-fit=cover` im Viewport-Meta oben.** Ohne das
+      liefert jedes `env(safe-area-inset-*)` schlicht 0, und diese Zeile tut
+      nichts — so war es hier bis zum 26.08.2026.
     -->
     <div
       id="aktionsleiste"

@@ -150,6 +150,33 @@ das Gerät nicht herausgibt, kann kein Skript ausgleichen.**
 korrekt. Der untere Balken bleibt also samt seiner iOS-Schwäche, und der obere
 Knopf sorgt dafür, dass die Anmeldung trotzdem jederzeit erreichbar ist.
 
+### Was am unteren Balken schon geprüft und ausgeschlossen ist
+
+Damit niemand dieselben Wege noch einmal geht:
+
+| Versucht | Ergebnis |
+|---|---|
+| `visualViewport`-Korrektur per Skript | wirkungslos — Safari meldet keine Differenz |
+| `viewport-fit=cover` ergänzt | behebt einen echten Fehler, **löst das Problem aber nicht** |
+
+`viewport-fit=cover` war trotzdem nötig: **Ohne diesen Zusatz im Viewport-Meta
+liefert jedes `env(safe-area-inset-*)` schlicht 0.** Das
+`pb-[env(safe-area-inset-bottom)]` an der Leiste war bis dahin wirkungslos,
+obwohl der Kommentar daneben das Gegenteil behauptete. Aufgefallen beim Vergleich
+mit `../sobw-lager`, wo die untere Leiste funktioniert.
+
+**Nächster offener Verdacht, falls das Thema wieder aufkommt:** Die Leiste hat
+`bg-night/85 backdrop-blur-md`. sobw-lager hat einen **deckenden** Hintergrund und
+im ganzen Frontend **kein einziges** `backdrop-filter`. Auf iOS ist die
+Kombination `position: fixed` + `backdrop-filter` dafür bekannt, beim Scrollen
+nicht korrekt neu gezeichnet zu werden — was dazu passt, dass die Messwerte
+tadellos aussahen: Die Leiste *ist* an der richtigen Stelle, sie wird nur nicht
+dorthin gezeichnet. Ein Umschalter zum Durchprobieren war gebaut, der Test steht
+noch aus. Preis einer Lösung wäre der Weichzeichner unter der Leiste.
+
+Ebenfalls aus sobw-lager, falls die Leiste je umgebaut wird: Dort wandert sie auf
+breiten Bildschirmen per Media-Query nach **oben** (`position: sticky; top: 0`).
+
 **Den oberen Knopf nicht entfernen**, ohne den unteren auf einem echten iPhone zu
 prüfen. Puppeteer und schmale Viewports zeigen den Fehler nicht — dort sieht die
 Seite tadellos aus. Genau deshalb blieb er lange unbemerkt.
