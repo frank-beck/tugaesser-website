@@ -381,9 +381,17 @@ tritt aber optisch zurück.
   „Mach mit" — als Ausgleich dafür, dass die Leiste erst später einfuhr. Seit sie
   von Anfang an steht, lägen auf dem Handy beide Knöpfe direkt übereinander.
   Nicht wieder einbauen, ohne vorher am 390px-Screenshot zu prüfen.
-- **„Mach mit" steht an zwei Stellen**: in der Leiste und am Ende von
-  Abschnitt 03, wo die Argumentation schließt. Der zweite ist derselbe plastische
-  Knopf — hinter dem Trennstrich endet das Satzbild, ab dort ist es Bedienung.
+- **„Mach mit" steht an genau zwei Stellen: oben und unten, beide fixiert.**
+  Ein dritter stand bis zum 26.08.2026 am Ende von Abschnitt 04, mit dem
+  Argument, der Abschluss der Argumentation sei der stärkste Ort für die
+  Handlung. Das stimmte — bis der Knopf zusätzlich in die Kopfleiste kam: Am
+  Seitenende standen dann alle drei gleichzeitig im Bild. Dreimal dieselbe
+  Handlung auf einem Bildschirm ist keine Betonung mehr, sondern Rauschen.
+  Nicht wieder einbauen, ohne den Seitenschluss im Screenshot zu prüfen.
+- **Zwei reichen, weil beide fixiert sind.** Der Daumen liegt am Handy mal oben,
+  mal unten; erreichbar ist die Anmeldung dadurch auf jeder Scrollposition. Auf
+  iOS rutscht die untere Leiste beim Scrollen weg (siehe oben) — der obere Knopf
+  ist dort die Absicherung und damit noch wichtiger als vorher.
 - **Der Footer hat `pb-32`, nicht `py-5`.** Sonst deckt die Leiste den
   KI-Transparenzhinweis zu — ausgerechnet den Text, der sichtbar sein muss. Bei
   52px Knopfhöhe plus `py-3` ist die Leiste 76px hoch, es bleiben 52px Luft.
