@@ -770,6 +770,16 @@ damit die geänderte CSS live frisch geladen wird.
   beide Gerätearten geprüft, indem `hover: none` und `pointer: coarse` emuliert
   wurden — ein schmaler Viewport allein prüft das nicht, der meldet weiterhin
   einen Zeiger.
+- **`overflow-clip-margin` kennt Safari nicht.** Wer mit `overflow: clip` etwas
+  abfängt, kappt dort die Unterlängen — auf dem iPhone waren „gebrodelt.“ und
+  „bringst du mit.“ unten abgeschnitten, während Chrome alles korrekt zeigte.
+  Die Clip-Box stattdessen über `padding-bottom` plus negativen `margin-bottom`
+  vergrößern: Das wirkt in jedem Browser und lässt das Layout unverändert.
+  **Ein Puppeteer-Lauf beweist bei Clipping nichts über Safari** — Chrome füllt
+  die Lücke mit einer Eigenschaft, die es dort nicht gibt.
+- **`clip-path` ersetzt `overflow: clip` nicht.** Es schneidet nur die
+  Darstellung; der Layout-Overflow bleibt und erzeugt weiter einen
+  Querscrollbalken. Gemessen: 81 px bei 390, 226 px bei 1440.
 - **`text-current/60` funktioniert nicht.** Tailwind kann `currentColor` nicht
   mit Deckkraft mischen; die Klasse fällt wirkungslos aus. Stattdessen
   `opacity-60` auf das Element.

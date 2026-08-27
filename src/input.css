@@ -78,19 +78,15 @@
 
   DER VERSATZ IST IN PROZENT DER ZEILENBREITE, nicht in `em`. Eine frühere
   Fassung rechnete in Geviert: 0,5 em sind rund ein Buchstabe, und mehr ging
-  nicht, weil die Zeile sonst aus dem Seitenrand ragte. Prozent lösen das
-  doppelt — der Versatz skaliert mit der Zeilenlänge statt mit der Schriftgröße,
-  und er geht nach rechts in den freien Raum der Spalte statt nach links über
-  die Kante.
+  nicht. Prozent skalieren mit der Zeilenlänge statt mit der Schriftgröße und
+  erlauben den kräftigen Ausschlag, den die Sätze brauchen.
 
-  DAS CLIPPING GEHÖRT AN DIE `<section>`. Auf schmalen Bildschirmen füllt eine
-  Zeile die Spalte fast aus und ragt im Startzustand über den Rand. Zwei
-  Sackgassen davor, damit sie niemand wiederholt: `overflow-x: clip` am `body`
-  propagiert auf den Viewport und ändert nichts; am `html` zieht `clip` die
-  vertikale Achse mit, und mit `overflow-y: auto` dagegen scrollte die Seite
-  messbar nur noch 392 px weit. An der Section wirkt es — und `clip` erzeugt
-  anders als `hidden` keinen Scroll-Container, der die `view()`-Timelines
-  umhängen würde.
+  Er geht nach rechts in den freien Raum der Spalte, begrenzt vom Clipping am
+  Satz — begründet dort unten.
+
+  **Ein Puppeteer-Lauf beweist bei Clipping nichts über Safari.** Die gekappten
+  Unterlängen sahen in Chrome tadellos aus und fielen erst am Gerät auf. Wer hier
+  etwas ändert, prüft auf einem echten iPhone nach.
 
   DIE ZEILEN SIND `<span>`, KEIN `<br />`. Ein Umbruch lässt sich nicht einzeln
   ansprechen. `display: block` steht bewusst **außerhalb** der beiden Abfragen
@@ -123,19 +119,44 @@
   @supports (animation-timeline: view()) {
     [data-zeilen] {
       view-timeline: --satz block;
+
       /*
         DAS CLIPPING GEHÖRT AN DEN SATZ, nicht an die Section. An der Section
         abgefangen lief die versetzte Zeile quer in die Nebenspalte und legte
-        sich im Startzustand über die Leitfrage rechts („nüchtern ins Glas.“ über
-        „Heilbronn hat Biergeschichte.“). Am Satz endet sie an seiner eigenen
+        sich über die Leitfrage rechts. Am Satz endet sie an seiner eigenen
         Spaltenkante und fährt von dort herein.
 
-        `overflow-clip-margin` ist nötig, weil `overflow-x: clip` die vertikale
-        Achse mitzieht: Ohne den Puffer schnitte die Box die Unterlängen ab, und
-        bei `leading-[0.98]` steht das „g“ in „Glas.“ knapp an der Kante.
+        **`padding-bottom` plus negativer `margin-bottom` hält die Unterlängen
+        frei — das ist ein Safari-Bugfix.** `overflow: clip` schneidet auf beiden
+        Achsen, und bei `leading-[0.98]` ragt das „g“ unter die Box. Hier stand
+        dafür `overflow-clip-margin`, aber **Safari kennt die Eigenschaft
+        nicht**: Auf dem iPhone waren „gebrodelt.“ und „bringst du mit.“ unten
+        gekappt, während Chrome alles korrekt zeigte. Padding vergrößert die
+        Clip-Box statt sie zu bepuffern und wirkt deshalb überall; der negative
+        Margin nimmt den Platz im Layout wieder zurück.
+
+        **Nur unten, nicht oben.** Ein `margin-top` würde die Abstandsklassen der
+        Sätze überschreiben (`mt-7` an den H2, `mt-16 lg:mt-24` an den
+        Zwischenpointen). Oben ist auch nichts nötig: Versalien reichen nicht bis
+        an die Ascender-Linie, dort bleibt von selbst Luft.
+
+        **0,65 em, weil der vertikale Versatz mitzählt.** Mit 0,35 em reichte es
+        im Endzustand, aber nicht im Startzustand: Dort schiebt
+        `--zeilenabstand` die letzte Zeile um 0,32 em nach unten, und es blieben
+        gemessen 1,9 px Luft — die Unterlänge lag wieder auf der Clip-Kante. Der
+        Wert muss also größer sein als der vertikale Versatz plus die
+        Unterlänge. **Wer `--zeilenabstand` erhöht, zieht diesen Wert mit.**
+
+        Zwei Wege, die vorher hier standen und nicht funktionieren:
+        `overflow-x: clip` am `body` propagiert auf den Viewport; am `html` zieht
+        `clip` die vertikale Achse mit und die Seite scrollte nur noch 392 px
+        weit. Und `clip-path: inset()` schneidet nur die Darstellung, nicht den
+        Layout-Overflow — das Querscrollen war damit sofort zurück (81 px bei
+        390, 226 px bei 1440).
       */
       overflow: clip;
-      overflow-clip-margin: 0.35em;
+      padding-bottom: 0.65em;
+      margin-bottom: -0.65em;
     }
 
     [data-zeilen] > span {
