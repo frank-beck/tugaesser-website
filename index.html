@@ -28,7 +28,7 @@
     -->
     <meta
       name="description"
-      content="Ein Bier aus Heilbronn, für Heilbronn. Kein Konzern, kein Chef — wer mitmacht, entscheidet mit. Noch ist Tugässer nur eine Idee: Mach mit."
+      content="Ein Bier aus Heilbronn, für Heilbronn. Kein Konzern, kein Chef — wer mitmacht, entscheidet mit. Über 50 machen schon mit: Mach mit."
     />
 
     <!--
@@ -88,7 +88,7 @@
       jedes Besuchers dorthin. Erzeugt von fetch-fonts.mjs.
     -->
     <link rel="stylesheet" href="fonts/fonts.css" />
-    <link rel="stylesheet" href="tailwind.css?v=238a006b" />
+    <link rel="stylesheet" href="tailwind.css?v=403f4227" />
   </head>
 
   <body class="bg-night font-body text-cream antialiased">
@@ -115,6 +115,9 @@
       **Vier Phasen seit 26.08.2026.** „Die Idee“ und „Mitmachen“ waren bis dahin
       ein Abschnitt; die Trennung folgt der Instagram-Serie, in der beide je
       einen eigenen Post haben.
+
+      **Fünf seit 30.09.2026** („05 Die Antwort“). Bei 1024 px gemessen: passt
+      noch in eine Zeile, Leiste bleibt 55 px hoch, rechte Kante bei 992 px.
 
       Unterhalb `lg` stehen nur die Ziffern — vier ausgeschriebene Namen plus
       Marke, Knopf und Uhr passen erst ab rund 1000 px in eine Zeile. Die Uhr
@@ -176,6 +179,15 @@
           >
             <span class="tabular-nums">04</span>
             <span class="hidden lg:inline">Mitmachen</span>
+          </a>
+          <!-- Wie 03 ohne eigenes Bild, springt deshalb auf den Textabschnitt. -->
+          <a
+            href="#antwort"
+            data-phase-link="antwort"
+            class="flex items-center gap-2 text-cream/55 transition-colors duration-150 hover:text-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 aria-[current=true]:text-brand-400"
+          >
+            <span class="tabular-nums">05</span>
+            <span class="hidden lg:inline">Die Antwort</span>
           </a>
         </nav>
 
@@ -410,8 +422,8 @@
           <p
             class="mt-6 max-w-md text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75 transition-[opacity,transform] duration-700 ease-out [transition-delay:340ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
           >
-            Wer mitmacht, entscheidet mit. Bisher gibt es nur die Idee. Ob
-            daraus ein Bier wird, liegt an dir.
+            Wer mitmacht, entscheidet mit. Die Idee hat ihre Leute gefunden,
+            das erste Rezept steht. Ob daraus ein Bier wird, liegt an dir.
           </p>
 
           <div
@@ -1095,6 +1107,166 @@
     </section>
 
     <!--
+      Phase 05 — Die Antwort (seit 30.09.2026).
+
+      ANTWORTET AUF DEN SCHLUSS VON 04, Satz für Satz. Dort steht „die
+      vielleicht naive Hoffnung: dass sich genug Heilbronner finden, die Lust
+      darauf haben. Melden sich zu wenige, ist das auch eine Antwort.“ Hier
+      steht die Zahl, und rechts „Die Hoffnung war nicht naiv.“ Beide Bezüge
+      nicht gegen etwas Allgemeines tauschen.
+
+      DIE INVENTUR SPIEGELT DIE AUS 03 („Kein Rezept. Kein Kessel. Kein Ort.
+      Und keine Mannschaft.“). Übrig bleibt genau ein „Kein“ — der Ort. Der
+      Kessel ist eine Grainfather G40 (40 l), gebraut wird im Hobbymaßstab.
+
+      JEDE PHASE ENDET MIT EINER FRAGE AN DER LINKEN KANTE (02 „Muss das so
+      bleiben?“, 03 „Wie kommen wir zusammen?“). Hier „Wo brauen wir?“ — die
+      offene Stelle, an der die nächste Phase ansetzt.
+
+      ZAHL UND VEREINE KOMMEN LIVE von mitmachen.tugaesser.de/stand.json (Skript
+      unten). Was hier im HTML steht, ist nur der Fallback ohne JavaScript oder
+      bei Ausfall — Stand 30.09.2026 von der öffentlichen Liste abgezählt:
+      45 genannte Personen + 5 Vereine/Betriebe + 3 Ungenannte = 53, also
+      48 Leute.
+      **Keine Personennamen**: Deren Einwilligung gilt für die Liste auf der
+      Mitmachseite („darf unten öffentlich in der Liste stehen“), nicht für
+      eine zweite Website. Und eine Kopie hier bekäme eine Löschung nicht mit.
+
+      „Leute“ = alle Einträge minus die genannten Vereine und Betriebe. Wer als
+      Betrieb nicht genannt werden will, zählt deshalb bei den Leuten mit —
+      genau wie in der Restzahl der Mitmachseite, sonst verriete die Differenz
+      ihn.
+
+      Kein eigenes Bild, deshalb `data-phase` am Abschnitt wie bei 03.
+    -->
+    <section
+      id="antwort"
+      data-phase
+      class="mx-auto max-w-[1600px] scroll-mt-[55px] border-t border-cream/10 px-5 py-20 sm:px-8 lg:py-28"
+    >
+      <div class="grid gap-x-10 gap-y-10 lg:grid-cols-12">
+        <div class="lg:col-span-7">
+          <p class="font-mono text-[13px] uppercase tracking-[0.22em] text-brand-400">
+            <span class="text-cream/55">05</span> &nbsp;Die Antwort
+          </p>
+
+          <h2
+            class="mt-7 font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
+            data-zeilen
+          >
+            <span><span data-stand-leute class="tabular-nums">48</span> Leute</span>
+            <span>machen mit.</span>
+          </h2>
+        </div>
+
+        <div class="flex flex-col justify-end lg:col-span-5">
+          <p
+            class="max-w-md text-[clamp(1.35rem,2.2vw,1.8rem)] leading-[1.5] text-cream/85"
+          >
+            Die Hoffnung war nicht naiv.
+          </p>
+          <p class="mt-4 font-mono text-[12px] uppercase tracking-[0.22em] text-cream/55">
+            Stand <time data-stand-datum datetime="2026-09-30">30.09.2026</time>
+          </p>
+        </div>
+      </div>
+
+      <!-- Vereine und Betriebe — wie auf der Mitmachseite eigens aufgeführt -->
+      <div
+        data-stand-block
+        class="mt-20 grid gap-x-10 gap-y-4 border-t border-cream/10 pt-10 lg:mt-28 lg:grid-cols-12 lg:pt-12"
+      >
+        <p
+          class="font-mono text-[12px] uppercase tracking-[0.22em] text-cream/55 lg:col-span-3"
+        >
+          Und diese Vereine und Betriebe
+        </p>
+        <ul
+          data-stand-organisationen
+          class="font-display text-[clamp(1.85rem,3.6vw,2.9rem)] font-bold leading-[1.1] tracking-[-0.035em] text-cream lg:col-span-8 lg:col-start-4"
+        >
+          <li>BierKultur Heilbronn e.V.</li>
+          <li>Craftelicious</li>
+          <li>Kulturkeller e.V.</li>
+          <li>VfR Heilbronn</li>
+          <li>innovis - medienagentur</li>
+        </ul>
+      </div>
+
+      <!-- Seitdem -->
+      <div
+        class="mt-14 grid gap-x-10 gap-y-4 border-t border-cream/10 pt-10 lg:mt-16 lg:grid-cols-12 lg:pt-12"
+      >
+        <p
+          class="font-mono text-[12px] uppercase tracking-[0.22em] text-cream/55 lg:col-span-3"
+        >
+          Seitdem
+        </p>
+        <div class="lg:col-span-8 lg:col-start-4">
+          <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
+            Seit Anfang September sitzen wir freitags ab 18 Uhr im Craftelicious
+            in der Fischergasse. Ohne Anmeldung, ohne Programm — wer uns
+            kennenlernen will, kommt einfach vorbei.
+          </p>
+          <p
+            class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
+          >
+            Das erste Rezept steht: ein helles Bürgerbier, süffig, keine fünf
+            Prozent. Die Brauer und Hobbybrauer unter uns haben daran getüftelt.
+            Der erste Probesud ist für Anfang Oktober angesetzt, in einem
+            Kessel für 40 Liter.
+          </p>
+        </div>
+      </div>
+
+      <!--
+        Spiegel der Inventur aus 03 — übrig bleibt ein einziges „Kein“.
+        „Alles da. Nur kein Ort.“ stammt aus Reel 4. Die ausführliche Fassung
+        („Eine Mannschaft. Ein Rezept. / Ein kleiner Kessel. / Kein Ort.“) brach
+        auf 390 px in der ersten Zeile zusätzlich um; mit dem Zeilenversatz sah
+        das kaputt aus. Mannschaft, Rezept und Kessel stehen deshalb im Text
+        darüber.
+      -->
+      <p
+        class="mt-14 font-display text-[clamp(1.85rem,3.6vw,2.9rem)] font-bold leading-[1.05] tracking-[-0.035em] text-cream lg:mt-16"
+        data-zeilen
+      >
+        <span>Alles da.</span>
+        <span>Nur kein Ort.</span>
+      </p>
+
+      <!-- Schluss: Frage an der Kante wie in 02 und 03 -->
+      <div class="mt-20 border-t border-cream/10 pt-14 lg:mt-28 lg:pt-20">
+        <p
+          class="text-balance font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
+        >
+          Wo brauen wir?
+        </p>
+
+        <div class="mt-12 grid gap-x-10 lg:mt-16 lg:grid-cols-12">
+          <div class="lg:col-span-8 lg:col-start-4">
+            <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
+              Der richtige Ort in Heilbronn fehlt noch — Halle, Hof, Keller,
+              leerstehende Werkstatt. Wenn dir was einfällt, schreib uns:
+              <a
+                href="mailto:kontakt@tugaesser.de"
+                class="text-cream underline decoration-brand-500 decoration-2 underline-offset-4 transition-colors duration-150 hover:text-brand-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:text-brand-500"
+                >kontakt@tugaesser.de</a
+              >.
+            </p>
+            <p
+              class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
+            >
+              Mitmachen geht weiter. Du musst nichts können, mitdenken reicht.
+              Und wenn du später einfach mittrinken willst — auch das zählt. Ohne
+              Leute, die es trinken, braucht man nicht zu brauen.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
       Transparenzhinweis nach Art. 50 Abs. 4 EU AI Act. Zwei verschiedene Fälle,
       deshalb **ein Satz je Bild**: Beim Auftaktbild ist nur die Person
       synthetisch, beim Dämmerungsbild das ganze Bild — und „vollständig“
@@ -1313,6 +1485,53 @@
           markieren();
           addEventListener('scroll', anstossen, { passive: true });
           addEventListener('resize', anstossen, { passive: true });
+        }
+
+        /*
+          Phase 05: Zahl und Vereine tagesaktuell von der Mitmachseite.
+
+          Eigene Subdomain, kein fremder Host. Schlägt der Abruf fehl, bleibt
+          der Stand aus dem HTML stehen — mit seinem Datum, also nie falsch,
+          höchstens älter. Kein Ladezustand, kein Fehlertext.
+
+          Leute = alle Einträge minus genannte Vereine/Betriebe. Ungenannte
+          Betriebe stecken damit in den Leuten, wie in der Restzahl dort.
+        */
+        const leute = document.querySelector('[data-stand-leute]');
+        const orgListe = document.querySelector('[data-stand-organisationen]');
+        const datum = document.querySelector('[data-stand-datum]');
+
+        if (leute && orgListe && datum) {
+          fetch('https://mitmachen.tugaesser.de/stand.json', {
+            signal: AbortSignal.timeout(5000),
+          })
+            .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+            .then(({ mitmacher, organisationen, stand }) => {
+              if (!Number.isInteger(mitmacher) || !Array.isArray(organisationen)) return;
+              leute.textContent = String(mitmacher - organisationen.length);
+              orgListe.replaceChildren(
+                ...organisationen.map((name) => {
+                  const li = document.createElement('li');
+                  li.textContent = name;
+                  return li;
+                })
+              );
+              // Ohne genannte Organisation fällt der ganze Block weg, nicht
+              // nur die Liste — sonst stünde eine Überschrift über nichts.
+              // Klasse statt `hidden`-Attribut: `.grid` schlägt das Attribut.
+              orgListe
+                .closest('[data-stand-block]')
+                .classList.toggle('hidden', organisationen.length === 0);
+              const d = new Date(stand);
+              datum.dateTime = d.toISOString().slice(0, 10);
+              datum.textContent = d.toLocaleDateString('de-DE', {
+                timeZone: 'Europe/Berlin',
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+              });
+            })
+            .catch(() => {});
         }
 
         /*

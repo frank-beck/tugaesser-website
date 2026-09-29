@@ -33,7 +33,10 @@ zusammensuchen.
 | Wo | Was |
 |---|---|
 | **Auf dem Auftaktbild** | Ein Bier aus Heilbronn. Für Heilbronn. |
-| **Rechts im Auftakt** | Kein Konzern, kein Chef. — Wer mitmacht, entscheidet mit. Bisher gibt es nur die Idee. Ob daraus ein Bier wird, liegt an dir. |
+| **Rechts im Auftakt** | Kein Konzern, kein Chef. — Wer mitmacht, entscheidet mit. Die Idee hat ihre Leute gefunden, das erste Rezept steht. Ob daraus ein Bier wird, liegt an dir. |
+
+„Bisher gibt es nur die Idee“ stand dort bis 30.09.2026 und war seit den
+Anmeldungen falsch.
 
 - **Jeder Satz steht genau einmal.** Der Bildsatz stand zuerst zusätzlich im
   Textblock und in der Aktionsleiste — dreimal auf einem Bildschirm. Wer hier
@@ -91,6 +94,29 @@ liegt im Text und kostet keinen Bildpunkt Helligkeit.
 Den anderen Weg (Hero-Höhe von 78dvh kappen, damit der Textblock anreißt)
 **nicht gehen**: Bei 68dvh wären oben 55 px statt 30 px weggeschnitten, und dort
 sitzt die Gedankenblase mit dem Bierdeckel.
+
+### Phase 05 „Die Antwort“ seit 30.09.2026
+
+Antwortet auf den Schluss von 04 („die vielleicht naive Hoffnung: dass sich genug
+Heilbronner finden …“). Aufbau: Zahl als H2 („N Leute machen mit.“), rechts „Die
+Hoffnung war nicht naiv.“, dann Vereine/Betriebe, „Seitdem“ (Stammtisch, Rezept,
+Probesud), „Alles da. Nur kein Ort.“ als Spiegel der Inventur aus 03, Schluss
+„Wo brauen wir?“ — jede Phase endet mit einer Frage an der Kante.
+
+- **Zahl und Vereine kommen live** von `https://mitmachen.tugaesser.de/stand.json`
+  (Endpunkt im Repo `tugaesser-mitmachen`, `src/routes/stand.json/+server.ts`).
+  Das HTML trägt einen Fallback mit Datum; schlägt der Abruf fehl, bleibt der
+  stehen. Die einzige Anfrage an einen anderen Host als tugaesser.de — eigene
+  Subdomain, eigener Server.
+- **Leute = alle Einträge minus genannte Vereine/Betriebe.** Ungenannte Betriebe
+  zählen bei den Leuten mit; eine getrennte Zahl würde sie verraten.
+- **Keine Personennamen.** Die Einwilligung lautet „Dieser Name darf unten
+  öffentlich in der Liste stehen“ — gilt für die Mitmachseite, nicht für diese.
+  Eine Kopie hier bekäme außerdem keine Löschung mit.
+- **Veraltet nach dem 03.10.2026:** „Der erste Probesud ist für Anfang Oktober
+  angesetzt“. Nach dem Brautag umschreiben.
+- Die Instagram-Folgen 5.2–7 (32 → 36 → 50) fasst die Website zu dieser einen
+  Phase zusammen — bewusste Abweichung von „dieselben Phasen“.
 
 ### Vier Phasen seit 26.08.2026
 
