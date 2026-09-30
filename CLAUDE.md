@@ -44,6 +44,13 @@ unbehandelt, Text nie auf Foto) — gelten nur für main, bis entschieden ist.
 - **Videos laufen mit 0,6-facher Geschwindigkeit** (`playbackRate` im Skript,
   je Video über `data-tempo` änderbar) — in Echtzeit wirkten sie hektisch.
   Kein Neukodieren nötig.
+- **Logo-Zoom über die viewBox, nicht `transform: scale(36)`** (30.09.2026).
+  Safari rastert eine skalierte Ebene in Normalgröße und vergrößert das
+  Rasterbild — die Ä-Punkte waren auf dem iPhone pixelig. Die viewBox
+  zeichnet jede Stufe als Vektor. Das Logo steht dafür als Inline-SVG im HTML.
+- **Einblendungen (`data-auftauchen`) nur mit Maus** — auf dem iPhone ruckelte
+  die Seite. Galerie und Logo laufen überall. Puls-Punkt animiert nur noch
+  transform/opacity (vorher box-shadow = Neuzeichnen je Frame).
 - `serve.mjs` kennt jetzt `.mp4`. Ohne Range-Support: `networkidle0` hängt bei
   reduzierter Bewegung (Video lädt nie fertig) — in Tests `load` nehmen.
 - Gemessen 30.09.2026: 320–1920 ohne Querlauf, Auftakt = Bildschirmhöhe;
@@ -169,7 +176,7 @@ Bierdeckel, hier die echte Marke, weil die Leute da sind.
 |---|---|
 | Verlauf Seitengrund → Weiß, 75dvh, ohne Text | `[data-zeichen-verlauf]` vor `#phase-05` |
 | Wortmarke (ohne „74 BIER“), **Vektor-Nachzeichnung** ohne Ä-Punkte | `images/tugaesser-wortmarke-ohne-punkte.svg`, Original in `brand_assets/` |
-| Logo setzt sich zusammen: leer, Punkte fliegen ein, dann Zoom 36 → 1 (exponentiell) | `src/input.css`, „Das Logo setzt sich zusammen“ |
+| Logo setzt sich zusammen: leer, Punkte fliegen ein, dann Zoom 36 → 1 (exponentiell) | Skript „Logo-Zoom“ (viewBox des Inline-SVG), Bühne in `src/input.css` |
 | Bildmarke in der Kopfleiste, erst am Ende sichtbar | `images/tugaesser-bildmarke.jpeg`, `.leiste-logo` |
 | Stufenloser Wechsel beider Leisten | `src/input.css`, „Der Wechsel ins Design System“ |
 | Public Sans 400/800/900 | `fonts/public-sans.css`, **von Hand gepflegt**, nicht von `fetch-fonts.mjs` |
@@ -994,8 +1001,12 @@ damit die geänderte CSS live frisch geladen wird.
 - Kein `transition-all`
 - Kein Tailwind-Standard-Blau/-Indigo als Primärfarbe
 - Keine Markenfarben erfinden, wenn `brand_assets/` welche vorgibt
-- **Den KI-Transparenzhinweis im Footer nicht entfernen und nicht unauffälliger
-  machen.** Die Person im Hero-Foto ist KI-generiert (das Foto selbst nicht);
-  Art. 50 Abs. 4 EU AI Act verlangt eine klar erkennbare Offenlegung. Der
-  Hinweis steht doppelt: sichtbar im Footer und im Alt-Text des Bildes. Wird das
-  Bild ausgetauscht, muss der Hinweis mitgeführt oder bewusst gestrichen werden.
+- **Den KI-Transparenzhinweis im Footer nicht entfernen.** Die Frau im Bild zu
+  01 ist KI-generiert (das Foto selbst nicht), das Gruppenbild zu 04 ganz.
+  Art. 50 Abs. 4 EU AI Act verlangt eine klar erkennbare Offenlegung. Seit
+  30.09.2026 **auf Ansage des Auftraggebers** nur noch klein (`text-xs`) im
+  Footer plus Alt-Text — die Hinweise in den Bildunterschriften sind entfallen.
+  **Risiko bewusst getragen:** Art. 50 Abs. 5 verlangt die Information
+  „spätestens zum Zeitpunkt der ersten Interaktion oder Aussetzung“; ein
+  Hinweis am Seitenende erfüllt das womöglich nicht. Wird ein Bild
+  ausgetauscht, den Hinweis mitführen oder bewusst streichen.

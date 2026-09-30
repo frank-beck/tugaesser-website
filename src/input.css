@@ -232,10 +232,20 @@
   }
 
   .puls {
+    position: relative;
     width: 10px;
     height: 10px;
     border-radius: 9999px;
     background: #fff;
+  }
+
+  .puls::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: #fff;
+    opacity: 0;
   }
 
   /* ----------------------------------------------------------- Laufband */
@@ -534,15 +544,16 @@
   }
 }
 
+/* Nur transform/opacity: die frühere box-shadow-Animation malte jeden Frame neu. */
 @keyframes puls {
-  70% {
-    box-shadow: 0 0 0 10px rgb(255 255 255 / 0);
-  }
   from {
-    box-shadow: 0 0 0 0 rgb(255 255 255 / 0.6);
+    opacity: 0.6;
+    transform: scale(1);
   }
+  70%,
   to {
-    box-shadow: 0 0 0 0 rgb(255 255 255 / 0);
+    opacity: 0;
+    transform: scale(3);
   }
 }
 
@@ -550,7 +561,7 @@
   .laufband-spur {
     animation: laufen 40s linear infinite;
   }
-  .puls {
+  .puls::after {
     animation: puls 2s ease-out infinite;
   }
 }
@@ -582,7 +593,12 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
+/*
+  Einblendungen nur mit Maus (30.09.2026): Auf dem iPhone ruckelte die Seite.
+  Rund 40 an den Scrollweg gekoppelte Einblendungen sind der größte Posten;
+  am Handy verzichtbar. Galerie und Logo bleiben überall.
+*/
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
   @supports (animation-timeline: view()) {
     [data-auftauchen] {
       animation: auftauchen linear both;
@@ -595,7 +611,12 @@
       animation-timeline: view();
       animation-range: exit 10% exit 80%;
     }
+  }
+}
 
+/* Galerie überall, auch am Handy. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
     .galerie {
       view-timeline: --galerie block;
     }
@@ -625,90 +646,42 @@
 }
 
 /*
-  DAS LOGO SETZT SICH ZUSAMMEN — unverändert aus main, nur die Kopfleiste ist
-  64 statt 55 px hoch. Begründung, Rechnung (leerer Anfang bei 36-fach) und
-  Grenzen stehen dort im Kommentar; wer Zoom, Blickpunkt oder Bühnenhöhe
-  ändert, rechnet den leeren Anfang nach.
+  DAS LOGO SETZT SICH ZUSAMMEN. Die Bewegung rechnet das Skript („Logo-Zoom“)
+  über die viewBox des Inline-SVG — hier nur die Bühne. `data-zoom` setzt das
+  Skript, und nur ohne reduzierte Bewegung; sonst steht das Logo fertig da.
+
+  Vorher: CSS `transform: scale(36)` am Logo. Auf dem iPhone waren die
+  Ä-Punkte am Anfang pixelig — Safari rastert die Ebene in Normalgröße und
+  vergrößert das Rasterbild (30.09.2026).
+
+  DIE BÜHNE IST 220dvh HOCH, das Bild darin klebt. Nicht verlängern: die
+  frühere 420vh-Sequenz im Auftakt ist genau an der Länge gescheitert.
+  `overflow: clip`, nicht `hidden` (kein eigener Scrollport).
 */
-@keyframes logo-zoom {
-  from {
-    transform: translate(5.84%, -24.47%) scale(36);
-  }
-  25% {
-    transform: translate(2.28%, -9.57%) scale(14.7);
-  }
-  50% {
-    transform: translate(0.835%, -3.5%) scale(6);
-  }
-  75% {
-    transform: translate(0.242%, -1.01%) scale(2.45);
-  }
-  to {
-    transform: none;
-  }
+[data-zoom] {
+  height: 220dvh;
 }
 
-@keyframes punkt-links {
-  from {
-    transform: translateX(-350%) scale(1.5);
-  }
-  to {
-    transform: none;
-  }
+/* Sprungziel unten in der Bühne, eine Bildschirmhöhe hoch: dort steht das
+   Logo fertig. */
+[data-zoom] [data-logo-anker] {
+  position: absolute;
+  bottom: 0;
+  height: calc(100dvh - 64px);
 }
 
-@keyframes punkt-rechts {
-  from {
-    transform: translateX(350%) scale(1.5);
-  }
-  to {
-    transform: none;
-  }
+[data-zoom] [data-logo-bild] {
+  position: sticky;
+  top: 64px;
+  height: calc(100dvh - 64px);
+  padding: 0;
+  overflow: clip;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    [data-logo-buehne] {
-      height: 220dvh;
-      view-timeline: --logo block;
-    }
-
-    [data-logo-anker] {
-      position: absolute;
-      bottom: 0;
-      height: calc(100dvh - 64px);
-    }
-
-    [data-logo-bild] {
-      position: sticky;
-      top: 64px;
-      height: calc(100dvh - 64px);
-      padding: 0 20px;
-      overflow: clip;
-    }
-
-    /* Blickpunkt: x 434,5 / y 595 von 984 × 799 */
-    [data-logo] {
-      transform-origin: 44.16% 74.47%;
-      animation: logo-zoom linear both;
-      animation-timeline: --logo;
-      animation-range: contain 40% contain 100%;
-    }
-
-    [data-logo-punkt] {
-      animation-fill-mode: both;
-      animation-timing-function: cubic-bezier(0.15, 0.6, 0.3, 1);
-      animation-timeline: --logo;
-    }
-
-    [data-logo-punkt='links'] {
-      animation-name: punkt-links;
-      animation-range: contain 6% contain 32%;
-    }
-
-    [data-logo-punkt='rechts'] {
-      animation-name: punkt-rechts;
-      animation-range: contain 14% contain 40%;
-    }
-  }
+[data-zoom] [data-logo] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
 }
