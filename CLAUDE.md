@@ -1006,8 +1006,9 @@ damit die geänderte CSS live frisch geladen wird.
 - Kein `transition-all`
 - Kein Tailwind-Standard-Blau/-Indigo als Primärfarbe
 - Keine Markenfarben erfinden, wenn `brand_assets/` welche vorgibt
-- **Den KI-Transparenzhinweis im Footer nicht entfernen.** Die Frau im Bild zu
-  01 ist KI-generiert (das Foto selbst nicht), das Gruppenbild zu 04 ganz.
+- **Den KI-Transparenzhinweis im Footer nicht entfernen.** Seit 30.09.2026 ist
+  nur noch das Gruppenbild zu 04 KI-generiert — das Traumbild (Frau mit
+  Bierdeckel-Gedankenblase) ist von der Seite genommen.
   Art. 50 Abs. 4 EU AI Act verlangt eine klar erkennbare Offenlegung. Seit
   30.09.2026 **auf Ansage des Auftraggebers** nur noch klein (`text-xs`) im
   Footer plus Alt-Text — die Hinweise in den Bildunterschriften sind entfallen.
