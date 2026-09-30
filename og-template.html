@@ -4,132 +4,113 @@
     <meta charset="utf-8" />
     <!-- Liegt im Webroot mit, ist aber keine Seite für Besucher. -->
     <meta name="robots" content="noindex, nofollow" />
-    <link rel="stylesheet" href="fonts/fonts.css" />
+    <link rel="stylesheet" href="fonts/public-sans.css" />
     <style>
       /*
-        Vorlage für images/og-image.jpg – wird von generate-og.mjs auf exakt
-        1200x630 abfotografiert. Nicht Teil der Website, wird nicht ausgeliefert.
-        Farben und Schriften bewusst identisch zur Seite gehalten.
+        Vorlage für images/og-image.jpg — generate-og.mjs fotografiert sie auf
+        exakt 1200×630 ab. Aufbau wie der Auftakt der Seite (seit 30.09.2026):
+        Text links auf Tiefblau, rechts ein Standbild der Zapfanlage.
+
+        Bild: `images/og-zapfanlage.jpg`, Sekunde 3 aus video/zapfanlage.mp4 —
+        ohne das Lindr-Logo (Sekunde 0–1) und ohne Kreideschrift fremder Biere.
+        Keine Live-Zahl: das Bild wird tagelang gecacht und veraltete sonst.
       */
       * { box-sizing: border-box; margin: 0; padding: 0; }
       html, body { width: 1200px; height: 630px; overflow: hidden; }
 
-      /* Inter fürs Fließende, Inter Tight nur für die Überschrift – genau wie
-         auf der Seite. Von Inter Tight liegt lokal nur der 700er, alles andere
-         würde der Browser sonst selbst verzerren. */
       body {
-        position: relative;
-        background: #0a0d14;
-        font-family: 'Inter', system-ui, sans-serif;
-        color: #f4efe7;
+        display: grid;
+        grid-template-columns: 780px 420px;
+        background: #001a33;
+        font-family: 'Public Sans', system-ui, sans-serif;
+        color: #fff;
       }
 
-      .bg {
-        position: absolute;
-        inset: 0;
-        background-image: url('images/tugaesser-rathaus-hero-1600x900.png');
-        background-size: cover;
-        /* Etwas nach rechts: Frau und Gedankenblase sollen ins Bild. */
-        background-position: 62% 42%;
-      }
-
-      /* Links kräftig abdunkeln, rechts das Foto stehen lassen. */
-      .scrim {
-        position: absolute;
-        inset: 0;
-        background:
-          linear-gradient(100deg, rgba(10,13,20,0.95) 0%, rgba(10,13,20,0.86) 34%, rgba(10,13,20,0.35) 60%, rgba(10,13,20,0.08) 100%),
-          linear-gradient(to top, rgba(10,13,20,0.75) 0%, transparent 45%);
-      }
-
-      .content {
-        position: relative;
-        z-index: 2;
-        height: 100%;
-        padding: 62px 68px;
+      .text {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        padding: 56px 64px 52px;
       }
 
-      .label {
-        font-family: 'JetBrains Mono', ui-monospace, monospace;
-        font-size: 19px;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: #e06359;
+      .kicker {
         display: flex;
         align-items: center;
         gap: 14px;
-      }
-      .label .dot { width: 9px; height: 9px; background: #c8322a; flex: none; }
-      .label .ort { color: rgba(244,239,231,0.5); }
-
-      h1 {
-        font-family: 'Inter Tight', system-ui, sans-serif;
-        font-size: 82px;
-        font-weight: 700;
-        line-height: 0.94;
-        letter-spacing: -0.045em;
-        max-width: 15ch;
-        /* Der Text steht teils auf heller Fassade – der Schatten trägt hier
-           die Lesbarkeit, nicht noch mehr Abdunklung. */
-        text-shadow: 0 2px 4px rgba(10,13,20,0.7), 0 8px 34px rgba(10,13,20,0.95);
-      }
-
-      .foot {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 40px;
-      }
-      .claim {
-        font-size: 27px;
-        line-height: 1.45;
-        color: rgba(244,239,231,0.82);
-        max-width: 22ch;
-        text-shadow: 0 2px 18px rgba(10,13,20,0.95);
-      }
-      .handle {
-        font-family: 'JetBrains Mono', ui-monospace, monospace;
-        font-size: 19px;
-        letter-spacing: 0.16em;
+        font-size: 17px;
+        font-weight: 900;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
-        color: rgba(244,239,231,0.72);
-        border: 1px solid rgba(244,239,231,0.3);
-        padding: 13px 20px;
-        white-space: nowrap;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .kicker i { width: 32px; height: 4px; border-radius: 2px; background: currentColor; }
+
+      /* Längste Zeile „Für Heilbronn.“ ist 8,4 × Schriftgröße breit: 76 px → 638 von 652. */
+      h1 {
+        font-size: 76px;
+        font-weight: 900;
+        line-height: 0.9;
+        letter-spacing: -0.025em;
+        text-transform: uppercase;
+      }
+      h1 span { display: block; }
+      h1 .leise { color: rgba(255, 255, 255, 0.55); }
+
+      .satz {
+        margin-top: 22px;
+        font-size: 25px;
+        line-height: 1.35;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .satz b { font-weight: 900; color: #fff; }
+
+      .fuss {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .marke {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .marke img { width: 40px; height: 40px; }
+      .knopf {
+        border-radius: 8px;
+        background: #7a1618;
+        padding: 14px 26px;
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.25);
       }
 
-      /* Ecken-Ticks wie auf der Seite. */
-      .tick { position: absolute; background: rgba(244,239,231,0.3); z-index: 3; }
-      .tick.a { left: 30px; top: 30px; width: 1px; height: 20px; }
-      .tick.b { left: 30px; top: 30px; width: 20px; height: 1px; }
-      .tick.c { right: 30px; bottom: 30px; width: 1px; height: 20px; }
-      .tick.d { right: 30px; bottom: 30px; width: 20px; height: 1px; }
+      .bild {
+        background: url('images/og-zapfanlage.jpg') center 45% / cover no-repeat;
+      }
     </style>
   </head>
   <body>
-    <div class="bg"></div>
-    <div class="scrim"></div>
-
-    <span class="tick a"></span><span class="tick b"></span>
-    <span class="tick c"></span><span class="tick d"></span>
-
-    <div class="content">
-      <div class="label">
-        <span class="dot"></span>
-        Tugässer&nbsp;Bräu <span class="ort">· Heilbronn</span>
-      </div>
-
+    <div class="text">
+      <p class="kicker"><i></i>Tugässer · Heilbronn</p>
       <div>
-        <h1>Tugässer,<br />schaffen wir&rsquo;s.</h1>
+        <h1>
+          <span>Ein Bier aus</span>
+          <span>Heilbronn.</span>
+          <span class="leise">Für Heilbronn.</span>
+        </h1>
+        <p class="satz"><b>Kein Konzern, kein Chef.</b><br />Wer mitmacht, entscheidet mit.</p>
       </div>
-
-      <div class="foot">
-        <p class="claim">Man wird ja wohl noch träumen dürfen.</p>
-        <span class="handle">@tugaesser</span>
+      <div class="fuss">
+        <span class="marke"><img src="images/tugaesser-bildmarke-weiss.png" alt="" />tugaesser.de</span>
+        <span class="knopf">Mach mit</span>
       </div>
     </div>
+    <div class="bild"></div>
   </body>
 </html>

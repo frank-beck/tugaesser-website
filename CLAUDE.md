@@ -765,8 +765,12 @@ nicht erst. Unter 300 KB bleiben, sonst fällt die Vorschau still aus.
 
 - **Nach Änderungen an Claim, Marke oder Bild das OG-Bild neu erzeugen** — es ist
   eine Kopie, die sonst stillschweigend veraltet.
-- **`og:description` sagt seit 26.08.2026 die Sache, das OG-Bild weiter den
-  Traum.** In der Beschreibung stand „Man wird ja wohl noch träumen dürfen." —
+- **OG-Bild seit 30.09.2026 wie der Auftakt:** Claim links auf Tiefblau,
+  rechts Standbild `images/og-zapfanlage.jpg` (Sekunde 3 der Zapfanlage — ohne
+  Lindr-Logo, ohne Kreideschrift fremder Biere). Keine Live-Zahl, weil gecacht.
+  URL trägt `?v=` — bei neuem Bild hochzählen, sonst hält Facebook das alte.
+- **`og:description` sagt seit 26.08.2026 die Sache, das OG-Bild bis 30.09.2026
+  den Traum.** In der Beschreibung stand „Man wird ja wohl noch träumen dürfen." —
   schön, aber in einer WhatsApp-Vorschau erfährt so niemand, worum es geht. Jetzt
   steht dort der Dreisatz aus dem Auftakt. Das Bild trägt weiterhin den Claim;
   zusammen ergibt das Stimmung plus Auskunft. Wer beides gleichschaltet, verliert
