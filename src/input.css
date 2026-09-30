@@ -309,6 +309,13 @@
   passiert hat. Das schaltet hart um, mit kurzer Überblendung nur bei erlaubter
   Bewegung. Nicht stufenlos, aber nie falsch.
 */
+/* Linkschrift in den Leisten — siehe „Farben an Links“ unten. */
+@property --lf {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
 @property --neu {
   syntax: '<number>';
   inherits: true;
@@ -373,21 +380,59 @@
     text-transform: uppercase;
   }
 
-  .leiste-link:hover {
-    color: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
+  /*
+    FARBEN AN LINKS STEHEN AM KIND, NIE AM `<a>` (30.09.2026).
+
+    Chrome berechnet Farben besuchter Links — und aller Elemente darin — auf
+    einem eigenen Weg, und der verwirft `color-mix(… var(--neu) …)`. Die
+    Schrift erbt dann einfach die Farbe der Leiste. Beim Auftraggeber stand so
+    „Mach mit“ in Blau auf Ziegelrot, und die Ziffern verloren ihre
+    Markierung; wer nie auf der Mitmachseite war, sah alles richtig.
+
+    Gemessen am 30.09.2026 im besuchten Zustand: feste Farbe ✓, `color-mix`
+    ohne `var()` ✓, `var()` ohne `color-mix` ✓, beides zusammen ✗. **Der Weg
+    heraus ist `--lf`**, eine registrierte `<color>`-Eigenschaft: Die Mischung
+    wird dort zu einer fertigen Farbe ausgerechnet, und `color: var(--lf)` ist
+    für Chrome dann ein schlichtes `var()`.
+
+    Dazu gehört der zweite Teil: **am `<a>` keine gemischten Farbeigenschaften**
+    (`color`, `background-color`, `border-color`, `outline-color`). Fläche und
+    Rahmen der Knöpfe sind deshalb `background-image` und `box-shadow`, der
+    Fokusrahmen `currentColor`.
+
+    **Puppeteer zeigt den Fehler nur mit echtem Profil** (`userDataDir`) und
+    nur, wenn der Link VON der Seite aus geklickt wurde — Chrome führt
+    besuchte Links je Herkunftsseite getrennt.
+  */
+  .leiste-link {
+    --lf: color-mix(in oklab, rgb(244 239 231 / 0.55), #4d7293 calc(var(--neu) * 100%));
   }
 
-  .leiste-marke:hover {
-    color: color-mix(in oklab, #e06359, #7a1618 calc(var(--neu) * 100%));
+  .leiste-link:hover {
+    --lf: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
   }
 
   .leiste-link[aria-current='true'] {
-    color: color-mix(in oklab, #e06359, #7a1618 calc(var(--neu) * 100%));
+    --lf: color-mix(in oklab, #e06359, #7a1618 calc(var(--neu) * 100%));
+  }
+
+  .leiste-marke {
+    --lf: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
+  }
+
+  .leiste-marke:hover {
+    --lf: color-mix(in oklab, #e06359, #7a1618 calc(var(--neu) * 100%));
+  }
+
+  .leiste-link > span,
+  .leiste-marke > .leiste-marke-text,
+  .knopf-mach-mit > span,
+  .knopf-folg > span {
+    color: var(--lf);
   }
 
   .leiste :focus-visible {
-    outline: calc(2px + 1px * var(--stufe)) solid
-      color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
+    outline: calc(2px + 1px * var(--stufe)) solid currentColor;
     outline-offset: calc(2px + 2px * var(--stufe));
   }
 
@@ -442,7 +487,6 @@
     --oben: color-mix(in oklab, #c8322a, #7a1618 calc(var(--neu) * 100%));
     --unten: color-mix(in oklab, #8a201a, #7a1618 calc(var(--neu) * 100%));
     background-image: linear-gradient(to bottom, var(--oben), var(--unten));
-    color: color-mix(in oklab, #f4efe7, #ffffff calc(var(--neu) * 100%));
     border-radius: calc(4px + 4px * var(--neu));
     box-shadow:
       inset 0 1px 0 0 rgb(244 239 231 / calc(0.32 * (1 - var(--neu)))),
@@ -453,27 +497,44 @@
     text-transform: var(--l-versal);
   }
 
+  .knopf-mach-mit {
+    --lf: color-mix(in oklab, #f4efe7, #ffffff calc(var(--neu) * 100%));
+  }
+
+  /* Fläche und Rahmen als `background-image` und `box-shadow` statt
+     `background-color` und `border` — siehe „Farben an Links“ oben. */
   .knopf-folg {
-    background-color: color-mix(in oklab, transparent, #ffffff calc(var(--neu) * 100%));
-    border: calc(1px + 1px * var(--stufe)) solid
-      color-mix(in oklab, rgb(244 239 231 / 0.25), #013565 calc(var(--neu) * 100%));
+    --fuellung: color-mix(in oklab, transparent, #ffffff calc(var(--neu) * 100%));
+    --rahmen: color-mix(in oklab, rgb(244 239 231 / 0.25), #013565 calc(var(--neu) * 100%));
+    background-image: linear-gradient(var(--fuellung), var(--fuellung));
+    box-shadow: inset 0 0 0 calc(1px + 1px * var(--stufe)) var(--rahmen);
     border-radius: calc(4px + 4px * var(--neu));
     font-weight: calc(400 + 500 * var(--stufe));
     letter-spacing: calc(0.16em * (1 - var(--stufe)));
     text-transform: var(--l-versal);
   }
 
+  .knopf-folg {
+    --lf: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
+  }
+
   @media (hover: hover) and (pointer: fine) {
     .knopf-mach-mit:hover {
       --oben: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
       --unten: var(--oben);
-      color: color-mix(in oklab, #8a201a, #ffffff calc(var(--neu) * 100%));
+    }
+
+    .knopf-mach-mit:hover {
+      --lf: color-mix(in oklab, #8a201a, #ffffff calc(var(--neu) * 100%));
     }
 
     .knopf-folg:hover {
-      background-color: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
-      border-color: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
-      color: color-mix(in oklab, #0a0d14, #ffffff calc(var(--neu) * 100%));
+      --fuellung: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
+      --rahmen: var(--fuellung);
+    }
+
+    .knopf-folg:hover {
+      --lf: color-mix(in oklab, #0a0d14, #ffffff calc(var(--neu) * 100%));
     }
   }
 }

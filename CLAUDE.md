@@ -871,6 +871,14 @@ damit die geänderte CSS live frisch geladen wird.
   beide Gerätearten geprüft, indem `hover: none` und `pointer: coarse` emuliert
   wurden — ein schmaler Viewport allein prüft das nicht, der meldet weiterhin
   einen Zeiger.
+- **Besuchte Links vertragen kein `color-mix(… var() …)`** (Chrome, gemessen
+  30.09.2026). Wer schon auf der Mitmachseite war, sah „Mach mit“ blau auf
+  Ziegelrot — die Schrift fiel auf die geerbte Farbe zurück. Das gilt für den
+  Link **und alles darin**. Lösung: Mischung in die registrierte `<color>`-
+  Eigenschaft `--lf` rechnen, `color: var(--lf)` am Kind. Am `<a>` selbst keine
+  gemischten `color`/`background-color`/`border-color`/`outline-color`.
+  **Puppeteer zeigt das nur mit `userDataDir` und wenn der Link von der Seite
+  aus geklickt wurde** — sonst sieht alles richtig aus.
 - **`overflow-clip-margin` kennt Safari nicht.** Wer mit `overflow: clip` etwas
   abfängt, kappt dort die Unterlängen — auf dem iPhone waren „gebrodelt.“ und
   „bringst du mit.“ unten abgeschnitten, während Chrome alles korrekt zeigte.
