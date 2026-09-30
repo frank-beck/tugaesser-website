@@ -548,6 +548,11 @@ Inhaltliche Leitplanken für diesen Abschnitt, nicht wegoptimieren:
   Heilbronner Markengeschichte. Der Abschnitt trennt Produktionsort und
   Markenherkunft sachlich; der Block „Heute“ sagt mit „Das ist kein Vorwurf“
   explizit, dass hier niemand angegriffen wird. Der Satz bleibt drin.
+- **Käthchen braut jetzt Palmbräu in Eppingen** (Zeitung, Ende Sept. 2026), nicht mehr
+  Nagold-Hochdorf (Stimme.de/RNZ, eingepflegt 30.09.2026). Der Satz
+  „Eppingen … die Palmbräu. Beide brauen vor Ort.“ unter „Anderswo“ bleibt
+  richtig. Die Faktenbasis im Schwesterrepo (`pitch.md`, `reel_ideen.md`,
+  `social_media_postserie.md`) nennt noch Nagold.
 - **Cluss hat bis Ende 1995 in Heilbronn gebraut, nicht bis 1982.** 1982 ging nur
   die Aktienmehrheit an Dinkelacker; die Stilllegung beschloss eine
   außerordentliche Hauptversammlung im November 1995. Eine frühere Fassung des
