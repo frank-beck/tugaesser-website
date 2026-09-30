@@ -147,6 +147,10 @@ Bierdeckel, hier die echte Marke, weil die Leute da sind.
   Zoom unscharf. **Sobald Ralf eine SVG liefert, ersetzen** — die Ä-Punkte sind
   dann aus ihr zu übernehmen (heute Kreise, Mittelpunkte 418/613 und 451/613,
   r 14,5 in 984×799).
+- **Der Kopfleisten-Link „05“ springt auf `#phase-05-logo`**, einen Anker am
+  Bühnenende — dort steht das Logo fertig. Der Bühnenanfang ist leer; wer dort
+  landet, sieht Weiß und scrollt nicht weiter. `#phase-05` bleibt als Phase für
+  die Markierung in der Leiste.
 - **Die Logo-Bühne ist 220dvh hoch** (Bild klebt, ~120dvh Bewegung). Während
   der Animation fehlen kurz die Punkte und das Logo ragt über den Rand — mit
   dem Auftraggeber so abgestimmt, Endzustand regelkonform.

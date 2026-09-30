@@ -624,6 +624,15 @@
       view-timeline: --logo block;
     }
 
+    /* Sprungziel unten in der Bühne, eine Bildschirmhöhe hoch: Landet seine
+       Oberkante unter der Kopfleiste, liegt die Bühnenunterkante am unteren
+       Rand — `contain 100%`, das Logo steht fertig. */
+    [data-logo-anker] {
+      position: absolute;
+      bottom: 0;
+      height: calc(100dvh - 55px);
+    }
+
     [data-logo-bild] {
       position: sticky;
       top: 55px;

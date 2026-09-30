@@ -93,7 +93,7 @@
     -->
     <link rel="stylesheet" href="fonts/fonts.css" />
     <link rel="stylesheet" href="fonts/public-sans.css" />
-    <link rel="stylesheet" href="tailwind.css?v=d948f5e8" />
+    <link rel="stylesheet" href="tailwind.css?v=f555f184" />
   </head>
 
   <body class="bg-night font-body text-cream antialiased">
@@ -198,9 +198,9 @@
             <span class="tabular-nums">04</span>
             <span class="hidden lg:inline">Mitmachen</span>
           </a>
-          <!-- Sprungziel ist die Wortmarke, die Phase 05 eröffnet. -->
+          <!-- Sprungziel ist das fertige Logo (#phase-05-logo), nicht der leere Bühnenanfang. -->
           <a
-            href="#phase-05"
+            href="#phase-05-logo"
             data-phase-link="phase-05"
             class="leiste-leise leiste-link flex items-center gap-2 whitespace-nowrap transition-colors duration-150 active:opacity-70"
           >
@@ -1177,8 +1177,15 @@
         id="phase-05"
         data-phase
         data-logo-buehne
-        class="scroll-mt-[55px] bg-white"
+        class="relative scroll-mt-[55px] bg-white"
       >
+        <!--
+          Sprungziel der Kopfleiste: dort, wo das Logo FERTIG steht. Die Bühne
+          beginnt leer (36-fach gezoomt) — wer per Klick dort landet, sieht
+          eine weiße Fläche und weiß nicht, dass er scrollen muss. Mit Bühne
+          sitzt der Anker unten (input.css), ohne Bühne bleibt er oben.
+        -->
+        <span id="phase-05-logo" data-logo-anker class="block scroll-mt-[55px]" aria-hidden="true"></span>
         <div data-logo-bild class="grid place-items-center px-5 pb-16 pt-8 sm:px-8 lg:pb-24">
           <div
             data-logo
