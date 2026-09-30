@@ -118,6 +118,54 @@ Probesud), „Alles da. Nur kein Ort.“ als Spiegel der Inventur aus 03, Schlus
 - Die Instagram-Folgen 5.2–7 (32 → 36 → 50) fasst die Website zu dieser einen
   Phase zusammen — bewusste Abweichung von „dieselben Phasen“.
 
+### Design System ab Phase 05 (seit 30.09.2026)
+
+Ab der Wortmarke steht die Seite im **Tugässer Design System 2.1.3**
+([design-system.tugaesser.de](https://design-system.tugaesser.de/)): Weiß,
+`tg-blue` #013565, `tg-brick` #7A1618, Public Sans. **Davor bleibt alles alt**
+(Nacht, Creme, Inter Tight, Mono) — der Bruch ist erzählt: oben der geträumte
+Bierdeckel, hier die echte Marke, weil die Leute da sind.
+
+| Was | Wo |
+|---|---|
+| Verlauf Seitengrund → Weiß, 75dvh, ohne Text | `[data-zeichen-verlauf]` vor `#phase-05` |
+| Wortmarke (ohne „74 BIER“), **Vektor-Nachzeichnung** ohne Ä-Punkte | `images/tugaesser-wortmarke-ohne-punkte.svg`, Original in `brand_assets/` |
+| Logo setzt sich zusammen: leer, Punkte fliegen ein, dann Zoom 36 → 1 (exponentiell) | `src/input.css`, „Das Logo setzt sich zusammen“ |
+| Bildmarke in der Kopfleiste, erst am Ende sichtbar | `images/tugaesser-bildmarke.jpeg`, `.leiste-logo` |
+| Stufenloser Wechsel beider Leisten | `src/input.css`, „Der Wechsel ins Design System“ |
+| Public Sans 400/800/900 | `fonts/public-sans.css`, **von Hand gepflegt**, nicht von `fetch-fonts.mjs` |
+
+- **Farbe fließt, Schrift springt** — in der Mitte des Verlaufs. Gesteuert über
+  einen registrierten Wert `--neu`; Kopfleiste über `animation-range: exit`,
+  Aktionsleiste über `entry`, damit jede die Farbe hat, die hinter ihr liegt.
+- **Ohne Scroll-Timeline** (Firefox, ältere Safari, reduzierte Bewegung) setzt
+  das Skript `data-neu` hart. Geprüft mit emulierter reduzierter Bewegung.
+- **Im Verlauf steht kein Text** — auf halbem Weg ist der Grund mittelgrau, dort
+  hätte keine Schriftfarbe Kontrast.
+- **Das Logo auf der Seite ist nachgezeichnet** (Potrace, 30.09.2026): 1,56 %
+  der Logofläche weichen an den Kanten vom JPEG ab. Das JPEG (984 px) wäre beim
+  Zoom unscharf. **Sobald Ralf eine SVG liefert, ersetzen** — die Ä-Punkte sind
+  dann aus ihr zu übernehmen (heute Kreise, Mittelpunkte 418/613 und 451/613,
+  r 14,5 in 984×799).
+- **Die Logo-Bühne ist 220dvh hoch** (Bild klebt, ~120dvh Bewegung). Während
+  der Animation fehlen kurz die Punkte und das Logo ragt über den Rand — mit
+  dem Auftraggeber so abgestimmt, Endzustand regelkonform.
+- **Logo-Regeln aus dem DS:** nur auf Weiß, nicht einfärben, nicht beschneiden.
+  Das Siegel trägt „74 BIER“, dessen Status offen ist — deshalb die Wortmarke.
+- **Bildunterschrift „Mitgebracht von einem, der mitmacht.“ nennt bewusst keinen
+  Namen** — Nennung und Rechte mit dem Gestalter sind nicht schriftlich.
+- **Kopfleiste bei 320–1920 gemessen, 55 px hoch in beiden Fassungen.** Unter
+  640 px ersetzt die Bildmarke den Schriftzug, unter 360 px entfällt er ganz
+  (lief sonst 5 px über). Bei jeder Änderung an Leiste oder Einträgen alle
+  Breiten neu messen.
+- In 05: nichts unter 1rem, `tg-muted` nie als Textfarbe (2,5:1), leiser Text
+  `tg-blue/70` (5,1:1). Typo-Rollen im Kommentar über `<section id="antwort">`.
+- **Flächen und Kästen in 05** (auf Wunsch, „wirkt sehr eintönig“): Antwort auf
+  Logo-Blau, Vereine als Kästen wie auf der Mitmachseite, Inventur als vier
+  Kacheln (✓/✕ plus Screenreader-Text), Ortsaufruf auf Ziegelrot. Blau → Weiß →
+  Rot = Stadtflagge. Die Anti-Karten-Regel gilt nur für 01–04.
+- **Die Typoskala weiter unten gilt nur bis 04.**
+
 ### Vier Phasen seit 26.08.2026
 
 Traum → Bestandsaufnahme → Die Idee → Mitmachen. Bis dahin trug „03“ beides: die
@@ -486,7 +534,7 @@ werden dürfen. Wer daran arbeitet, liest zuerst dort.
 |---|---|---|
 | Der Satz auf dem Auftaktbild bleibt zurück | `[data-parallax-satz]` | 72 px über den Scrollweg |
 | Zeilen großer Sätze richten sich aus | `[data-zeilen]` | gestaffelt bis 46 % der Zeilenbreite, endet bündig |
-| Der Grund wird heller | `body`, beide Leisten | `#0A0D14` → `#0E2143` linear über die Seite |
+| Der Grund wird heller | `body::before` (nur `opacity`) | `#0A0D14` → `#0E2143` linear über die Seite |
 
 Gemeinsame Bauweise, die für jeden weiteren Effekt gelten soll:
 
@@ -532,9 +580,27 @@ Daraus folgt zweierlei:
 
 - **`bg-night` am `<body>` ist nur noch Startwert und Fallback**, nicht mehr die
   Farbe der ganzen Seite.
-- **Die beiden Leisten tragen dieselben Farben doppelt** — einmal als
-  Tailwind-Klasse (`bg-night/70`, `bg-night/85`) für den Fallback, einmal in
-  ihren Keyframes. Beim Ändern beide Stellen nachziehen.
+- **Die Leisten wandern nicht mehr mit** — fester Mittelton `#0C172C` bei 70/85 %
+  Deckkraft. Ihre eigene Farbanimation kostete die Hälfte der Style-Arbeit.
+
+### Ruckeln — gemessen, nicht geschätzt (30.09.2026)
+
+Chrome-Trace, 390 px, ganze Seite durchgescrollt, Live-Stand gegen neu:
+
+| | vorher | nachher |
+|---|---|---|
+| Paint | 193 ms | 56 ms |
+| Raster | 128 ms | 42 ms |
+| Style (`UpdateLayoutTree`) | 111 ms | 209 ms (Leistenwechsel) |
+
+- **Nie `background-color` scrollgebunden animieren** — malt jeden Frame die ganze
+  Fläche neu. `opacity` auf einer eigenen Ebene läuft im Compositor.
+- **Nie eine vererbte Custom Property am `<body>` animieren** — jeder Frame
+  rechnet dann die Styles der ganzen Seite neu.
+- Headless-Chrome deckelt auf 60 fps; Frame-Abstände sagen dort nichts. Trace
+  lesen (`Paint`, `UpdateLayoutTree`, `RasterTask`).
+- **Safari ist ungemessen.** Das Ruckeln fiel am Gerät auf; ob es dort weg ist,
+  zeigt nur ein echtes iPhone/Safari.
 
 ## Design-Richtung
 
@@ -616,8 +682,10 @@ Mit 3:2 sind es rund 84 Prozent.
 
 Ebenfalls offen und für jede Design-Arbeit relevant:
 
-- `brand_assets/` ist **leer** — kein Logo, kein Styleguide, keine Hausschriften.
-- Farben und Fonts in `tailwind.config.js` sind deshalb **provisorisch**: die
+- **Logo und Styleguide gibt es seit September**: Design System 2.1.3, siehe
+  „Design System ab Phase 05“. `brand_assets/` bleibt trotzdem leer.
+- Farben und Fonts der Abschnitte 01–04 in `tailwind.config.js` sind weiter
+  **provisorisch**: die
   Farben aus `images/tugaesser-rathaus-hero-1600x900.png` abgetastet
   (Bierdeckel-Rot `brand`, Bierdeckel-Blau `navy`, Nachthimmel `night`,
   Bier `gold`, Rathaus-Sandstein `sandstone`), die Schriften frei gewählt
@@ -700,14 +768,17 @@ JetBrains Mono 400/500, zusammen ~107 KB, nur Subset `latin`).
 
 ## Favicon
 
-`favicon.svg` ist die Quelle — der Bierdeckel aus dem Hero, reduziert auf helles
-Quadrat, roten Rahmen und blaues T. Der Schriftzug des Originals ist bei 16 px
-nicht darstellbar und würde nur vermatschen.
+**Die Bildmarke, weiß auf Logo-Blau** (seit 30.09.2026). Quelle ist
+`brand_assets/tugaesser-bildmarke-maske.png` (Alphamaske aus dem DS-Favicon);
+`PORT=3001 node generate-icons.mjs` schreibt daraus `favicon.svg`,
+`favicon-32.png` und `apple-touch-icon.png`. **`favicon.svg` nicht von Hand
+bearbeiten.** Farben stehen oben im Skript.
 
-`PORT=3001 node generate-icons.mjs` rendert daraus `favicon-32.png` (Fallback für
-Browser ohne SVG-Favicon) und `apple-touch-icon.png` (iOS-Homescreen, kann kein
-SVG). **Nach Änderungen am SVG neu erzeugen** — die PNGs sind Kopien und
-veralten sonst still.
+- **Nicht rot auf blau.** War gewünscht; #7A1618 gegen #013565 hat ~1,15:1
+  Kontrast, bei 16/32 px war das Zeichen in beiden Richtungen weg.
+- Apple-Icon auf vollem Blau: iOS füllt transparente Ecken schwarz.
+- Nach Änderung `?v=` an den drei `<link>`-Tags hochzählen — Favicons werden
+  besonders lange gecacht.
 
 ## Offen
 

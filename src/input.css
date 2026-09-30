@@ -61,7 +61,11 @@
       view-timeline: --auftakt block;
     }
 
+    /* `will-change`: eigene Ebene von Anfang an. Der Satz trägt einen 24-px-
+       Textschatten; ohne feste Ebene kann Safari ihn bei jedem Frame neu
+       rastern. */
     [data-parallax-satz] {
+      will-change: transform;
       animation: parallax-satz linear both;
       animation-timeline: --auftakt;
       animation-range: cover 50% cover 100%;
@@ -205,11 +209,26 @@
   Zielfarbe aufhellt, rechnet cream/55 gegen den neuen Grund nach** — unter
   4,5:1 fällt die Seite aus WCAG AA.
 
-  DIE BEIDEN LEISTEN MÜSSEN MITWANDERN. Sie liegen mit `bg-night/70` und `/85`
-  über dem Grund; bliebe ihre Farbe stehen, stünden unten zwei dunkle Balken auf
-  hellerem Grund. Ihre Keyframes tragen dieselben Farben mit derselben Deckkraft
-  wie die Tailwind-Klassen, die sie überschreiben — beim Ändern beide Stellen
-  nachziehen.
+  **NUR ÜBER `opacity`, NICHT ÜBER `background-color`** (seit 30.09.2026,
+  „Scrolling ist ruckelig“). Die erste Fassung animierte `background-color` am
+  `<body>` — das kann kein Browser auf der Grafikkarte, also malte er in jedem
+  Scroll-Frame die ganze Fläche neu, auf dem Hauptthread. Kurz war dort zusätzlich
+  eine *vererbte* Farbe `--grund` animiert: Damit rechnete der Browser pro Frame
+  die Styles **jedes Elements der Seite** neu. Beides bremste alle anderen
+  scrollgebundenen Effekte mit aus, am sichtbarsten den Parallax-Satz.
+
+  Jetzt liegt Navy-800 als feste, bildschirmgroße Ebene hinter allem
+  (`body::before`, `z-index: -1`) und wird nur eingeblendet. `opacity` läuft im
+  Compositor, der Hauptthread tut beim Scrollen nichts mehr dafür. Optisch
+  identisch: Night unten, Navy-800 mit steigender Deckkraft darüber.
+
+  DIE BEIDEN LEISTEN WANDERN NICHT MEHR MIT. Sie tragen einen festen Mittelton
+  zwischen Night und Navy-800 (`#0C172C`) mit 70 bzw. 85 % Deckkraft; der Grund
+  scheint durch und macht den Rest. Vorher lief an jeder Leiste eine eigene
+  Farbanimation über die ganze Seite. Gemessen am 30.09.2026 (Chrome-Trace,
+  390 px, ganze Seite durchgescrollt): `UpdateLayoutTree` 517 ms mit, 269 ms
+  ohne — die Hälfte der Style-Arbeit für einen Unterschied, den man hinter
+  70 % Deckkraft kaum sieht.
 
   `scroll()` statt `view()`: Der Verlauf hängt am Scrollstand des Dokuments, nicht
   an der Sichtbarkeit eines Elements. Er läuft linear über die ganze Seite; die
@@ -221,46 +240,420 @@
 */
 @keyframes tag-werden {
   from {
-    background-color: #0a0d14;
+    opacity: 0;
   }
   to {
-    background-color: #0e2143;
-  }
-}
-
-@keyframes tag-werden-kopf {
-  from {
-    background-color: rgb(10 13 20 / 0.7);
-  }
-  to {
-    background-color: rgb(14 33 67 / 0.7);
-  }
-}
-
-@keyframes tag-werden-fuss {
-  from {
-    background-color: rgb(10 13 20 / 0.85);
-  }
-  to {
-    background-color: rgb(14 33 67 / 0.85);
+    opacity: 1;
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: scroll()) {
-    body {
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-color: #0e2143;
+      pointer-events: none;
       animation: tag-werden linear both;
       animation-timeline: scroll();
     }
+  }
+}
+
+/*
+  DER WECHSEL INS DESIGN SYSTEM (seit 30.09.2026).
+
+  Phase 05 öffnet nicht mit einem Foto, sondern mit einem Verlauf vom Seitengrund
+  nach Weiß (`[data-zeichen-verlauf]`), darunter die Wortmarke. Ab dort steht die
+  Seite im Tugässer Design System 2.1.3: weiß, Logo-Blau, Ziegelrot, Public Sans.
+  Davor bleibt alles, wie es war — Nacht, Creme, Inter Tight und Mono. Die
+  Geschichte trägt den Bruch: Der Traum oben hat noch einen Bierdeckel, den es nie
+  gab; die Marke kommt mit den Leuten.
+
+  DIE BEIDEN LEISTEN WANDERN STUFENLOS MIT. Ein einziger Fortschrittswert `--neu`
+  (0 = alt, 1 = Design System) steuert alle Farben über `color-mix()`. Er ist
+  registriert (`@property`), sonst ließe er sich nicht interpolieren.
+
+  **JEDE LEISTE HAT IHRE EIGENE STRECKE**, weil sie an einem anderen Bildschirmrand
+  sitzt und dort eine andere Farbe unter sich hat:
+
+  | Leiste | Bereich | Bedeutung |
+  |---|---|---|
+  | Kopf | `exit` | Oberkante des Verlaufs am oberen Rand → Unterkante am oberen Rand |
+  | Aktion | `entry` | Oberkante des Verlaufs am unteren Rand → Unterkante am unteren Rand |
+
+  So hat jede Leiste in jedem Moment ungefähr die Farbe, die gerade hinter ihr
+  liegt. Ein gemeinsamer Wert für beide ließe die untere zu spät oder die obere zu
+  früh hell werden.
+
+  **WARUM `--neu` UND NICHT DIE FARBEN SELBST ANIMIERT.** Eine Animation schlägt
+  jede normale Deklaration, auch `:hover`. Animiert man `background-color`,
+  funktioniert der Hover nicht mehr. Animiert wird deshalb nur die Zahl; Grund-,
+  Hover- und Fokusfarben rechnen jeweils selbst mit ihr.
+
+  **SCHRIFT SPRINGT, FARBE FLIESST.** Eine Schriftfamilie lässt sich nicht
+  überblenden. Unregistrierte Eigenschaften (`--stufe`, `--l-schrift`,
+  `--l-versal`) wechseln in Keyframes diskret bei 50 % — also in der Mitte des
+  Verlaufs, wo der Grund zwischen hell und dunkel liegt. Größe, Gewicht und
+  Laufweite hängen an `--stufe`, damit sie mit der Schrift springen und nicht
+  zwischendurch krumme Werte annehmen (Mono in 900 würde der Browser künstlich
+  fetten).
+
+  `timeline-scope` AM `<html>`, weil die Leisten nicht im Verlauf liegen: Ohne
+  das sieht ein Element nur benannte Timelines seiner Vorfahren.
+
+  OHNE UNTERSTÜTZUNG (Firefox, ältere Safari) UND BEI REDUZIERTER BEWEGUNG setzt
+  das Skript `data-neu` an die Leiste, sobald die Mitte des Verlaufs ihren Rand
+  passiert hat. Das schaltet hart um, mit kurzer Überblendung nur bei erlaubter
+  Bewegung. Nicht stufenlos, aber nie falsch.
+*/
+@property --neu {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes neu-werden {
+  from {
+    --neu: 0;
+    --stufe: 0;
+    --l-schrift: 'JetBrains Mono', ui-monospace, monospace;
+    --l-versal: uppercase;
+  }
+  to {
+    --neu: 1;
+    --stufe: 1;
+    --l-schrift: 'Public Sans', system-ui, sans-serif;
+    --l-versal: none;
+  }
+}
+
+@layer components {
+  .leiste {
+    --stufe: 0;
+    --l-schrift: 'JetBrains Mono', ui-monospace, monospace;
+    --l-versal: uppercase;
+    color: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
+    border-color: color-mix(in oklab, rgb(244 239 231 / 0.1), #dbe2ec calc(var(--neu) * 100%));
+    font-family: var(--l-schrift);
+  }
+
+  #kopfleiste {
+    background-color: color-mix(
+      in oklab,
+      rgb(12 23 44 / 0.7),
+      rgb(255 255 255 / 0.94) calc(var(--neu) * 100%)
+    );
+  }
+
+  #aktionsleiste {
+    background-color: color-mix(
+      in oklab,
+      rgb(12 23 44 / 0.85),
+      rgb(255 255 255 / 0.96) calc(var(--neu) * 100%)
+    );
+  }
+
+  /* Kleinteiliges in den Leisten: Phasen, Uhr, Satz links unten. Neu in
+     Blau/70 (#4D7293, 5,1:1 auf Weiß) — `tg-muted` wäre mit 2,5:1 zu blass. */
+  .leiste-leise {
+    color: color-mix(in oklab, rgb(244 239 231 / 0.55), #4d7293 calc(var(--neu) * 100%));
+    font-size: calc(11px + 2px * var(--stufe));
+    font-weight: calc(400 + 400 * var(--stufe));
+    letter-spacing: calc(0.18em - 0.14em * var(--stufe));
+    text-transform: uppercase;
+  }
+
+  .leiste-marke {
+    font-size: calc(11px + 4px * var(--stufe));
+    font-weight: calc(500 + 400 * var(--stufe));
+    letter-spacing: calc(0.18em - 0.14em * var(--stufe));
+    text-transform: uppercase;
+  }
+
+  .leiste-link:hover {
+    color: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
+  }
+
+  .leiste-marke:hover {
+    color: color-mix(in oklab, #e06359, #7a1618 calc(var(--neu) * 100%));
+  }
+
+  .leiste-link[aria-current='true'] {
+    color: color-mix(in oklab, #e06359, #7a1618 calc(var(--neu) * 100%));
+  }
+
+  .leiste :focus-visible {
+    outline: calc(2px + 1px * var(--stufe)) solid
+      color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
+    outline-offset: calc(2px + 2px * var(--stufe));
+  }
+
+  /* Die Bildmarke erscheint erst, wenn die Leiste fast weiß ist — das Design
+     System erlaubt sie nur auf Weiß. Breite mit, sonst stünde vor „Tugässer“
+     eine leere Lücke. */
+  .leiste-logo {
+    --logo: clamp(0, calc((var(--neu) - 0.75) * 4), 1);
+    width: calc(28px * var(--logo));
+    margin-right: calc(10px * var(--logo));
+    opacity: var(--logo);
+  }
+
+  /* Unter `sm` ersetzt die Bildmarke den Schriftzug. Neben Marke, fünf
+     Ziffern und „Mach mit“ in Public Sans ist bei 390 px kein Platz für beides
+     — gemessen ragte der Knopf rund 75 px über den Rand. `display` lässt sich
+     nicht aus `--stufe` rechnen, die Schriftgröße schon; der Text bleibt für
+     Screenreader stehen (das Logo hat leeres alt). */
+  @media (max-width: 639px) {
+    .leiste-marke-text {
+      font-size: calc(1em * (1 - var(--stufe)));
+    }
+  }
+
+  /* Unter 360 px passt der Schriftzug auch in der alten Fassung nicht: Mit
+     fünf Phasen lief die Leiste bei 320 px 5 px über den Rand (gemessen
+     30.09.2026). Ziffern und „Mach mit“ sind wichtiger als der Name. */
+  @media (max-width: 359px) {
+    .leiste-marke-text {
+      font-size: 0;
+    }
+
+    /* Neu ragte sie hier noch 11 px ins Randmaß — Logo und Knopfschrift eine
+       Spur kleiner. */
+    .leiste-logo {
+      width: calc(24px * var(--logo));
+      margin-right: 0;
+    }
+  }
+
+  /*
+    „Mach mit“ — alt: plastischer Verlauf brand-500 → brand-700 mit Kanten und
+    Schatten, Hover kehrt auf Creme um. Neu: `tg-button--accent` — Ziegelrot,
+    weiße Schrift, 8 px Radius, kein Schatten, Hover Logo-Blau.
+
+    Der Verlauf bleibt als Verlauf stehen und läuft auf zwei gleiche Farben
+    zusammen; ein `background-image` lässt sich nicht in eine Vollfarbe
+    überblenden, zwei Farbstopps schon. Die Schatten tragen ihre Deckkraft als
+    `1 - --neu` und verschwinden so mit.
+  */
+  .knopf-mach-mit {
+    --oben: color-mix(in oklab, #c8322a, #7a1618 calc(var(--neu) * 100%));
+    --unten: color-mix(in oklab, #8a201a, #7a1618 calc(var(--neu) * 100%));
+    background-image: linear-gradient(to bottom, var(--oben), var(--unten));
+    color: color-mix(in oklab, #f4efe7, #ffffff calc(var(--neu) * 100%));
+    border-radius: calc(4px + 4px * var(--neu));
+    box-shadow:
+      inset 0 1px 0 0 rgb(244 239 231 / calc(0.32 * (1 - var(--neu)))),
+      inset 0 -1px 0 0 rgb(0 0 0 / calc(0.35 * (1 - var(--neu)))),
+      0 3px 10px -3px rgb(0 0 0 / calc(0.7 * (1 - var(--neu))));
+    font-weight: calc(400 + 500 * var(--stufe));
+    letter-spacing: calc(0.16em * (1 - var(--stufe)));
+    text-transform: var(--l-versal);
+  }
+
+  .knopf-folg {
+    background-color: color-mix(in oklab, transparent, #ffffff calc(var(--neu) * 100%));
+    border: calc(1px + 1px * var(--stufe)) solid
+      color-mix(in oklab, rgb(244 239 231 / 0.25), #013565 calc(var(--neu) * 100%));
+    border-radius: calc(4px + 4px * var(--neu));
+    font-weight: calc(400 + 500 * var(--stufe));
+    letter-spacing: calc(0.16em * (1 - var(--stufe)));
+    text-transform: var(--l-versal);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .knopf-mach-mit:hover {
+      --oben: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
+      --unten: var(--oben);
+      color: color-mix(in oklab, #8a201a, #ffffff calc(var(--neu) * 100%));
+    }
+
+    .knopf-folg:hover {
+      background-color: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
+      border-color: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
+      color: color-mix(in oklab, #0a0d14, #ffffff calc(var(--neu) * 100%));
+    }
+  }
+}
+
+/* Ersatzweg ohne Scroll-Timeline, gesetzt vom Skript. */
+#kopfleiste[data-neu],
+#aktionsleiste[data-neu] {
+  --neu: 1;
+  --stufe: 1;
+  --l-schrift: 'Public Sans', system-ui, sans-serif;
+  --l-versal: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #kopfleiste,
+  #aktionsleiste {
+    transition: --neu 0.4s ease-out;
+  }
+
+  @supports (animation-timeline: view()) and (timeline-scope: --a) {
+    html {
+      timeline-scope: --zeichen;
+    }
+
+    [data-zeichen-verlauf] {
+      view-timeline: --zeichen block;
+    }
 
     #kopfleiste {
-      animation: tag-werden-kopf linear both;
-      animation-timeline: scroll();
+      animation: neu-werden linear both;
+      animation-timeline: --zeichen;
+      animation-range: exit;
     }
 
     #aktionsleiste {
-      animation: tag-werden-fuss linear both;
-      animation-timeline: scroll();
+      animation: neu-werden linear both;
+      animation-timeline: --zeichen;
+      animation-range: entry;
+    }
+  }
+}
+
+/* Schriftgröße der Knöpfe springt mit der Schrift (siehe `--stufe` oben). */
+@layer components {
+  .knopf-klein {
+    font-size: calc(11px + 4px * var(--stufe));
+  }
+
+  .knopf-gross {
+    font-size: calc(13px + 4px * var(--stufe));
+  }
+
+  /* Gehört zu `.leiste-marke-text` unter 360 px weiter oben — muss aber nach
+     `.knopf-klein` stehen, sonst gewinnt die Grundregel. */
+  @media (max-width: 359px) {
+    .knopf-klein {
+      font-size: calc(11px + 3px * var(--stufe));
+    }
+  }
+}
+
+/*
+  DAS LOGO SETZT SICH ZUSAMMEN (seit 30.09.2026).
+
+  Drei Takte, alle am Scrollweg über die Bühne `[data-logo-buehne]`:
+
+  | Bereich (`contain`) | Was |
+  |---|---|
+  | bis 6 % | leer — die Kamera steht 36-fach nah im Weiß zwischen Wellen und Schrift |
+  | 6 % – 40 % | die Ä-Punkte fliegen von links und rechts herein, der rechte etwas später |
+  | 40 % – 100 % | das Logo zoomt von 36-fach auf 1 |
+
+  WARUM ES AM ANFANG LEER IST, gerechnet in Logokoordinaten (984 × 799): Der
+  Blickpunkt liegt bei x 434,5 / y 595 — mittig über dem Ä, zwischen dem Ende
+  der Wellen (y 556) und dem Anfang der Schrift (y 634). Bei 36-fach und
+  440 px Logobreite zeigt die Bühne auf 1440 × 900 y 569–621, auf 390 × 844
+  y 557–633. Beides trifft nichts. **Wer Zoom, Blickpunkt oder Bühnenhöhe
+  ändert, rechnet das nach** — sonst ragt am Anfang ein Wellenende oder die
+  A-Spitze ins Bild.
+
+  DIE PUNKTE SIND KINDER DES GEZOOMTEN LOGOS. Sie landen also schon riesig
+  (Durchmesser ~470 px auf 1440, ~300 px auf 390; auf dem Handy ragen sie beim
+  Landen seitlich über den Rand) und schrumpfen dann mit dem Logo. Ihr eigener
+  Flug braucht deshalb nur 1,5-fach, nicht mehr — eine eigene Vergrößerung
+  multipliziert sich mit den 36 des Logos, und die Textur würde riesig.
+
+  DER ZOOM IST EXPONENTIELL, nicht linear: Stützstellen 36 → 14,7 → 6 → 2,45
+  → 1 (je Viertel dieselbe Verkleinerung). Linear von 36 auf 1 passierte in
+  der ersten Hälfte scheinbar nichts und am Ende alles auf einmal. Der Versatz
+  läuft anteilig mit (`(s−1)/35`), damit der Blickpunkt auf geradem Weg in
+  seine Endlage wandert.
+
+  DIE BÜHNE IST 220dvh HOCH, das Bild darin klebt (`sticky`). So steht das Logo
+  still, während gescrollt wird, und die Bewegung hat rund 120dvh Weg. Die
+  frühere 420vh-Sequenz im Auftakt war fünfmal so lang und ist genau daran
+  gescheitert — nicht verlängern, ohne das zu bedenken.
+
+  NUR `transform` — läuft im Compositor.
+
+  `overflow: clip` am klebenden Bild, nicht `hidden`: `hidden` würde einen
+  Scrollport erzeugen und die Timeline umhängen (siehe Parallax oben). Das
+  Clipping hält den übergroßen Zoom innerhalb der weißen Fläche — das Design
+  System erlaubt das Logo nur auf Weiß, nicht über dem Verlauf.
+
+  OHNE UNTERSTÜTZUNG ODER BEI REDUZIERTER BEWEGUNG: keine Bühne, kein Kleben,
+  das Logo steht fertig da.
+*/
+@keyframes logo-zoom {
+  from {
+    transform: translate(5.84%, -24.47%) scale(36);
+  }
+  25% {
+    transform: translate(2.28%, -9.57%) scale(14.7);
+  }
+  50% {
+    transform: translate(0.835%, -3.5%) scale(6);
+  }
+  75% {
+    transform: translate(0.242%, -1.01%) scale(2.45);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes punkt-links {
+  from {
+    transform: translateX(-350%) scale(1.5);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes punkt-rechts {
+  from {
+    transform: translateX(350%) scale(1.5);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    [data-logo-buehne] {
+      height: 220dvh;
+      view-timeline: --logo block;
+    }
+
+    [data-logo-bild] {
+      position: sticky;
+      top: 55px;
+      height: calc(100dvh - 55px);
+      padding: 0 20px;
+      overflow: clip;
+    }
+
+    /* Blickpunkt: x 434,5 / y 595 von 984 × 799 */
+    [data-logo] {
+      transform-origin: 44.16% 74.47%;
+      animation: logo-zoom linear both;
+      animation-timeline: --logo;
+      animation-range: contain 40% contain 100%;
+    }
+
+    [data-logo-punkt] {
+      animation-fill-mode: both;
+      animation-timing-function: cubic-bezier(0.15, 0.6, 0.3, 1);
+      animation-timeline: --logo;
+    }
+
+    [data-logo-punkt='links'] {
+      animation-name: punkt-links;
+      animation-range: contain 6% contain 32%;
+    }
+
+    [data-logo-punkt='rechts'] {
+      animation-name: punkt-rechts;
+      animation-range: contain 14% contain 40%;
     }
   }
 }

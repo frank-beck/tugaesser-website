@@ -51,6 +51,16 @@ module.exports = {
         night: '#0A0D14', // Nachthimmel überm Rathaus
         gold: '#C89A3C', // Bier im Glas
         sandstone: '#A08A63', // Rathaus-Fassade
+        // Tugässer Design System 2.1.3 (design-system.tugaesser.de) — VERBINDLICH,
+        // nicht provisorisch. Gilt ab Phase 05; die Paletten darüber tragen den
+        // Teil der Seite davor, bis auch der umgestellt ist.
+        tg: {
+          blue: '#013565', // Logo-Blau, Text und Primärfläche
+          brick: '#7A1618', // Ziegelrot, einziger Akzent
+          surface: '#F5F7FA',
+          muted: '#8CA3C2', // nur Fläche/Linie, als Text auf Weiß 2,5:1 — zu blass
+          line: '#DBE2EC',
+        },
       },
       // Scroll-Hinweis: sinkt leicht ab und wird dabei heller. Bewusst nur
       // opacity und transform, damit es auf jeder Karte flüssig läuft.
@@ -70,6 +80,9 @@ module.exports = {
         display: ['"Inter Tight"', 'system-ui', 'sans-serif'],
         body: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        // Hausschrift des Design Systems. Eine Familie, Hierarchie über
+        // Gewicht (400/800/900) und Größe.
+        ds: ['"Public Sans"', 'system-ui', 'sans-serif'],
       },
     },
   },
