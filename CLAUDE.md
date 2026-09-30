@@ -19,7 +19,7 @@ unbehandelt, Text nie auf Foto) — gelten nur für main, bis entschieden ist.
 
 | Was | Wo |
 |---|---|
-| Videos (s/w Zapfhahn, Zapfanlage; Hopfen-Wandbild als Pingpong-Schleife) | `video/*.mp4` + `.jpg` (Standbild) |
+| Videos: Zapfanlage im Auftakt, brodelnder Sud in 03 („Drei Jahre gebrodelt“), Hopfen-Wandbild (Pingpong-Schleife) in 05 | `video/*.mp4` + `.jpg` (Standbild) |
 | Heilbronn-Fotos, 1400 px, ohne EXIF/GPS | `images/stadt/` |
 | Galerie fährt waagerecht beim Scrollen | `.galerie*` in `src/input.css`, Höhe setzt das Skript |
 | Bildmarke weiß für die blaue Leiste | `images/tugaesser-bildmarke-weiss.png` (aus der DS-Maske) |
@@ -28,9 +28,22 @@ unbehandelt, Text nie auf Foto) — gelten nur für main, bis entschieden ist.
   zscale → erst `avconvert --preset Preset1920x1080` (macOS, mappt auf SDR),
   dann ffmpeg: `-an -map_metadata -1`, H.264 CRF 26, 720 px breit. Sonst
   flaue Farben und GPS im Container.
+- **Zapfanlage ab Sekunde 1,6 geschnitten** (30.09.2026): davor steht das
+  Herstellerlogo „Lindr“ formatfüllend im Bild. Neu schneiden immer aus der
+  SDR-Zwischenfassung, nicht aus der fertigen MP4 (doppeltes Kodieren).
+- **Sud-Video ist nicht HDR, hat aber keine gerenderte Bearbeitung** — Fotos
+  legt die s/w-Fassung nur als Standbild ab. Nachgebaut aus der Bearbeitung in
+  der `.plist` (`adjustmentData`, raw deflate): Trim 1,128–8,8 s, oben
+  2160×2480 behalten — Fotos selbst schneidet bei 3030, dann läuft aber der
+  Regler samt Herstellerschrift unten ins Bild —, `hue=s=0`, leichter Kontrast,
+  Entrauschen, Schärfe. Ein Zapfhahn-Video (Kreideschrift mit fremdem Bier)
+  ist dafür am 30.09.2026 entfallen.
 - **Quellen:** Originale in `~/Pictures/Fotos Library.photoslibrary/resources/renders/`
   (bearbeitete s/w-Fassung), Fotos aus `project_tugaesser/assets/heilbronn/reel*/`.
 - `tg-tiefe` #001A33 und `tg-nacht` #0B0F14 **stehen nicht im DS** — abgeleitet.
+- **Videos laufen mit 0,6-facher Geschwindigkeit** (`playbackRate` im Skript,
+  je Video über `data-tempo` änderbar) — in Echtzeit wirkten sie hektisch.
+  Kein Neukodieren nötig.
 - `serve.mjs` kennt jetzt `.mp4`. Ohne Range-Support: `networkidle0` hängt bei
   reduzierter Bewegung (Video lädt nie fertig) — in Tests `load` nehmen.
 - Gemessen 30.09.2026: 320–1920 ohne Querlauf, Auftakt = Bildschirmhöhe;
@@ -124,7 +137,7 @@ sitzt die Gedankenblase mit dem Bierdeckel.
 ### Phase 05 „Die Antwort“ seit 30.09.2026
 
 Antwortet auf den Schluss von 04 („die vielleicht naive Hoffnung: dass sich genug
-Heilbronner finden …“). Aufbau: Zahl als H2 („N Leute machen mit.“), rechts „Die
+Heilbronner finden …“). Aufbau: Gesamtzahl als H2 („N machen mit.“, seit 30.09.2026; klein darunter „48 Personen · 5 Vereine/Betriebe“), rechts „Die
 Hoffnung war nicht naiv.“, dann Vereine/Betriebe, „Seitdem“ (Stammtisch, Rezept,
 Probesud), „Alles da. Nur kein Ort.“ als Spiegel der Inventur aus 03, Schluss
 „Wo brauen wir?“ — jede Phase endet mit einer Frage an der Kante.
@@ -134,7 +147,7 @@ Probesud), „Alles da. Nur kein Ort.“ als Spiegel der Inventur aus 03, Schlus
   Das HTML trägt einen Fallback mit Datum; schlägt der Abruf fehl, bleibt der
   stehen. Die einzige Anfrage an einen anderen Host als tugaesser.de — eigene
   Subdomain, eigener Server.
-- **Leute = alle Einträge minus genannte Vereine/Betriebe.** Ungenannte Betriebe
+- **Personen = alle Einträge minus genannte Vereine/Betriebe.** Ungenannte Betriebe
   zählen bei den Leuten mit; eine getrennte Zahl würde sie verraten.
 - **Keine Personennamen.** Die Einwilligung lautet „Dieser Name darf unten
   öffentlich in der Liste stehen“ — gilt für die Mitmachseite, nicht für diese.

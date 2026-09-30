@@ -62,7 +62,7 @@
     <meta name="theme-color" content="#013565" />
     <!-- Nur Public Sans, lokal. Inter/JetBrains Mono braucht der Vorschlag nicht mehr. -->
     <link rel="stylesheet" href="fonts/public-sans.css" />
-    <link rel="stylesheet" href="tailwind.css?v=25cc63cb" />
+    <link rel="stylesheet" href="tailwind.css?v=179b9394" />
   </head>
   <body class="bg-white font-ds text-tg-blue antialiased">
     <a
@@ -153,8 +153,8 @@
           <video
             data-video
             class="absolute inset-0 h-full w-full object-cover"
-            src="video/zapfhahn.mp4"
-            poster="video/zapfhahn.jpg"
+            src="video/zapfanlage.mp4"
+            poster="video/zapfanlage.jpg"
             muted
             loop
             playsinline
@@ -514,9 +514,9 @@
             <div class="lg:sticky lg:top-24">
               <video
                 data-video
-                class="aspect-[4/5] w-full rounded-lg object-cover lg:aspect-[9/16] lg:max-h-[calc(100dvh-8rem)]"
-                src="video/zapfanlage.mp4"
-                poster="video/zapfanlage.jpg"
+                class="aspect-[4/5] w-full rounded-lg object-cover lg:aspect-[720/826] lg:max-h-[calc(100dvh-8rem)]"
+                src="video/sud.mp4"
+                poster="video/sud.jpg"
                 muted
                 loop
                 playsinline
@@ -775,15 +775,27 @@
             </div>
             <h2 class="mt-6" data-auftauchen>
               <span
-                data-stand-leute
                 data-zaehler
                 class="block text-[clamp(8rem,30vw,26rem)] font-black leading-[0.8] tracking-[-0.05em] tabular-nums"
-                >48</span
+                >53</span
               >
               <span class="display mt-4 block text-[clamp(2.5rem,6vw,6rem)]"
-                >Leute machen mit.</span
+                >machen mit.</span
               >
             </h2>
+            <!--
+              Aufteilung klein darunter. „Personen“ = alle Einträge minus
+              genannte Vereine/Betriebe — ungenannte Betriebe stecken mit drin,
+              eine eigene Zahl für sie würde sie verraten.
+            -->
+            <p
+              class="mt-5 text-[clamp(1.125rem,1.6vw,1.375rem)] font-extrabold text-white/85"
+              data-auftauchen
+            >
+              <span data-stand-leute class="tabular-nums">48</span> Personen ·
+              <span data-stand-orgs class="tabular-nums">5</span>
+              <span data-stand-orgs-wort>Vereine/Betriebe</span>
+            </p>
             <div
               class="mt-10 flex flex-wrap items-baseline justify-between gap-x-10 gap-y-3"
               data-auftauchen
@@ -798,7 +810,7 @@
             </div>
 
             <div data-stand-block class="mt-14 border-t border-white/20 pt-10">
-              <p class="kicker text-white/85">Und diese Vereine und Betriebe</p>
+              <p class="kicker text-white/85">Vereine und Betriebe</p>
               <ul
                 data-stand-organisationen
                 class="mt-6 flex flex-wrap gap-3 [&>li]:rounded-lg [&>li]:border-2 [&>li]:border-white [&>li]:px-5 [&>li]:py-3 [&>li]:text-lg [&>li]:font-black"
@@ -1043,6 +1055,9 @@
               const v = e.target;
               if (e.isIntersecting && bewegung.matches) {
                 if (v.preload === 'none') v.preload = 'auto';
+                // Langsamer als aufgenommen — in Echtzeit wirkten die
+                // Handyclips hektisch. Wert je Video über data-tempo.
+                v.defaultPlaybackRate = v.playbackRate = Number(v.dataset.tempo ?? 0.6);
                 v.play().catch(() => {});
               } else {
                 v.pause();
@@ -1143,7 +1158,7 @@
         /*
           Stand live von der Mitmachseite. Schlägt der Abruf fehl, bleibt der
           Stand aus dem HTML mit seinem Datum stehen.
-          Leute = alle Einträge minus genannte Vereine/Betriebe.
+          Groß die Gesamtzahl; klein Personen (= Einträge minus genannte Vereine/Betriebe) und Vereine/Betriebe.
         */
         const gesamt = document.querySelector('[data-stand-gesamt]');
         const orgListe = document.querySelector('[data-stand-organisationen]');
@@ -1155,7 +1170,15 @@
           .then(({ mitmacher, organisationen, stand }) => {
             if (!Number.isInteger(mitmacher) || !Array.isArray(organisationen)) return;
             gesamt.textContent = String(mitmacher);
-            const leute = String(mitmacher - organisationen.length);
+            document.querySelector('[data-stand-leute]').textContent = String(
+              mitmacher - organisationen.length
+            );
+            document.querySelector('[data-stand-orgs]').textContent = String(
+              organisationen.length
+            );
+            document.querySelector('[data-stand-orgs-wort]').textContent =
+              organisationen.length === 1 ? 'Verein/Betrieb' : 'Vereine/Betriebe';
+            const leute = String(mitmacher);
             zaehler.dataset.ziel = leute;
             // Noch nicht gezählt: Zahl direkt setzen. Zählt gerade: die
             // Animation liest das neue Ziel selbst.
