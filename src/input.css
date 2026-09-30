@@ -3,644 +3,632 @@
 @tailwind utilities;
 
 /*
-  PARALLAX — auf dem Satz über dem Auftaktfoto, NICHT auf den Fotos selbst.
+  REDESIGN-VORSCHLAG (Branch `redesign-vorschlag`, 30.09.2026).
 
-  WARUM NICHT AUF DEN FOTOS. Das war der erste Versuch, und er ist an den Bildern
-  gescheitert, nicht an der Technik. Gemessen am 26.08.2026:
-
-  | Bild | Ruhelage | Endlage bei ±15 % | Ergebnis |
-  |---|---|---|---|
-  | 01 Auftakt | 28 % | 43 % | Gedankenblase oben angeschnitten |
-  | 02 Dämmerung | 25 % | 40 % | „Tugässer“ auf der linken Fahne weg, nur „Bräu“ bleibt |
-  | 04 Gruppe | 62 % | 47 %/77 % | unkritisch |
-
-  Der Grund ist der Zuschnitt: Alle drei sind 16:9-Aufnahmen in flacheren
-  Containern, und `object-position` ist bereits bis an die Kante justiert — 28 %
-  beim Auftakt sind gerade so viel, dass die Blase hineinpasst, bei 34 % bleiben
-  rund 5 px Luft. Der verfügbare Weg ist damit rund 4 Prozentpunkte, das sind bei
-  1440×900 etwa 5 px. Einen Effekt, den man nicht sieht, baut man nicht ein.
-
-  **Mehr Weg gäbe es nur über eine Überhöhung des Bildes** — und weil
-  `object-cover` auf die Höhe skaliert, kostet die direkt Bildbreite. Das ist der
-  in CLAUDE.md unter „Bildhöhe: Orientierung, nicht Breite“ dokumentierte Fehler,
-  bei dem vom Rathaus fast nichts übrig blieb. Wer den Effekt auf den Fotos
-  wirklich will, braucht andere Bilder mit mehr Rand, nicht anderen Code.
-
-  WAS STATTDESSEN LÄUFT: Der Satz auf dem Auftaktbild bleibt beim Scrollen hinter
-  dem Foto zurück. Das ist derselbe Tiefeneindruck — zwei Ebenen, die sich
-  verschieden schnell bewegen — und er kostet keinen Bildpunkt, weil sich Text
-  über freiem Nachthimmel bewegt.
-
-  DIE TIMELINE HÄNGT AN DER `<figure>`, nicht am Bildcontainer. Der trägt
-  `overflow-hidden` und ist damit selbst ein Scroll-Container; ein `view()`
-  darin gemessen steht messbar konstant bei 0,5, egal wie weit man scrollt. Die
-  `<figure>` liegt außerhalb und wird gegen das Dokument gemessen.
-
-  `animation-range: cover 50%`: Der Auftakt ist beim Laden schon sichtbar und
-  steht rechnerisch bei 52,9 % des `cover`-Bereichs. Ohne diesen Startpunkt
-  begänne die Bewegung mitten drin, und der Satz stünde beim Laden bereits
-  versetzt. So beginnt sie dort, wo der Besucher tatsächlich einsteigt.
-  Ausgeschrieben wird nur der 50-%-Wert: cssnano kürzt `cover 0%` zu `cover 0`,
-  was Chrome nur halb parst.
-
-  Ohne Browser-Unterstützung greift `@supports` nicht und alles steht still.
-  `prefers-reduced-motion` schaltet den Effekt ab.
+  Regeln aus main, die weiter gelten:
+  - Scroll-Effekte nur über `animation-timeline`, jeder in `@supports` und
+    `prefers-reduced-motion: no-preference`. Ohne beides steht alles still.
+  - Nur `transform` und `opacity` scrollgebunden animieren.
+  - Kein `0%` in `animation-range` (cssnano kürzt es, Chrome parst dann halb).
+  - `overflow: clip` statt `hidden`, wo eine Timeline darunter hängt.
+  - Keine `color-mix(… var() …)` an Links (Chrome-:visited-Falle).
 */
-@keyframes parallax-satz {
+
+@layer base {
+  ::selection {
+    background: #7a1618;
+    color: #fff;
+  }
+
+  /* Ring aus Weiß und Logo-Blau: sichtbar auf hellem wie dunklem Grund. */
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 7px #013565;
+  }
+}
+
+@layer components {
+  /* ---------------------------------------------------------------- Typo */
+  .display {
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 0.9;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  .kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #7a1618;
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  .kicker-strich {
+    width: 28px;
+    height: 4px;
+    border-radius: 2px;
+    background: currentColor;
+  }
+
+  .fliess {
+    max-width: 40rem;
+    font-size: clamp(1.0625rem, 1.25vw, 1.25rem);
+    line-height: 1.65;
+  }
+
+  .textlink {
+    font-weight: 800;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  /* „01/05“ — die Zahl als Umriss, wie die Kapitelzähler bei Stone. */
+  .kapitel {
+    display: flex;
+    align-items: flex-start;
+    font-weight: 900;
+    line-height: 0.8;
+    color: #013565;
+  }
+
+  .kapitel-zahl {
+    font-size: clamp(4rem, 8vw, 7.5rem);
+    letter-spacing: -0.04em;
+  }
+
+  .kapitel-von {
+    margin: 0.35rem 0 0 0.35rem;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    opacity: 0.75;
+  }
+
+  .kapitel-hell {
+    color: #fff;
+  }
+
+  @supports (-webkit-text-stroke: 1px #000) {
+    .kapitel-zahl {
+      color: transparent;
+      -webkit-text-stroke: 2px #013565;
+    }
+    .kapitel-hell .kapitel-zahl {
+      -webkit-text-stroke-color: rgb(255 255 255 / 0.9);
+    }
+  }
+
+  /* -------------------------------------------------------------- Knöpfe */
+  .knopf {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 8px;
+    background: #7a1618;
+    color: #fff;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    box-shadow: inset 0 -3px 0 rgb(0 0 0 / 0.25);
+    transition:
+      background-color 150ms,
+      color 150ms,
+      transform 150ms;
+  }
+
+  .knopf-rahmen {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    border: 2px solid currentColor;
+    border-radius: 8px;
+    padding: 0.85rem 1.25rem;
+    font-size: 14px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition:
+      background-color 150ms,
+      color 150ms,
+      transform 150ms;
+  }
+
+  .knopf-rahmen-hell {
+    color: #fff;
+  }
+
+  .knopf-weiss {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 8px;
+    background: #fff;
+    color: #7a1618;
+    padding: 1rem 1.5rem;
+    font-size: 1.0625rem;
+    font-weight: 900;
+    transition:
+      background-color 150ms,
+      color 150ms,
+      transform 150ms;
+  }
+
+  .knopf:active,
+  .knopf-rahmen:active,
+  .knopf-weiss:active,
+  .schluss-cta:active {
+    transform: translateY(1px);
+  }
+
+  /* ---------------------------------------------------------- Kopfleiste */
+  .kopf {
+    background-image: linear-gradient(rgb(0 10 20 / 0.55), transparent);
+    transition:
+      background-color 250ms,
+      box-shadow 250ms;
+  }
+
+  .kopf[data-fest] {
+    background-color: #013565;
+    background-image: none;
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.1);
+  }
+
+  .kopf-link {
+    position: relative;
+    border-radius: 6px;
+    padding: 0.5rem 0.3rem;
+    color: rgb(255 255 255 / 0.72);
+    transition: color 150ms;
+  }
+
+  /* Unter 380 px: sonst 23 px Querlauf bei 320 (gemessen 30.09.2026). */
+  @media (max-width: 379px) {
+    .kopf-link {
+      padding-inline: 0.15rem;
+      font-size: 12px;
+      letter-spacing: 0.02em;
+    }
+  }
+
+  .kopf-link[aria-current='true'] {
+    color: #fff;
+  }
+
+  .kopf-link[aria-current='true']::after {
+    content: '';
+    position: absolute;
+    inset: auto 0.3rem 0.15rem;
+    height: 3px;
+    border-radius: 2px;
+    background: #fff;
+  }
+
+  /* ------------------------------------------------------------- Bilder */
+  .bildzeile {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    border-radius: 4px;
+    background: rgb(0 0 0 / 0.5);
+    padding: 0.35rem 0.6rem;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+
+  .bildzeile-oben {
+    top: 1rem;
+    bottom: auto;
+  }
+
+  .puls {
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+    background: #fff;
+  }
+
+  /* ----------------------------------------------------------- Laufband */
+  .laufband-satz {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 2rem;
+    padding-right: 2rem;
+    white-space: nowrap;
+    font-size: clamp(1.25rem, 2.4vw, 2rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .laufband-satz i {
+    display: inline-block;
+    width: 1.1em;
+    height: 1.1em;
+    background: url('images/tugaesser-bildmarke-weiss.png') center / contain
+      no-repeat;
+  }
+
+  /* ------------------------------------------------------------ Inventur */
+  .inventur li {
+    font-size: clamp(2.25rem, 5vw, 4.75rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .inventur li + li {
+    margin-top: 0.15em;
+  }
+
+  @supports (-webkit-text-stroke: 1px #000) {
+    .inventur li {
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgb(255 255 255 / 0.85);
+    }
+  }
+
+  /* ------------------------------------------------ Zwei Wege (Kapitel 04) */
+  .weg {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border-radius: 12px;
+    padding: 2rem;
+    transition: transform 200ms;
+  }
+
+  @media (min-width: 640px) {
+    .weg {
+      padding: 2.75rem;
+    }
+  }
+
+  .weg-nummer {
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+  }
+
+  .weg-titel {
+    font-size: clamp(1.75rem, 3.4vw, 3.25rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .weg-pfeil {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .weg-pfeil i,
+  .schluss-cta i {
+    font-style: normal;
+    transition: transform 200ms;
+  }
+
+  /* ---------------------------------------------- Kacheln (Kapitel 05) */
+  .kachel {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    min-height: 26rem;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #001a33;
+    color: #fff;
+  }
+
+  @media (min-width: 1024px) {
+    .kachel {
+      min-height: 32rem;
+    }
+  }
+
+  .kachel-bild {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .kachel:not(.kachel-flaeche)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      to top,
+      rgb(0 26 51 / 0.94) 0%,
+      rgb(0 26 51 / 0.6) 45%,
+      transparent 75%
+    );
+  }
+
+  .kachel-text {
+    padding: 1.5rem;
+  }
+
+  .kachel-titel {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .kachel-marke {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    flex: none;
+    place-items: center;
+    border-radius: 9999px;
+    background: #fff;
+    color: #013565;
+    font-size: 1rem;
+  }
+
+  .bg-tg-brick .kachel-marke {
+    color: #7a1618;
+  }
+
+  .kachel-gross {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.5rem;
+    font-size: clamp(5rem, 9vw, 8rem);
+    font-weight: 900;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+  }
+
+  /* --------------------------------------------------------- Schluss-CTA */
+  .schluss-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: 16px;
+    background: #7a1618;
+    color: #fff;
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3.5rem);
+    font-size: clamp(3rem, 11vw, 11rem);
+    font-weight: 900;
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    transition:
+      background-color 200ms,
+      transform 150ms;
+  }
+
+  /* ----------------------------------------------------------- Galerie */
+  .galerie-buehne {
+    padding-block: 4rem 5rem;
+  }
+
+  .galerie-fenster {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .galerie-spur {
+    display: flex;
+    width: max-content;
+    gap: 1rem;
+    padding-inline: 20px;
+  }
+
+  @media (min-width: 640px) {
+    .galerie-spur {
+      padding-inline: 32px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .galerie-spur {
+      gap: 1.5rem;
+      padding-inline: 48px;
+    }
+  }
+
+  .galerie-spur li {
+    position: relative;
+    flex: none;
+    scroll-snap-align: center;
+  }
+
+  .galerie-spur img {
+    height: min(52svh, 34rem);
+    width: auto;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  .galerie-spur span {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    border-radius: 4px;
+    background: rgb(0 0 0 / 0.5);
+    padding: 0.35rem 0.6rem;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  /* Hover nur mit Zeiger — auf Touch bliebe er sonst kleben. */
+  @media (hover: hover) and (pointer: fine) {
+    .knopf:hover {
+      background: #fff;
+      color: #7a1618;
+    }
+    .knopf-rahmen:hover {
+      background: #013565;
+      border-color: #013565;
+      color: #fff;
+    }
+    .knopf-rahmen-hell:hover {
+      background: #fff;
+      border-color: #fff;
+      color: #013565;
+    }
+    .knopf-weiss:hover {
+      background: #013565;
+      color: #fff;
+    }
+    .kopf-link:hover {
+      color: #fff;
+    }
+    .textlink:hover {
+      text-decoration-thickness: 4px;
+    }
+    .weg:hover {
+      transform: translateY(-4px);
+    }
+    .weg:hover .weg-pfeil i,
+    .schluss-cta:hover i {
+      transform: translateX(8px);
+    }
+    .schluss-cta:hover {
+      background: #013565;
+    }
+  }
+}
+
+/* ======================================================= Dauerbewegung */
+@keyframes laufen {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes puls {
+  70% {
+    box-shadow: 0 0 0 10px rgb(255 255 255 / 0);
+  }
   from {
-    transform: translate3d(0, 0, 0);
+    box-shadow: 0 0 0 0 rgb(255 255 255 / 0.6);
   }
   to {
-    transform: translate3d(0, 72px, 0);
+    box-shadow: 0 0 0 0 rgb(255 255 255 / 0);
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    #phase-01 {
-      view-timeline: --auftakt block;
-    }
-
-    /* `will-change`: eigene Ebene von Anfang an. Der Satz trägt einen 24-px-
-       Textschatten; ohne feste Ebene kann Safari ihn bei jedem Frame neu
-       rastern. */
-    [data-parallax-satz] {
-      will-change: transform;
-      animation: parallax-satz linear both;
-      animation-timeline: --auftakt;
-      animation-range: cover 50% cover 100%;
-    }
+  .laufband-spur {
+    animation: laufen 40s linear infinite;
+  }
+  .puls {
+    animation: puls 2s ease-out infinite;
   }
 }
 
-/*
-  DIE ZEILEN GROSSER SÄTZE RICHTEN SICH BEIM SCROLLEN AUS.
-
-  Jede Zeile startet deutlich nach rechts versetzt — gestaffelt bis knapp zur
-  halben Zeilenbreite — und rückt auf die gemeinsame linke Kante. Aus der Treppe
-  wird ein Block, fertig etwa dann, wenn der Satz die Bildschirmmitte erreicht.
-
-  DER VERSATZ IST IN PROZENT DER ZEILENBREITE, nicht in `em`. Eine frühere
-  Fassung rechnete in Geviert: 0,5 em sind rund ein Buchstabe, und mehr ging
-  nicht. Prozent skalieren mit der Zeilenlänge statt mit der Schriftgröße und
-  erlauben den kräftigen Ausschlag, den die Sätze brauchen.
-
-  Er geht nach rechts in den freien Raum der Spalte, begrenzt vom Clipping am
-  Satz — begründet dort unten.
-
-  **Ein Puppeteer-Lauf beweist bei Clipping nichts über Safari.** Die gekappten
-  Unterlängen sahen in Chrome tadellos aus und fielen erst am Gerät auf. Wer hier
-  etwas ändert, prüft auf einem echten iPhone nach.
-
-  DIE ZEILEN SIND `<span>`, KEIN `<br />`. Ein Umbruch lässt sich nicht einzeln
-  ansprechen. `display: block` steht bewusst **außerhalb** der beiden Abfragen
-  unten: Ohne Browser-Unterstützung und bei reduzierter Bewegung müssen die
-  Zeilen trotzdem Zeilen bleiben, sonst läuft der Satz einzeilig durch.
-
-  NICHT AM AUFTAKT-H1: Der hat bereits seinen Einfahr-Effekt über den
-  IntersectionObserver in `#lead`. Zwei Bewegungen auf demselben Satz wären eine
-  zu viel.
-
-  `animation-range: entry 30% cover 45%` — die Ausrichtung ist abgeschlossen,
-  wenn der Satz etwa die Bildschirmmitte erreicht. Wer den Wert ändert: kein
-  `0%` verwenden, cssnano kürzt das zu `0` und Chrome parst den Bereich dann nur
-  halb.
-*/
-[data-zeilen] > span {
-  display: block;
-}
-
-@keyframes zeile-ausrichten {
-  from {
-    transform: translate3d(var(--zeilenversatz, 0), var(--zeilenabstand, 0), 0);
-  }
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    [data-zeilen] {
-      view-timeline: --satz block;
-
-      /*
-        DAS CLIPPING GEHÖRT AN DEN SATZ, nicht an die Section. An der Section
-        abgefangen lief die versetzte Zeile quer in die Nebenspalte und legte
-        sich über die Leitfrage rechts. Am Satz endet sie an seiner eigenen
-        Spaltenkante und fährt von dort herein.
-
-        **`padding-bottom` plus negativer `margin-bottom` hält die Unterlängen
-        frei — das ist ein Safari-Bugfix.** `overflow: clip` schneidet auf beiden
-        Achsen, und bei `leading-[0.98]` ragt das „g“ unter die Box. Hier stand
-        dafür `overflow-clip-margin`, aber **Safari kennt die Eigenschaft
-        nicht**: Auf dem iPhone waren „gebrodelt.“ und „bringst du mit.“ unten
-        gekappt, während Chrome alles korrekt zeigte. Padding vergrößert die
-        Clip-Box statt sie zu bepuffern und wirkt deshalb überall; der negative
-        Margin nimmt den Platz im Layout wieder zurück.
-
-        **Nur unten, nicht oben.** Ein `margin-top` würde die Abstandsklassen der
-        Sätze überschreiben (`mt-7` an den H2, `mt-16 lg:mt-24` an den
-        Zwischenpointen). Oben ist auch nichts nötig: Versalien reichen nicht bis
-        an die Ascender-Linie, dort bleibt von selbst Luft.
-
-        **0,65 em, weil der vertikale Versatz mitzählt.** Mit 0,35 em reichte es
-        im Endzustand, aber nicht im Startzustand: Dort schiebt
-        `--zeilenabstand` die letzte Zeile um 0,32 em nach unten, und es blieben
-        gemessen 1,9 px Luft — die Unterlänge lag wieder auf der Clip-Kante. Der
-        Wert muss also größer sein als der vertikale Versatz plus die
-        Unterlänge. **Wer `--zeilenabstand` erhöht, zieht diesen Wert mit.**
-
-        Zwei Wege, die vorher hier standen und nicht funktionieren:
-        `overflow-x: clip` am `body` propagiert auf den Viewport; am `html` zieht
-        `clip` die vertikale Achse mit und die Seite scrollte nur noch 392 px
-        weit. Und `clip-path: inset()` schneidet nur die Darstellung, nicht den
-        Layout-Overflow — das Querscrollen war damit sofort zurück (81 px bei
-        390, 226 px bei 1440).
-      */
-      overflow: clip;
-      padding-bottom: 0.65em;
-      margin-bottom: -0.65em;
-    }
-
-    [data-zeilen] > span {
-      --zeilenversatz: 12%;
-      animation: zeile-ausrichten linear both;
-      animation-timeline: --satz;
-      animation-range: entry 30% cover 45%;
-    }
-
-    [data-zeilen] > span:nth-child(2) {
-      --zeilenversatz: 30%;
-      --zeilenabstand: 0.16em;
-    }
-
-    [data-zeilen] > span:nth-child(3) {
-      --zeilenversatz: 46%;
-      --zeilenabstand: 0.32em;
-    }
-  }
-}
-
-/*
-  DIE SEITE WIRD BEIM RUNTERSCROLLEN HELLER.
-
-  Sie geht denselben Weg wie ihre Bilder: Nacht über dem Rathaus, Dämmerung mit
-  den Fahnen, Vormittag mit der Gruppe. Bisher trugen das nur die Fotos, während
-  der Grund darunter von oben bis unten gleich schwarz blieb — das helle
-  Tageslichtbild in Phase 04 stand damit auf Nachtschwarz, ein harter Bruch.
-  Jetzt wandert der Grund mit.
-
-  DIE ZIELFARBE IST NAVY-800 AUS DER MARKENPALETTE, kein erfundener Ton: das
-  Tiefblau vom Bierdeckel. Die Seite hellt also in ihre eigene zweite Farbe auf.
-
-  **Weiter geht es nicht, und das ist gerechnet, nicht geschätzt.** Der
-  limitierende Wert ist `cream/55` — Mono-Labels, Bildunterschriften,
-  Rail-Beschriftungen:
-
-  | Grund | cream/100 | cream/75 | cream/55 |
-  |---|---|---|---|
-  | `#0A0D14` night (oben) | 16,98 | 9,67 | 5,59 ✓ |
-  | `#0E2143` navy-800 (unten) | 13,93 | 8,35 | 5,12 ✓ |
-  | `#122A57` navy-700 | 12,28 | 7,53 | 4,75 ✓ |
-  | `#223454` | 10,87 | 6,86 | **4,45 ✗** |
-
-  Bei navy-700 wäre bei 4,75 Schluss, hier bleibt bewusst Puffer. **Wer die
-  Zielfarbe aufhellt, rechnet cream/55 gegen den neuen Grund nach** — unter
-  4,5:1 fällt die Seite aus WCAG AA.
-
-  **NUR ÜBER `opacity`, NICHT ÜBER `background-color`** (seit 30.09.2026,
-  „Scrolling ist ruckelig“). Die erste Fassung animierte `background-color` am
-  `<body>` — das kann kein Browser auf der Grafikkarte, also malte er in jedem
-  Scroll-Frame die ganze Fläche neu, auf dem Hauptthread. Kurz war dort zusätzlich
-  eine *vererbte* Farbe `--grund` animiert: Damit rechnete der Browser pro Frame
-  die Styles **jedes Elements der Seite** neu. Beides bremste alle anderen
-  scrollgebundenen Effekte mit aus, am sichtbarsten den Parallax-Satz.
-
-  Jetzt liegt Navy-800 als feste, bildschirmgroße Ebene hinter allem
-  (`body::before`, `z-index: -1`) und wird nur eingeblendet. `opacity` läuft im
-  Compositor, der Hauptthread tut beim Scrollen nichts mehr dafür. Optisch
-  identisch: Night unten, Navy-800 mit steigender Deckkraft darüber.
-
-  DIE BEIDEN LEISTEN WANDERN NICHT MEHR MIT. Sie tragen einen festen Mittelton
-  zwischen Night und Navy-800 (`#0C172C`) mit 70 bzw. 85 % Deckkraft; der Grund
-  scheint durch und macht den Rest. Vorher lief an jeder Leiste eine eigene
-  Farbanimation über die ganze Seite. Gemessen am 30.09.2026 (Chrome-Trace,
-  390 px, ganze Seite durchgescrollt): `UpdateLayoutTree` 517 ms mit, 269 ms
-  ohne — die Hälfte der Style-Arbeit für einen Unterschied, den man hinter
-  70 % Deckkraft kaum sieht.
-
-  `scroll()` statt `view()`: Der Verlauf hängt am Scrollstand des Dokuments, nicht
-  an der Sichtbarkeit eines Elements. Er läuft linear über die ganze Seite; die
-  Phasen sind unterschiedlich lang, und Stufen je Abschnitt würden an den Kanten
-  springen.
-
-  Bei reduzierter Bewegung bleibt der Grund durchgehend `night`, also der
-  Zustand, den auch jeder Browser ohne Unterstützung sieht.
-*/
-@keyframes tag-werden {
+/* ===================================================== Scrollgebunden */
+@keyframes auftauchen {
   from {
     opacity: 0;
+    transform: translateY(48px);
   }
   to {
     opacity: 1;
+    transform: none;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: scroll()) {
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background-color: #0e2143;
-      pointer-events: none;
-      animation: tag-werden linear both;
-      animation-timeline: scroll();
-    }
-  }
-}
-
-/*
-  DER WECHSEL INS DESIGN SYSTEM (seit 30.09.2026).
-
-  Phase 05 öffnet nicht mit einem Foto, sondern mit einem Verlauf vom Seitengrund
-  nach Weiß (`[data-zeichen-verlauf]`), darunter die Wortmarke. Ab dort steht die
-  Seite im Tugässer Design System 2.1.3: weiß, Logo-Blau, Ziegelrot, Public Sans.
-  Davor bleibt alles, wie es war — Nacht, Creme, Inter Tight und Mono. Die
-  Geschichte trägt den Bruch: Der Traum oben hat noch einen Bierdeckel, den es nie
-  gab; die Marke kommt mit den Leuten.
-
-  DIE BEIDEN LEISTEN WANDERN STUFENLOS MIT. Ein einziger Fortschrittswert `--neu`
-  (0 = alt, 1 = Design System) steuert alle Farben über `color-mix()`. Er ist
-  registriert (`@property`), sonst ließe er sich nicht interpolieren.
-
-  **JEDE LEISTE HAT IHRE EIGENE STRECKE**, weil sie an einem anderen Bildschirmrand
-  sitzt und dort eine andere Farbe unter sich hat:
-
-  | Leiste | Bereich | Bedeutung |
-  |---|---|---|
-  | Kopf | `exit` | Oberkante des Verlaufs am oberen Rand → Unterkante am oberen Rand |
-  | Aktion | `entry` | Oberkante des Verlaufs am unteren Rand → Unterkante am unteren Rand |
-
-  So hat jede Leiste in jedem Moment ungefähr die Farbe, die gerade hinter ihr
-  liegt. Ein gemeinsamer Wert für beide ließe die untere zu spät oder die obere zu
-  früh hell werden.
-
-  **WARUM `--neu` UND NICHT DIE FARBEN SELBST ANIMIERT.** Eine Animation schlägt
-  jede normale Deklaration, auch `:hover`. Animiert man `background-color`,
-  funktioniert der Hover nicht mehr. Animiert wird deshalb nur die Zahl; Grund-,
-  Hover- und Fokusfarben rechnen jeweils selbst mit ihr.
-
-  **SCHRIFT SPRINGT, FARBE FLIESST.** Eine Schriftfamilie lässt sich nicht
-  überblenden. Unregistrierte Eigenschaften (`--stufe`, `--l-schrift`,
-  `--l-versal`) wechseln in Keyframes diskret bei 50 % — also in der Mitte des
-  Verlaufs, wo der Grund zwischen hell und dunkel liegt. Größe, Gewicht und
-  Laufweite hängen an `--stufe`, damit sie mit der Schrift springen und nicht
-  zwischendurch krumme Werte annehmen (Mono in 900 würde der Browser künstlich
-  fetten).
-
-  `timeline-scope` AM `<html>`, weil die Leisten nicht im Verlauf liegen: Ohne
-  das sieht ein Element nur benannte Timelines seiner Vorfahren.
-
-  OHNE UNTERSTÜTZUNG (Firefox, ältere Safari) UND BEI REDUZIERTER BEWEGUNG setzt
-  das Skript `data-neu` an die Leiste, sobald die Mitte des Verlaufs ihren Rand
-  passiert hat. Das schaltet hart um, mit kurzer Überblendung nur bei erlaubter
-  Bewegung. Nicht stufenlos, aber nie falsch.
-*/
-/* Linkschrift in den Leisten — siehe „Farben an Links“ unten. */
-@property --lf {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: transparent;
-}
-
-@property --neu {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 0;
-}
-
-@keyframes neu-werden {
-  from {
-    --neu: 0;
-    --stufe: 0;
-    --l-schrift: 'JetBrains Mono', ui-monospace, monospace;
-    --l-versal: uppercase;
-  }
+@keyframes verblassen {
   to {
-    --neu: 1;
-    --stufe: 1;
-    --l-schrift: 'Public Sans', system-ui, sans-serif;
-    --l-versal: none;
+    opacity: 0;
+    transform: translateY(-64px);
   }
 }
 
-@layer components {
-  .leiste {
-    --stufe: 0;
-    --l-schrift: 'JetBrains Mono', ui-monospace, monospace;
-    --l-versal: uppercase;
-    color: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
-    border-color: color-mix(in oklab, rgb(244 239 231 / 0.1), #dbe2ec calc(var(--neu) * 100%));
-    font-family: var(--l-schrift);
+/* Spur endet mit ihrer rechten Kante am rechten Fensterrand. Die Bühnenhöhe
+   dazu setzt das Skript (Spurbreite − Fensterbreite + Fensterhöhe). */
+@keyframes galerie-fahrt {
+  to {
+    transform: translateX(calc(-100% + 100vw));
   }
-
-  #kopfleiste {
-    background-color: color-mix(
-      in oklab,
-      rgb(12 23 44 / 0.7),
-      rgb(255 255 255 / 0.94) calc(var(--neu) * 100%)
-    );
-  }
-
-  #aktionsleiste {
-    background-color: color-mix(
-      in oklab,
-      rgb(12 23 44 / 0.85),
-      rgb(255 255 255 / 0.96) calc(var(--neu) * 100%)
-    );
-  }
-
-  /* Kleinteiliges in den Leisten: Phasen, Uhr, Satz links unten. Neu in
-     Blau/70 (#4D7293, 5,1:1 auf Weiß) — `tg-muted` wäre mit 2,5:1 zu blass. */
-  .leiste-leise {
-    color: color-mix(in oklab, rgb(244 239 231 / 0.55), #4d7293 calc(var(--neu) * 100%));
-    font-size: calc(11px + 2px * var(--stufe));
-    font-weight: calc(400 + 400 * var(--stufe));
-    letter-spacing: calc(0.18em - 0.14em * var(--stufe));
-    text-transform: uppercase;
-  }
-
-  .leiste-marke {
-    font-size: calc(11px + 4px * var(--stufe));
-    font-weight: calc(500 + 400 * var(--stufe));
-    letter-spacing: calc(0.18em - 0.14em * var(--stufe));
-    text-transform: uppercase;
-  }
-
-  /*
-    FARBEN AN LINKS STEHEN AM KIND, NIE AM `<a>` (30.09.2026).
-
-    Chrome berechnet Farben besuchter Links — und aller Elemente darin — auf
-    einem eigenen Weg, und der verwirft `color-mix(… var(--neu) …)`. Die
-    Schrift erbt dann einfach die Farbe der Leiste. Beim Auftraggeber stand so
-    „Mach mit“ in Blau auf Ziegelrot, und die Ziffern verloren ihre
-    Markierung; wer nie auf der Mitmachseite war, sah alles richtig.
-
-    Gemessen am 30.09.2026 im besuchten Zustand: feste Farbe ✓, `color-mix`
-    ohne `var()` ✓, `var()` ohne `color-mix` ✓, beides zusammen ✗. **Der Weg
-    heraus ist `--lf`**, eine registrierte `<color>`-Eigenschaft: Die Mischung
-    wird dort zu einer fertigen Farbe ausgerechnet, und `color: var(--lf)` ist
-    für Chrome dann ein schlichtes `var()`.
-
-    Dazu gehört der zweite Teil: **am `<a>` keine gemischten Farbeigenschaften**
-    (`color`, `background-color`, `border-color`, `outline-color`). Fläche und
-    Rahmen der Knöpfe sind deshalb `background-image` und `box-shadow`, der
-    Fokusrahmen `currentColor`.
-
-    **Puppeteer zeigt den Fehler nur mit echtem Profil** (`userDataDir`) und
-    nur, wenn der Link VON der Seite aus geklickt wurde — Chrome führt
-    besuchte Links je Herkunftsseite getrennt.
-  */
-  .leiste-link {
-    --lf: color-mix(in oklab, rgb(244 239 231 / 0.55), #4d7293 calc(var(--neu) * 100%));
-  }
-
-  .leiste-link:hover {
-    --lf: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
-  }
-
-  .leiste-link[aria-current='true'] {
-    --lf: color-mix(in oklab, #e06359, #7a1618 calc(var(--neu) * 100%));
-  }
-
-  .leiste-marke {
-    --lf: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
-  }
-
-  .leiste-marke:hover {
-    --lf: color-mix(in oklab, #e06359, #7a1618 calc(var(--neu) * 100%));
-  }
-
-  .leiste-link > span,
-  .leiste-marke > .leiste-marke-text,
-  .knopf-mach-mit > span,
-  .knopf-folg > span {
-    color: var(--lf);
-  }
-
-  .leiste :focus-visible {
-    outline: calc(2px + 1px * var(--stufe)) solid currentColor;
-    outline-offset: calc(2px + 2px * var(--stufe));
-  }
-
-  /* Die Bildmarke erscheint erst, wenn die Leiste fast weiß ist — das Design
-     System erlaubt sie nur auf Weiß. Breite mit, sonst stünde vor „Tugässer“
-     eine leere Lücke. */
-  .leiste-logo {
-    --logo: clamp(0, calc((var(--neu) - 0.75) * 4), 1);
-    width: calc(28px * var(--logo));
-    margin-right: calc(10px * var(--logo));
-    opacity: var(--logo);
-  }
-
-  /* Unter `sm` ersetzt die Bildmarke den Schriftzug. Neben Marke, fünf
-     Ziffern und „Mach mit“ in Public Sans ist bei 390 px kein Platz für beides
-     — gemessen ragte der Knopf rund 75 px über den Rand. `display` lässt sich
-     nicht aus `--stufe` rechnen, die Schriftgröße schon; der Text bleibt für
-     Screenreader stehen (das Logo hat leeres alt). */
-  @media (max-width: 639px) {
-    .leiste-marke-text {
-      font-size: calc(1em * (1 - var(--stufe)));
-    }
-  }
-
-  /* Unter 360 px passt der Schriftzug auch in der alten Fassung nicht: Mit
-     fünf Phasen lief die Leiste bei 320 px 5 px über den Rand (gemessen
-     30.09.2026). Ziffern und „Mach mit“ sind wichtiger als der Name. */
-  @media (max-width: 359px) {
-    .leiste-marke-text {
-      font-size: 0;
-    }
-
-    /* Neu ragte sie hier noch 11 px ins Randmaß — Logo und Knopfschrift eine
-       Spur kleiner. */
-    .leiste-logo {
-      width: calc(24px * var(--logo));
-      margin-right: 0;
-    }
-  }
-
-  /*
-    „Mach mit“ — alt: plastischer Verlauf brand-500 → brand-700 mit Kanten und
-    Schatten, Hover kehrt auf Creme um. Neu: `tg-button--accent` — Ziegelrot,
-    weiße Schrift, 8 px Radius, kein Schatten, Hover Logo-Blau.
-
-    Der Verlauf bleibt als Verlauf stehen und läuft auf zwei gleiche Farben
-    zusammen; ein `background-image` lässt sich nicht in eine Vollfarbe
-    überblenden, zwei Farbstopps schon. Die Schatten tragen ihre Deckkraft als
-    `1 - --neu` und verschwinden so mit.
-  */
-  .knopf-mach-mit {
-    --oben: color-mix(in oklab, #c8322a, #7a1618 calc(var(--neu) * 100%));
-    --unten: color-mix(in oklab, #8a201a, #7a1618 calc(var(--neu) * 100%));
-    background-image: linear-gradient(to bottom, var(--oben), var(--unten));
-    border-radius: calc(4px + 4px * var(--neu));
-    box-shadow:
-      inset 0 1px 0 0 rgb(244 239 231 / calc(0.32 * (1 - var(--neu)))),
-      inset 0 -1px 0 0 rgb(0 0 0 / calc(0.35 * (1 - var(--neu)))),
-      0 3px 10px -3px rgb(0 0 0 / calc(0.7 * (1 - var(--neu))));
-    font-weight: calc(400 + 500 * var(--stufe));
-    letter-spacing: calc(0.16em * (1 - var(--stufe)));
-    text-transform: var(--l-versal);
-  }
-
-  .knopf-mach-mit {
-    --lf: color-mix(in oklab, #f4efe7, #ffffff calc(var(--neu) * 100%));
-  }
-
-  /* Fläche und Rahmen als `background-image` und `box-shadow` statt
-     `background-color` und `border` — siehe „Farben an Links“ oben. */
-  .knopf-folg {
-    --fuellung: color-mix(in oklab, transparent, #ffffff calc(var(--neu) * 100%));
-    --rahmen: color-mix(in oklab, rgb(244 239 231 / 0.25), #013565 calc(var(--neu) * 100%));
-    background-image: linear-gradient(var(--fuellung), var(--fuellung));
-    box-shadow: inset 0 0 0 calc(1px + 1px * var(--stufe)) var(--rahmen);
-    border-radius: calc(4px + 4px * var(--neu));
-    font-weight: calc(400 + 500 * var(--stufe));
-    letter-spacing: calc(0.16em * (1 - var(--stufe)));
-    text-transform: var(--l-versal);
-  }
-
-  .knopf-folg {
-    --lf: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .knopf-mach-mit:hover {
-      --oben: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
-      --unten: var(--oben);
-    }
-
-    .knopf-mach-mit:hover {
-      --lf: color-mix(in oklab, #8a201a, #ffffff calc(var(--neu) * 100%));
-    }
-
-    .knopf-folg:hover {
-      --fuellung: color-mix(in oklab, #f4efe7, #013565 calc(var(--neu) * 100%));
-      --rahmen: var(--fuellung);
-    }
-
-    .knopf-folg:hover {
-      --lf: color-mix(in oklab, #0a0d14, #ffffff calc(var(--neu) * 100%));
-    }
-  }
-}
-
-/* Ersatzweg ohne Scroll-Timeline, gesetzt vom Skript. */
-#kopfleiste[data-neu],
-#aktionsleiste[data-neu] {
-  --neu: 1;
-  --stufe: 1;
-  --l-schrift: 'Public Sans', system-ui, sans-serif;
-  --l-versal: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  #kopfleiste,
-  #aktionsleiste {
-    transition: --neu 0.4s ease-out;
-  }
-
-  @supports (animation-timeline: view()) and (timeline-scope: --a) {
-    html {
-      timeline-scope: --zeichen;
+  @supports (animation-timeline: view()) {
+    [data-auftauchen] {
+      animation: auftauchen linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 22%;
     }
 
-    [data-zeichen-verlauf] {
-      view-timeline: --zeichen block;
+    [data-auftakt-text] {
+      animation: verblassen linear both;
+      animation-timeline: view();
+      animation-range: exit 10% exit 80%;
     }
 
-    #kopfleiste {
-      animation: neu-werden linear both;
-      animation-timeline: --zeichen;
-      animation-range: exit;
+    .galerie {
+      view-timeline: --galerie block;
     }
 
-    #aktionsleiste {
-      animation: neu-werden linear both;
-      animation-timeline: --zeichen;
-      animation-range: entry;
+    .galerie-buehne {
+      position: sticky;
+      top: 64px;
+      display: flex;
+      height: calc(100dvh - 64px);
+      flex-direction: column;
+      justify-content: center;
+      overflow: clip;
+      padding-block: 1rem;
     }
-  }
-}
 
-/* Schriftgröße der Knöpfe springt mit der Schrift (siehe `--stufe` oben). */
-@layer components {
-  .knopf-klein {
-    font-size: calc(11px + 4px * var(--stufe));
-  }
+    /* Kein eigener Scrollport mehr — die Spur fährt per transform. */
+    .galerie-fenster {
+      overflow: visible;
+    }
 
-  .knopf-gross {
-    font-size: calc(13px + 4px * var(--stufe));
-  }
-
-  /* Gehört zu `.leiste-marke-text` unter 360 px weiter oben — muss aber nach
-     `.knopf-klein` stehen, sonst gewinnt die Grundregel. */
-  @media (max-width: 359px) {
-    .knopf-klein {
-      font-size: calc(11px + 3px * var(--stufe));
+    .galerie-spur {
+      animation: galerie-fahrt linear both;
+      animation-timeline: --galerie;
+      animation-range: contain;
     }
   }
 }
 
 /*
-  DAS LOGO SETZT SICH ZUSAMMEN (seit 30.09.2026).
-
-  Drei Takte, alle am Scrollweg über die Bühne `[data-logo-buehne]`:
-
-  | Bereich (`contain`) | Was |
-  |---|---|
-  | bis 6 % | leer — die Kamera steht 36-fach nah im Weiß zwischen Wellen und Schrift |
-  | 6 % – 40 % | die Ä-Punkte fliegen von links und rechts herein, der rechte etwas später |
-  | 40 % – 100 % | das Logo zoomt von 36-fach auf 1 |
-
-  WARUM ES AM ANFANG LEER IST, gerechnet in Logokoordinaten (984 × 799): Der
-  Blickpunkt liegt bei x 434,5 / y 595 — mittig über dem Ä, zwischen dem Ende
-  der Wellen (y 556) und dem Anfang der Schrift (y 634). Bei 36-fach und
-  440 px Logobreite zeigt die Bühne auf 1440 × 900 y 569–621, auf 390 × 844
-  y 557–633. Beides trifft nichts. **Wer Zoom, Blickpunkt oder Bühnenhöhe
-  ändert, rechnet das nach** — sonst ragt am Anfang ein Wellenende oder die
-  A-Spitze ins Bild.
-
-  DIE PUNKTE SIND KINDER DES GEZOOMTEN LOGOS. Sie landen also schon riesig
-  (Durchmesser ~470 px auf 1440, ~300 px auf 390; auf dem Handy ragen sie beim
-  Landen seitlich über den Rand) und schrumpfen dann mit dem Logo. Ihr eigener
-  Flug braucht deshalb nur 1,5-fach, nicht mehr — eine eigene Vergrößerung
-  multipliziert sich mit den 36 des Logos, und die Textur würde riesig.
-
-  DER ZOOM IST EXPONENTIELL, nicht linear: Stützstellen 36 → 14,7 → 6 → 2,45
-  → 1 (je Viertel dieselbe Verkleinerung). Linear von 36 auf 1 passierte in
-  der ersten Hälfte scheinbar nichts und am Ende alles auf einmal. Der Versatz
-  läuft anteilig mit (`(s−1)/35`), damit der Blickpunkt auf geradem Weg in
-  seine Endlage wandert.
-
-  DIE BÜHNE IST 220dvh HOCH, das Bild darin klebt (`sticky`). So steht das Logo
-  still, während gescrollt wird, und die Bewegung hat rund 120dvh Weg. Die
-  frühere 420vh-Sequenz im Auftakt war fünfmal so lang und ist genau daran
-  gescheitert — nicht verlängern, ohne das zu bedenken.
-
-  NUR `transform` — läuft im Compositor.
-
-  `overflow: clip` am klebenden Bild, nicht `hidden`: `hidden` würde einen
-  Scrollport erzeugen und die Timeline umhängen (siehe Parallax oben). Das
-  Clipping hält den übergroßen Zoom innerhalb der weißen Fläche — das Design
-  System erlaubt das Logo nur auf Weiß, nicht über dem Verlauf.
-
-  OHNE UNTERSTÜTZUNG ODER BEI REDUZIERTER BEWEGUNG: keine Bühne, kein Kleben,
-  das Logo steht fertig da.
+  DAS LOGO SETZT SICH ZUSAMMEN — unverändert aus main, nur die Kopfleiste ist
+  64 statt 55 px hoch. Begründung, Rechnung (leerer Anfang bei 36-fach) und
+  Grenzen stehen dort im Kommentar; wer Zoom, Blickpunkt oder Bühnenhöhe
+  ändert, rechnet den leeren Anfang nach.
 */
 @keyframes logo-zoom {
   from {
@@ -685,19 +673,16 @@
       view-timeline: --logo block;
     }
 
-    /* Sprungziel unten in der Bühne, eine Bildschirmhöhe hoch: Landet seine
-       Oberkante unter der Kopfleiste, liegt die Bühnenunterkante am unteren
-       Rand — `contain 100%`, das Logo steht fertig. */
     [data-logo-anker] {
       position: absolute;
       bottom: 0;
-      height: calc(100dvh - 55px);
+      height: calc(100dvh - 64px);
     }
 
     [data-logo-bild] {
       position: sticky;
-      top: 55px;
-      height: calc(100dvh - 55px);
+      top: 64px;
+      height: calc(100dvh - 64px);
       padding: 0 20px;
       overflow: clip;
     }

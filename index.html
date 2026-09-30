@@ -1,43 +1,24 @@
 <!DOCTYPE html>
 <!--
-  motion-safe:scroll-smooth — die Sprungmarken der Kopfleiste gleiten, statt zu
-  springen, aber nur wenn das System keine reduzierte Bewegung verlangt.
+  REDESIGN-VORSCHLAG (Branch `redesign-vorschlag`, 30.09.2026).
+  Ganze Seite im Tugässer Design System 2.1.3: Public Sans, tg-blue, tg-brick,
+  Weiß. Vorbild für die Anmutung: stonebrewing.com — Video-Auftakt, riesige
+  Versalien, Kapitelzählung, randlose Bildflächen. Die Erzählung (01–05) und
+  ihre Texte sind dieselben wie auf main.
 -->
 <html lang="de" class="motion-safe:scroll-smooth">
   <head>
     <meta charset="utf-8" />
-    <!--
-      `viewport-fit=cover` ist die Voraussetzung dafür, dass `env(safe-area-inset-*)`
-      überhaupt einen Wert liefert. Ohne diesen Zusatz stehen alle vier auf 0 —
-      das `pb-[env(safe-area-inset-bottom)]` an der Aktionsleiste war also
-      wirkungslos, obwohl der Kommentar dort das Gegenteil behauptete.
-      Aufgefallen beim Vergleich mit sobw-lager, wo die untere Leiste
-      funktioniert und dieser Zusatz gesetzt ist.
-    -->
+    <!-- viewport-fit=cover: sonst liefert env(safe-area-inset-*) überall 0. -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <title>Tugässer Bräu — Ein neues Bier belebt Heilbronn</title>
-    <!--
-      Die Beschreibungen nennen seit 26.08.2026 die Sache, nicht die Stimmung.
-      Vorher stand hier und in og:description „Man wird ja wohl noch träumen
-      dürfen.“ — schön, aber in einer WhatsApp-Vorschau erfährt davon niemand,
-      worum es geht. Wer den Link aus dem Zeitungsartikel weiterschickt, soll in
-      der Vorschau die Auskunft mitschicken.
-    -->
     <meta
       name="description"
       content="Ein Bier aus Heilbronn, für Heilbronn. Kein Konzern, kein Chef — wer mitmacht, entscheidet mit. Über 50 machen schon mit: Mach mit."
     />
-
-    <!--
-      Link-Vorschau für WhatsApp, Signal, Slack, Facebook & Co.
-      og:image erzeugt `node generate-og.mjs` aus og-template.html.
-
-      Die kanonische Adresse verwendet bewusst die leicht eintippbare
-      ASCII-Schreibweise tugaesser.de. Der Markenname bleibt „Tugässer“.
-    -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Tugässer Bräu" />
     <meta property="og:locale" content="de_DE" />
@@ -62,7 +43,6 @@
       property="og:image:alt"
       content="Das Heilbronner Rathaus bei Nacht, davor eine KI-generierte Frau mit einer Gedankenblase: Bierdeckel „Tugässer Bräu — Ein neues Bier belebt Heilbronn“"
     />
-
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
@@ -76,1691 +56,1130 @@
       name="twitter:image"
       content="https://tugaesser.de/images/og-image.jpg"
     />
-
-    <!--
-      Die Bildmarke, weiß auf Logo-Blau. Alles erzeugt generate-icons.mjs aus
-      brand_assets/tugaesser-bildmarke-maske.png. `?v=2`, weil Browser Favicons
-      besonders lange zwischenspeichern — bei der nächsten Änderung hochzählen.
-    -->
     <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
     <link rel="icon" href="favicon-32.png?v=2" sizes="32x32" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2" />
-    <meta name="theme-color" content="#0a0d14" />
-
-    <!--
-      Schriften liegen lokal, nicht bei Google: sonst wanderte die IP-Adresse
-      jedes Besuchers dorthin. Erzeugt von fetch-fonts.mjs.
-    -->
-    <link rel="stylesheet" href="fonts/fonts.css" />
+    <meta name="theme-color" content="#013565" />
+    <!-- Nur Public Sans, lokal. Inter/JetBrains Mono braucht der Vorschlag nicht mehr. -->
     <link rel="stylesheet" href="fonts/public-sans.css" />
-    <link rel="stylesheet" href="tailwind.css?v=60301015" />
+    <link rel="stylesheet" href="tailwind.css?v=25cc63cb" />
   </head>
-
-  <body class="bg-night font-body text-cream antialiased">
-    <!--
-      Die Kopfleiste ist der Phasenindex der Seite.
-
-      Sie beantwortet das Problem, das mit jeder neuen Phase größer wird: Das
-      Neueste rutscht immer weiter nach unten. Die naheliegende Lösung wäre, die
-      Reihenfolge umzudrehen wie in einem Blog — sie ist bewusst verworfen. Die
-      Phasen sind keine unabhängigen Posts, sondern Kapitel einer Erzählung:
-      Dieselbe Frau träumt oben nachts und denkt unten in der Dämmerung nach,
-      Abschnitt 02 beginnt mit „Nach dem Traum“, und das og:image verspricht das
-      Auftaktmotiv. Umgedreht liefe all das rückwärts. Stattdessen führt hier ein
-      Klick zum Neuesten, und die Geschichte bleibt in ihrer Reihenfolge.
-
-      **Jede neue Phase braucht hier einen Eintrag** — sonst wächst die Seite
-      nach unten, ohne dass man sie erreicht.
-
-      Sprungziel ist jeweils das Bild, das die Phase eröffnet (`#phase-01`,
-      `#phase-02`, `#phase-04`), nicht der Textabschnitt: Sonst überspränge der
-      Sprung das Motiv, das die Phase trägt. Ausnahme ist `03 Die Idee` — die
-      einzige Phase ohne eigenes Bild, sie springt auf `#idee`.
-
-      **Vier Phasen seit 26.08.2026.** „Die Idee“ und „Mitmachen“ waren bis dahin
-      ein Abschnitt; die Trennung folgt der Instagram-Serie, in der beide je
-      einen eigenen Post haben.
-
-      **Fünf seit 30.09.2026** („05 Die Antwort“). Bei 1024 px gemessen: passt
-      noch in eine Zeile, Leiste bleibt 55 px hoch, rechte Kante bei 992 px.
-
-      Unterhalb `lg` stehen nur die Ziffern — vier ausgeschriebene Namen plus
-      Marke, Knopf und Uhr passen erst ab rund 1000 px in eine Zeile. Die Uhr
-      weicht bis `xl` ganz; sie ist Dekor, die Navigation nicht.
-    -->
-    <header
-      id="kopfleiste"
-      class="leiste fixed inset-x-0 top-0 z-20 border-b backdrop-blur-md"
+  <body class="bg-white font-ds text-tg-blue antialiased">
+    <a
+      href="#phase-01"
+      class="knopf sr-only fixed left-4 top-4 z-50 focus:not-sr-only"
+      >Zum Inhalt</a
     >
+
+    <!--
+      KOPFLEISTE. Über dem Auftakt durchsichtig, danach Logo-Blau (`data-fest`,
+      gesetzt vom Skript). Bewusst ohne backdrop-filter: auf iOS steht
+      fixed + backdrop-filter im Verdacht, beim Scrollen nicht neu gezeichnet
+      zu werden (CLAUDE.md, „Aktionsleiste unten“).
+    -->
+    <header id="kopf" class="kopf fixed inset-x-0 top-0 z-30 text-white">
       <div
-        class="mx-auto flex max-w-[1600px] items-center justify-between gap-2 px-5 py-2 sm:gap-3 sm:px-8 md:gap-4"
+        class="mx-auto flex h-16 max-w-[1600px] items-center gap-2 px-3 min-[380px]:gap-3 min-[380px]:px-4 sm:gap-5 sm:px-8"
       >
-        <!--
-          Die Bildmarke wächst erst am Ende des Wechsels herein (`.leiste-logo`
-          in input.css) — das Design System erlaubt sie nur auf Weiß. Leeres
-          alt, weil „Tugässer“ direkt daneben steht.
-        -->
         <a
-          href="#phase-01"
-          class="leiste-marke flex items-center transition-colors duration-150 active:opacity-70"
+          href="#top"
+          class="kopf-marke flex shrink-0 items-center gap-2.5 rounded-sm"
+          aria-label="Tugässer — nach oben"
         >
           <img
-            src="images/tugaesser-bildmarke.jpeg"
+            src="images/tugaesser-bildmarke-weiss.png"
             alt=""
-            width="362"
-            height="360"
-            class="leiste-logo h-auto shrink-0"
+            width="256"
+            height="256"
+            class="h-8 w-8 sm:h-9 sm:w-9"
           />
-          <span class="leiste-marke-text">Tugässer</span>
+          <span
+            class="hidden text-lg font-black uppercase tracking-[0.08em] sm:inline"
+            >Tugässer</span
+          >
         </a>
 
-        <!--
-          `aria-current="true"` setzt das Skript unten auf die Phase, in der man
-          gerade steht. Es ist zugleich Hook für die Einfärbung — kein zweiter
-          Zustand in einer CSS-Klasse, der auseinanderlaufen könnte.
-        -->
-        <nav aria-label="Phasen" class="flex items-center gap-3 sm:gap-5 lg:gap-4 xl:gap-7">
-          <a
-            href="#phase-01"
-            data-phase-link="phase-01"
-            class="leiste-leise leiste-link flex items-center gap-2 whitespace-nowrap transition-colors duration-150 active:opacity-70"
-          >
-            <span class="tabular-nums">01</span>
-            <span class="hidden lg:inline">Traumphase</span>
+        <nav
+          aria-label="Kapitel"
+          class="ml-auto flex items-center gap-1 text-[13px] font-black uppercase tracking-[0.08em] min-[380px]:gap-2 lg:gap-6"
+        >
+          <a href="#phase-01" data-phase-link="phase-01" class="kopf-link">
+            <span class="tabular-nums">01</span
+            ><span class="hidden xl:inline">&nbsp;Traum</span>
           </a>
-          <a
-            href="#phase-02"
-            data-phase-link="phase-02"
-            class="leiste-leise leiste-link flex items-center gap-2 whitespace-nowrap transition-colors duration-150 active:opacity-70"
-          >
-            <span class="tabular-nums">02</span>
-            <span class="hidden lg:inline">Bestandsaufnahme</span>
+          <a href="#phase-02" data-phase-link="phase-02" class="kopf-link">
+            <span class="tabular-nums">02</span
+            ><span class="hidden xl:inline">&nbsp;Bestand</span>
           </a>
-          <!--
-            **Phase 03 springt auf den Textabschnitt, nicht auf ein Bild.** Sie
-            ist die einzige Phase ohne eigenes Motiv; sobald eines vorliegt,
-            wandert `data-phase` samt `id` auf dessen `<figure>` und dieser Link
-            wieder mit. Bis dahin trägt `#idee` beides.
-          -->
-          <a
-            href="#idee"
-            data-phase-link="idee"
-            class="leiste-leise leiste-link flex items-center gap-2 whitespace-nowrap transition-colors duration-150 active:opacity-70"
-          >
-            <span class="tabular-nums">03</span>
-            <span class="hidden lg:inline">Die Idee</span>
+          <a href="#phase-03" data-phase-link="phase-03" class="kopf-link">
+            <span class="tabular-nums">03</span
+            ><span class="hidden xl:inline">&nbsp;Idee</span>
           </a>
-          <a
-            href="#phase-04"
-            data-phase-link="phase-04"
-            class="leiste-leise leiste-link flex items-center gap-2 whitespace-nowrap transition-colors duration-150 active:opacity-70"
-          >
-            <span class="tabular-nums">04</span>
-            <span class="hidden lg:inline">Mitmachen</span>
+          <a href="#phase-04" data-phase-link="phase-04" class="kopf-link">
+            <span class="tabular-nums">04</span
+            ><span class="hidden xl:inline">&nbsp;Mitmachen</span>
           </a>
-          <!-- Sprungziel ist das fertige Logo (#phase-05-logo), nicht der leere Bühnenanfang. -->
           <a
             href="#phase-05-logo"
             data-phase-link="phase-05"
-            class="leiste-leise leiste-link flex items-center gap-2 whitespace-nowrap transition-colors duration-150 active:opacity-70"
+            class="kopf-link"
           >
-            <span class="tabular-nums">05</span>
-            <span class="hidden lg:inline">Die Antwort</span>
+            <span class="tabular-nums">05</span
+            ><span class="hidden xl:inline">&nbsp;Antwort</span>
           </a>
         </nav>
 
-        <!--
-          „Mach mit" auch oben — zusätzlich zur Leiste unten, nicht statt ihr.
-
-          Die untere Aktionsleiste ist dort unbrauchbar: iOS Safari meldet einen
-          Viewport, der hoeher ist als das, was es tatsaechlich anzeigt. Ein
-          `fixed bottom-0` sitzt dann rechnerisch korrekt am Rand und ist
-          trotzdem abgeschnitten — am Geraet gemessen: innerHeight 749,
-          visualViewport.height 749, Leiste bei 749, sichtbar nur ihre Oberkante.
-          Die Differenz gibt Safari ueber keine Schnittstelle heraus, also kann
-          auch kein Skript sie ausgleichen.
-
-          `fixed top-0` ist davon nicht betroffen — die Kopfleiste sass auf jedem
-          Geraetefoto korrekt. Dieser Knopf ist deshalb die Absicherung: Die
-          untere Leiste bleibt, rutscht auf dem iPhone beim Scrollen aber weg.
-          Solange oben einer steht, ist die Anmeldung trotzdem immer erreichbar.
-
-          **Diesen Knopf nicht entfernen**, ohne den unteren auf einem echten
-          iPhone zu pruefen. Puppeteer und schmale Viewports zeigen den Fehler
-          nicht — dort sieht die Seite tadellos aus.
-        -->
         <a
           href="https://mitmachen.tugaesser.de"
-          class="knopf-mach-mit knopf-klein flex min-h-[38px] shrink-0 items-center gap-1.5 whitespace-nowrap px-2.5 sm:px-3.5 transition-[transform,box-shadow] duration-150 active:translate-y-px"
+          class="knopf ml-1 shrink-0 px-3 py-2.5 text-[13px] sm:ml-2 sm:px-5"
+          >Mach mit</a
         >
-          <span>Mach mit</span>
-        </a>
-
-        <!--
-          Die Uhr weicht bis `xl`, vorher stand sie ab `sm`. Mit vier Phasen
-          brauchen die Namen den Platz: Bei 1024 px messen Marke, vier Einträge
-          und der Knopf zusammen rund 870 px — mit der Uhr wären es 1000 und die
-          Zeile bräche um. Die Uhr ist Dekor, die Navigation nicht.
-        -->
-        <span class="leiste-leise hidden whitespace-nowrap xl:inline">
-          Heilbronn <time id="clock" class="ml-2 tabular-nums">--:--</time>
-        </span>
       </div>
     </header>
 
-    <!--
-      Das Foto ist eine eigene Fläche, kein Hintergrund: kein Text darüber,
-      keine Abdunklung. Früher lief hier eine 420vh lange Scroll-Sequenz, die
-      das Bild durch vier Stationen fuhr. Sie ist bewusst entfernt — die Seite
-      bekommt weitere Abschnitte, und drei leere Bildschirme davor hätten jeden
-      davon unerreichbar gemacht.
-    -->
-    <!--
-      pt-[46px]: Die Kopfleiste ist fixiert und ab `md` 46 px hoch (gemessen,
-      nicht geschätzt). Darunter sind es 55 px, weil dort der „Mach mit"-Knopf
-      mit in der Leiste sitzt — beide Werte gehören zusammen und müssen
-      gemeinsam wandern, sonst liegt die Leiste wieder auf dem Foto.
-      Ohne diesen Abstand liegt sie auf dem Foto und kappt genau
-      den oberen Rand der Gedankenblase mit dem Bierdeckel — auf dem Handy war
-      davon rund ein Zehntel verdeckt. Das verstößt zugleich gegen die Regel,
-      dass das Foto eine eigene Fläche ist und nichts darüber liegt.
-
-      Wird die Leiste höher, muss dieser Wert mit. Er steht bewusst hier und
-      nicht als globales body-padding: Nur der Auftakt beginnt am Seitenanfang,
-      alle folgenden Abschnitte liegen ohnehin unter der Leiste.
-    -->
-    <figure id="phase-01" data-phase class="relative scroll-mt-[55px] pt-[55px]">
+    <main id="top">
       <!--
-        Zwei Zuschnitte statt einer Sequenz.
-
-        Im Hochformat ein festes Seitenverhältnis (3:2), keine dvh-Höhe. Das ist
-        der entscheidende Punkt für Querformat-Bilder auf Hochformat-Schirmen:
-        `object-cover` skaliert auf die Höhe, also schneidet jede zusätzliche
-        Höhe seitlich Bild weg. Bei den früheren 62dvh blieben rund 40 Prozent
-        der Bildbreite übrig — das Rathaus war praktisch verschwunden. Mit 3:2
-        sind es etwa 84 Prozent: Rathaus, Frau und Gedankenblase stehen zusammen
-        im Bild.
-
-        Die Umschaltung hängt an `landscape:`, **nicht an einem
-        Breiten-Breakpoint**. Mit `sm:` (640px) fiel ein hochkant gehaltenes
-        Tablet zurück in die hohe Variante und zeigte wieder nur gut die Hälfte
-        der Bildbreite — die Breite ist eben nicht das Problem, die Orientierung
-        ist es. Ein 768px-Tablet im Hochformat hat dieselbe Not wie ein Handy.
-
-        Im Querformat liegt das Bild in voller Breite, die Höhe ist auf 78dvh
-        gedeckelt.
-        Ungedeckelt wäre es bei 16:9 auf einem 1440×900-Schirm 810 px hoch und
-        schöbe den Claim vollständig unter die Falz — man sähe nur ein Foto und
-        müsste raten, dass darunter noch etwas kommt. Die Deckelung lässt die
-        Überschrift anreißen.
-
-        Kein `aspect-[16/9]` zusammen mit `max-h`: aspect-ratio schrumpft dann
-        auch die *Breite* mit, und rechts steht ein schwarzer Balken.
-
-        `object-[center_28%]` statt `center`: object-cover schneidet oben und
-        unten gleichmäßig ab, und oben sitzt die Gedankenblase mit dem
-        Bierdeckel — also die eigentliche Botschaft. Der Fokus wandert nach
-        oben, der Verlust fällt auf den Mantelsaum unten.
-
-        dvh statt vh: iOS Safari rechnet vh ohne seine Toolbars.
+        AUFTAKT. Handy: Video randlos, Text unten darüber (Hochformat passt).
+        Ab lg: Split — Text links auf Tiefblau, Video rechts im Hochformat.
+        Randlos im Querformat hieße 720 px Video auf 1440 px Breite gezogen.
       -->
-      <div class="relative aspect-[3/2] overflow-hidden landscape:aspect-auto landscape:h-[78dvh]">
-        <img
-          src="images/tugaesser-rathaus-hero-1600x900.png"
-          alt="Der Heilbronner Marktplatz bei Nacht mit beleuchtetem Rathaus; im Vordergrund eine KI-generierte Frau, über ihr eine Gedankenblase mit einem Bierdeckel „Tugässer Bräu — Ein neues Bier belebt Heilbronn“ und einem frisch gezapften Bier"
-          class="h-full w-full object-cover object-[62%_center] landscape:object-[center_28%]"
-        />
+      <section
+        id="auftakt"
+        class="relative isolate flex min-h-[100svh] flex-col bg-tg-tiefe text-white lg:grid lg:min-h-[100dvh] lg:grid-cols-12"
+      >
+        <div
+          class="absolute inset-0 -z-10 lg:relative lg:inset-auto lg:z-auto lg:order-2 lg:col-span-5 lg:h-full"
+        >
+          <video
+            data-video
+            class="absolute inset-0 h-full w-full object-cover"
+            src="video/zapfhahn.mp4"
+            poster="video/zapfhahn.jpg"
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            aria-hidden="true"
+          ></video>
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-tg-tiefe via-tg-tiefe/60 to-tg-tiefe/10 lg:hidden"
+            aria-hidden="true"
+          ></div>
+        </div>
 
-        <!--
-          DER SATZ AUF DEM BILD — und damit eine bewusste Ausnahme von der Regel
-          „Das Foto ist eine eigene Fläche, kein Hintergrund“ (26.08.2026, auf
-          Ansage des Auftraggebers). Der Grund: Es ist der Satz, der fängt, und
-          über der Falz stand er sonst nirgends. Alles andere an der Regel gilt
-          weiter — **das Foto selbst bleibt unbehandelt**: kein Gradient über der
-          Fläche, keine Abdunklung, kein Blend-Modus.
-
-          Lesbar wird der Text stattdessen nur an sich selbst: ein weicher
-          `text-shadow` in Nachtblau. Er liegt im Text, nicht auf dem Bild, und
-          kostet keinen einzigen Bildpunkt Helligkeit.
-
-          Er sitzt oben links, weil dort in jedem Zuschnitt Nachthimmel liegt —
-          die Gedankenblase steht rechts oben, die Frau rechts unten, das Rathaus
-          mittig. Das ist die einzige Ecke, die in allen Formaten frei bleibt.
-          Wer die Position ändert, prüft sie im Hoch- **und** im Querformat: Die
-          beiden zeigen wegen `object-position` verschiedene Bildausschnitte.
-
-          Die Größe ist bewusst kleiner als die H1 darunter. Der Claim
-          („Tugässer, schaffen wir's.“) bleibt die größte Schrift der Seite,
-          sonst kämpfen zwei Sätze im selben Bildschirm um denselben Rang.
-
-          `pointer-events-none`: Der Text soll das Bild nicht anfassbar machen.
-        -->
-        <div class="pointer-events-none absolute inset-0">
-          <!--
-            `mx-auto max-w-[1600px] px-5 sm:px-8` ist dasselbe Raster wie
-            Kopfleiste, Bildunterschrift und Textabschnitte. Ohne das klebte der
-            Satz am Fensterrand: Auf 1920 begann er bei 32 px, während alles
-            andere bei 192 px steht — sichtbar schief, sobald das Fenster breiter
-            als 1600 px ist.
-          -->
-          <div class="mx-auto h-full max-w-[1600px] px-5 py-5 sm:px-8 sm:py-8">
-            <p
-              data-parallax-satz
-              class="max-w-[15ch] font-display text-[clamp(1.25rem,3.1vw,2.5rem)] font-bold leading-[1.04] tracking-[-0.035em] text-cream [text-shadow:0_2px_24px_rgba(10,13,20,0.85),0_1px_4px_rgba(10,13,20,0.6)]"
+        <div
+          data-auftakt-text
+          class="mt-auto px-5 pb-28 pt-28 sm:px-8 lg:order-1 lg:col-span-7 lg:mt-0 lg:flex lg:flex-col lg:justify-center lg:px-12 lg:pb-16 xl:px-16"
+        >
+          <p class="kicker text-white/80">
+            <span class="kicker-strich" aria-hidden="true"></span>Tugässer ·
+            Heilbronn
+          </p>
+          <!-- Drei feste Zeilen. Größen so, dass die längste („Für Heilbronn.“,
+               8,4 × Schriftgröße breit) in die Spalte passt: 320–1920 gemessen. -->
+          <h1
+            class="display mt-5 text-[clamp(2rem,10.4vw,5.5rem)] lg:text-[clamp(3rem,5.5vw,7.5rem)]"
+          >
+            <span class="block">Ein Bier aus</span>
+            <span class="block">Heilbronn.</span>
+            <span class="block text-white/55">Für Heilbronn.</span>
+          </h1>
+          <p
+            class="mt-7 max-w-[34rem] text-[clamp(1.125rem,1.6vw,1.375rem)] leading-snug text-white/85"
+          >
+            <strong class="font-black text-white">Kein Konzern, kein Chef.</strong>
+            Wer mitmacht, entscheidet mit.
+          </p>
+          <!-- Knopf erst ab lg: darunter stehen Kopfleiste und Aktionsleiste
+               schon im selben Bildschirm, ein dritter wäre Rauschen. -->
+          <div class="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <a
+              href="https://mitmachen.tugaesser.de"
+              class="knopf hidden px-7 py-4 text-base lg:inline-flex"
+              >Mach mit</a
             >
-              Ein Bier aus Heilbronn.<br />Für Heilbronn.
+            <p class="flex items-center gap-2.5 text-sm font-black uppercase tracking-[0.1em]">
+              <span class="puls" aria-hidden="true"></span>
+              <span
+                ><span data-stand-gesamt class="tabular-nums">53</span> machen
+                schon mit</span
+              >
             </p>
           </div>
         </div>
 
-        <!--
-          Nur noch der Tick unten rechts. Oben links saß einer bei `top-20` — er
-          lag ab `sm` mitten im Satz auf dem Bild und las sich wie ein zufälliger
-          Strich daneben. Ihn tiefer oder höher zu rücken, half nicht: Auf 1440
-          reicht der zweizeilige Satz von 32 bis 115 px, auf 390 von 20 bis 62 —
-          der Tick hätte in einem der beiden Formate immer im Weg gestanden.
-          Diese Ecke markiert jetzt der Text.
-        -->
-        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-          <span class="absolute bottom-4 right-4 h-3 w-px bg-cream/25"></span>
-          <span class="absolute bottom-4 right-4 h-px w-3 bg-cream/25"></span>
+        <a
+          href="#phase-01"
+          class="absolute bottom-24 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition-colors hover:text-white lg:bottom-8 lg:left-[29%] lg:flex"
+        >
+          Die Geschichte
+          <svg
+            class="h-5 w-5 motion-safe:animate-nudge"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            aria-hidden="true"
+          >
+            <path d="M12 4v16m0 0-6-6m6 6 6-6" />
+          </svg>
+        </a>
+      </section>
+
+      <!-- Laufband: reine Zierde, für Screenreader stumm. -->
+      <div
+        class="laufband overflow-hidden bg-tg-brick py-4 text-white"
+        aria-hidden="true"
+      >
+        <div class="laufband-spur flex w-max">
+          <p class="laufband-satz">
+            <span>Ein neues Bier belebt Heilbronn</span><i></i>
+            <span>Ein neues Bier belebt Heilbronn</span><i></i>
+            <span>Ein neues Bier belebt Heilbronn</span><i></i>
+          </p>
+          <p class="laufband-satz">
+            <span>Ein neues Bier belebt Heilbronn</span><i></i>
+            <span>Ein neues Bier belebt Heilbronn</span><i></i>
+            <span>Ein neues Bier belebt Heilbronn</span><i></i>
+          </p>
         </div>
       </div>
 
-      <figcaption
-        class="mx-auto flex max-w-[1600px] items-center gap-2.5 border-t border-cream/10 px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] text-cream/55 sm:px-8"
+      <!-- ============================ 01 TRAUM ============================ -->
+      <section
+        id="phase-01"
+        data-phase
+        class="scroll-mt-16 bg-tg-surface lg:grid lg:min-h-[92dvh] lg:grid-cols-12"
       >
-        <span class="h-1.5 w-1.5 shrink-0 bg-brand-500" aria-hidden="true"></span>
-        Heilbronn, Marktplatz
-      </figcaption>
-    </figure>
+        <figure class="relative lg:col-span-7">
+          <img
+            src="images/tugaesser-rathaus-hero-1600x900.png"
+            alt="Der Heilbronner Marktplatz bei Nacht mit beleuchtetem Rathaus; im Vordergrund eine KI-generierte Frau, über ihr eine Gedankenblase mit einem Bierdeckel „Tugässer Bräu — Ein neues Bier belebt Heilbronn“ und einem frisch gezapften Bier"
+            width="1600"
+            height="900"
+            loading="lazy"
+            decoding="async"
+            class="aspect-[4/3] w-full object-cover object-[64%_30%] lg:absolute lg:inset-0 lg:aspect-auto lg:h-full"
+          />
+          <figcaption class="bildzeile">Heilbronn, Marktplatz · Person KI-generiert</figcaption>
+        </figure>
 
-    <!--
-      Der Text fährt ein, sobald er im Blick ist. Startzustand nur unter
-      motion-safe, damit er ohne Animation sofort lesbar ist.
-
-      DIESER BLOCK IST DIE ANTWORT AUF „WORUM GEHT ES HIER?“ — und zwar seit
-      26.08.2026, weil er sie vorher nicht gab. Bis dahin stand hier nur der
-      Claim („Tugässer, schaffen wir's.“) und der Traumsatz daneben. Beides ist
-      Ton, keines nennt die Sache: Wer aus dem Zeitungsartikel kam, fand ein
-      Foto, ein Wortspiel und einen roten Knopf, auf dem „Mach mit“ steht —
-      mitmachen wobei?
-
-      Deshalb steht rechts jetzt derselbe Dreisatz, der auch die Instagram-Bio
-      trägt: was es ist, wie es gemacht wird, wo es steht. Er ist absichtlich
-      wortgleich gehalten — Zeitung, Profil und Seite sollen dieselbe Auskunft
-      geben, sonst muss der Leser sie sich zusammensuchen.
-
-      **Diese drei Sätze nicht durch Stimmung ersetzen.** Sie sind die einzige
-      Stelle oberhalb der Bestandsaufnahme, an der die Seite in Klartext sagt,
-      was Tugässer ist. Alles darunter erklärt, belegt und lädt ein — aber
-      niemand liest das, wer nach zehn Sekunden nicht weiß, worum es geht.
-    -->
-    <section
-      id="lead"
-      class="group/lead mx-auto max-w-[1600px] border-t border-cream/10 px-5 py-20 sm:px-8 lg:py-28"
-    >
-      <div class="grid gap-x-10 gap-y-12 lg:grid-cols-12">
-        <div class="lg:col-span-7">
-          <p
-            class="font-mono text-[13px] uppercase tracking-[0.22em] text-brand-400 transition-[opacity,transform] duration-700 ease-out [transition-delay:60ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
-          >
-            <span class="text-cream/55">01</span> &nbsp;Traumphase
+        <div
+          class="px-5 py-16 sm:px-8 sm:py-20 lg:col-span-5 lg:flex lg:flex-col lg:justify-center lg:px-12 xl:px-16"
+        >
+          <p class="kapitel" data-auftauchen>
+            <span class="kapitel-zahl">01</span
+            ><span class="kapitel-von">/05</span>
           </p>
-
-          <h1
-            class="mt-7 font-display text-[clamp(2.75rem,7vw,5.25rem)] font-bold leading-[0.94] tracking-[-0.045em] text-cream transition-[opacity,transform] duration-700 ease-out [transition-delay:140ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
-          >
+          <p class="kicker mt-6" data-auftauchen>
+            <span class="kicker-strich" aria-hidden="true"></span>Traumphase
+          </p>
+          <h2 class="display mt-4 text-[clamp(2.75rem,5.4vw,5.25rem)]" data-auftauchen>
             Tugässer,<br />schaffen wir&rsquo;s.
-          </h1>
-
-          <!--
-            Der Traumsatz steht jetzt hier, unter dem Claim, statt in der
-            rechten Spalte. Beide kommen vom Bierdeckel und gehören zusammen;
-            rechts wird der Platz für den Klartext gebraucht.
-          -->
+          </h2>
           <p
-            class="mt-6 max-w-sm text-lg leading-[1.65] text-cream/60 transition-[opacity,transform] duration-700 ease-out [transition-delay:220ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
+            class="mt-6 text-[clamp(1.25rem,1.9vw,1.625rem)] font-black leading-tight"
+            data-auftauchen
           >
             Man wird ja wohl noch träumen dürfen.
           </p>
-        </div>
-
-        <div class="flex flex-col justify-end lg:col-span-5">
-          <!--
-            Größe wie die Leitfragen in Abschnitt 02 und 03 — dieselbe Rolle,
-            dieselbe Stufe. Keine fünfte Textgröße.
-          -->
-          <p
-            class="max-w-md text-[clamp(1.35rem,2.2vw,1.8rem)] leading-[1.4] tracking-[-0.01em] text-cream transition-[opacity,transform] duration-700 ease-out [transition-delay:260ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
-          >
-            Kein Konzern, kein Chef.
+          <p class="fliess mt-6 max-w-[32rem]" data-auftauchen>
+            Die Idee hat ihre Leute gefunden, das erste Rezept steht. Ob daraus
+            ein Bier wird, liegt an dir.
           </p>
-
-          <p
-            class="mt-6 max-w-md text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75 transition-[opacity,transform] duration-700 ease-out [transition-delay:340ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
+          <a
+            href="https://www.instagram.com/tugaesser/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="knopf-rahmen mt-9 self-start"
+            data-auftauchen
           >
-            Wer mitmacht, entscheidet mit. Die Idee hat ihre Leute gefunden,
-            das erste Rezept steht. Ob daraus ein Bier wird, liegt an dir.
-          </p>
-
-          <div
-            class="mt-9 transition-[opacity,transform] duration-700 ease-out [transition-delay:420ms] motion-safe:translate-y-6 motion-safe:opacity-0 group-[.is-in]/lead:motion-safe:translate-y-0 group-[.is-in]/lead:motion-safe:opacity-100"
-          >
-            <div class="h-px w-full bg-cream/10" aria-hidden="true"></div>
-            <p
-              class="mt-7 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/55"
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
             >
-              Bleib dran
-            </p>
-            <!--
-              Nur Instagram. „Mach mit“ stand hier, solange die Aktionsleiste
-              erst nach dem Auftakt einfuhr — jetzt steht sie von Anfang an, und
-              auf dem Handy lägen beide Knöpfe direkt übereinander.
-            -->
-            <div class="mt-3.5">
-              <a
-                href="https://www.instagram.com/tugaesser/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center gap-3 border border-cream/25 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-cream transition-colors duration-150 hover:border-cream hover:bg-cream hover:text-night focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:bg-cream/85"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  class="h-4 w-4"
-                  aria-hidden="true"
-                >
-                  <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.4" />
-                  <circle cx="12" cy="12" r="4.1" />
-                  <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
-                </svg>
-                <span>Folg uns</span>
-                <span class="opacity-60">@tugaesser</span>
-              </a>
-            </div>
-          </div>
+              <rect x="3" y="3" width="18" height="18" rx="5.4" />
+              <circle cx="12" cy="12" r="4.2" />
+              <circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none" />
+            </svg>
+            Folg uns <span class="font-normal normal-case tracking-normal">@tugaesser</span>
+          </a>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!--
-      Phase 02. Die Seite erzählt die Phasen chronologisch, parallel zur
-      Instagram-Postserie: oben der Traum, hier die nüchterne Bestandsaufnahme.
-
-      Dasselbe Gesicht wie im Auftakt, aber eine Phase weiter: dort träumt sie
-      mit einer Gedankenblase, hier steht sie nachdenklich vor echten
-      Tugässer-Fahnen. Nacht wird Dämmerung. Die Figur trägt die Serie, statt
-      dass jeder Abschnitt ein neues Motiv aufmacht.
-
-      Eine frühere Fassung zeigte verwitterte Fahnen erfundener Brauereien.
-      Dieses Bild kommt ohne fremde Zeichen aus — auch ohne erfundene — und ist
-      damit markenrechtlich unkritisch. Nicht durch reale Brauereilogos
-      ersetzen: Cluss und Kronenbräu sind lebende Marken, und das Bild wirbt für
-      eine Marke, ist also Nutzung im geschäftlichen Verkehr.
-
-      Bildauftrag: ../its_my_life/projects/Ventures/project_tugaesser/hero_motiv_bestandsaufnahme.md
-    -->
-    <figure
-      id="phase-02"
-      data-phase
-      class="relative scroll-mt-[55px] border-t border-cream/10"
-    >
-      <!--
-        Flacher als der Auftakt oben (dort 78dvh): Dieses Bild eröffnet einen
-        Abschnitt mitten auf der Seite, es muss keinen Einstieg tragen.
-
-        Der Zuschnitt ist eng: Oben hängen die Fahnen, unten steht die Frau —
-        beides muss drin bleiben. `center 25%` opfert deshalb den Boden vor dem
-        Rathaus und die Fahnenspitzen, nicht den Schriftzug und nicht ihr
-        Gesicht. Wer die Höhe ändert, muss diesen Wert nachziehen und im
-        Screenshot prüfen, ob „Tugässer Bräu“ noch vollständig lesbar ist.
-
-        Im Hochformat gilt dasselbe wie oben: festes 3:2 statt dvh-Höhe, an
-        `landscape:` gehängt statt an einem Breiten-Breakpoint. Der Ausschnitt
-        sitzt trotzdem etwas rechts der Mitte, weil die zweite Fahne fast am
-        rechten Bildrand steht und sonst angeschnitten wäre.
-      -->
-      <div class="relative aspect-[3/2] overflow-hidden landscape:aspect-auto landscape:h-[62dvh]">
-        <img
-          src="images/tugaesser-rathaus-daemmerung-fahnen.jpg"
-          alt="Der Heilbronner Marktplatz in der Dämmerung mit beleuchtetem Rathaus; rechts steht dieselbe KI-generierte Frau wie im Auftaktbild, nachdenklich, die Hand am Kinn, dahinter zwei weiße Fahnen mit dem Logo „Tugässer Bräu — Ein neues Bier belebt Heilbronn“"
-          width="1600"
-          height="900"
-          loading="lazy"
-          decoding="async"
-          class="h-full w-full object-cover object-[64%_center] landscape:object-[center_25%]"
-        />
-
-        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-          <span class="absolute left-4 top-4 h-3 w-px bg-night/30"></span>
-          <span class="absolute left-4 top-4 h-px w-3 bg-night/30"></span>
-          <span class="absolute bottom-4 right-4 h-3 w-px bg-night/30"></span>
-          <span class="absolute bottom-4 right-4 h-px w-3 bg-night/30"></span>
-        </div>
-      </div>
-
-      <figcaption
-        class="mx-auto flex max-w-[1600px] items-center gap-2.5 border-t border-cream/10 px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] text-cream/55 sm:px-8"
+      <!-- ======================= 02 BESTANDSAUFNAHME ====================== -->
+      <section
+        id="phase-02"
+        data-phase
+        class="scroll-mt-16 bg-tg-tiefe text-white"
       >
-        <span class="h-1.5 w-1.5 shrink-0 bg-brand-500" aria-hidden="true"></span>
-        Wie es aussehen könnte
-      </figcaption>
-    </figure>
-
-    <!--
-      Abschnitt 02 — Bestandsaufnahme.
-
-      TYPOSKALA. Es gibt in diesem Abschnitt genau vier Textgrößen, und jede hat
-      eine Aufgabe. Wer eine fünfte einführt, macht den Abschnitt kaputt:
-
-        Rail-Label   11px mono         die Marginalie links, Navigationsmarke
-        Fließtext    clamp 1.125–1.375rem   jeder Absatz, ausnahmslos
-        Zwischenpointe clamp 1.85–2.9rem    die Sätze, die den Text gliedern
-        Kapitelsatz  clamp 2.25–4rem        H2 oben und „Muss das so bleiben?“
-
-      Eine frühere Fassung setzte den Schlussabsatz auf text-lg, weil er in einer
-      Nebenspalte stand. Ergebnis: Der Text wurde nach der stärksten Frage der
-      Seite plötzlich kleiner und wirkte wie eine Fußnote. Fließtext ist hier
-      überall gleich groß — auch im Schluss.
-
-      LAYOUT. Links eine schmale Rail mit dem Zwischentitel, rechts der Text.
-      Die Zwischenpointen brechen aus dem Einzug aus und stehen an der linken
-      Kante des Rasters. Daraus entsteht die Rhythmik des Abschnitts: an der
-      Kante spricht die Marke, eingerückt steht die Sachlage.
-
-      Kein Karussell, keine Bildergalerie, keine Faktenkacheln. Eine frühere
-      Fassung zerlegte dieselbe Geschichte in Zeitleiste, Tabelle und
-      Zahlenblöcke; das war korrekt und tonlos. Eine zweite hängte ein
-      Bilderkarussell an, das nichts beitrug. Beides ist bewusst wieder raus.
-    -->
-    <section
-      id="bestand"
-      class="mx-auto max-w-[1600px] border-t border-cream/10 px-5 py-20 sm:px-8 lg:py-28"
-    >
-      <!-- Kopf: Kapitelsatz links, Leitfrage rechts auf Grundlinie. -->
-      <div class="grid gap-x-10 gap-y-10 lg:grid-cols-12">
-        <div class="lg:col-span-7">
-          <p class="font-mono text-[13px] uppercase tracking-[0.22em] text-brand-400">
-            <span class="text-cream/55">02</span> &nbsp;Bestandsaufnahme
-          </p>
-
+        <div class="mx-auto max-w-[1600px] px-5 pb-10 pt-24 sm:px-8 lg:px-12 lg:pt-32">
+          <div class="flex flex-wrap-reverse items-end justify-between gap-x-6 gap-y-4">
+            <p class="kicker text-white/80" data-auftauchen>
+              <span class="kicker-strich" aria-hidden="true"></span>Bestandsaufnahme
+            </p>
+            <p class="kapitel kapitel-hell" data-auftauchen>
+              <span class="kapitel-zahl">02</span
+              ><span class="kapitel-von">/05</span>
+            </p>
+          </div>
           <h2
-            class="mt-7 font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
-            data-zeilen
+            class="display mt-8 text-[clamp(2.75rem,7.4vw,8rem)]"
+            data-auftauchen
           >
-            <span>Nach dem Traum</span>
-            <span>schauen wir jetzt</span>
-            <span>nüchtern ins Glas.</span>
+            Nach dem Traum schauen wir jetzt
+            <span class="text-white/55">nüchtern ins Glas.</span>
           </h2>
-        </div>
-
-        <div class="flex flex-col justify-end lg:col-span-5">
           <p
-            class="max-w-md text-[clamp(1.35rem,2.2vw,1.8rem)] leading-[1.5] text-cream/85"
+            class="mt-10 max-w-[44rem] text-[clamp(1.25rem,2vw,1.75rem)] font-black leading-snug"
+            data-auftauchen
           >
             Heilbronn hat Biergeschichte. Die Frage ist nur, wo das Heilbronner
             Bier heute gebraut wird.
           </p>
         </div>
-      </div>
 
-      <!-- Damals -->
-      <div
-        class="mt-20 grid gap-x-10 gap-y-4 border-t border-cream/10 pt-10 lg:mt-28 lg:grid-cols-12 lg:pt-12"
-      >
-        <p
-          class="font-mono text-[12px] uppercase tracking-[0.22em] text-cream/55 lg:col-span-3"
+        <!-- Damals / Heute neben einem klebenden Schwarzweißbild -->
+        <div
+          class="mx-auto grid max-w-[1600px] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-12 lg:py-24"
         >
-          Damals
-        </p>
-        <div class="lg:col-span-8 lg:col-start-4">
-          <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
-            Fünf Brauereien sind namentlich belegt, und jede hatte eine Adresse
-            in dieser Stadt. Die Rosenau fing 1860 in der Götzenturmstraße an
-            und zog 1898 an die Innsbrucker Straße. Ein Jahr nach ihr braute
-            Schuchmann in Böckingen, Kirchgasse 65, im Gasthaus Zur Sonne. 1865
-            kam Cluss auf dem Rosenberg dazu. Die Adlerbrauerei Würzburger stand
-            in der Deutschhofstraße 1 und hatte ihren Bierkeller in der
-            Klarastraße. Und 1894 wurde in Biberach aus dem Gasthaus Krone die
-            Kronenbrauerei, Bonfelder Straße 26.
-          </p>
+          <figure class="lg:col-span-5">
+            <div class="lg:sticky lg:top-24">
+              <img
+                src="images/stadt/neckar-schwarzweiss.jpg"
+                alt="Der Neckar in Heilbronn gegen die Sonne, schwarzweiß; Bäume an beiden Ufern spiegeln sich im Wasser"
+                width="1050"
+                height="1400"
+                loading="lazy"
+                decoding="async"
+                class="aspect-[4/5] w-full rounded-lg object-cover"
+              />
+              <figcaption class="mt-3 text-sm text-white/70">Der Neckar in Heilbronn.</figcaption>
+            </div>
+          </figure>
 
-          <p
-            class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
-          >
-            1920 verkaufte Schuchmann sein Braurecht an die Rosenau. 1938 wurde
-            die Adlerbrauerei ihren jüdischen Eigentümern genommen, der Familie
-            Würzburger. Rosenau und Cluss taten sich 1968 zusammen und
-            fusionierten 1973; 1976 ging in der Rosenau das Licht aus. Bei Cluss
-            lief der Sud noch bis Ende 1995. Und als die Kronenbrauerei Ende
-            2016 zum letzten Mal einbraute, war Heilbronn eine Stadt ohne
-            Brauerei.
-          </p>
+          <div class="space-y-20 lg:col-span-7 lg:pt-8">
+            <div data-auftauchen>
+              <h3 class="kicker text-white/80">Damals</h3>
+              <p class="fliess mt-5 text-white/85">
+                Fünf Brauereien sind namentlich belegt, und jede hatte eine
+                Adresse in dieser Stadt. Die Rosenau fing 1860 in der
+                Götzenturmstraße an und zog 1898 an die Innsbrucker Straße. Ein
+                Jahr nach ihr braute Schuchmann in Böckingen, Kirchgasse 65, im
+                Gasthaus Zur Sonne. 1865 kam Cluss auf dem Rosenberg dazu. Die
+                Adlerbrauerei Würzburger stand in der Deutschhofstraße 1 und
+                hatte ihren Bierkeller in der Klarastraße. Und 1894 wurde in
+                Biberach aus dem Gasthaus Krone die Kronenbrauerei, Bonfelder
+                Straße 26.
+              </p>
+              <p class="fliess mt-5 text-white/85">
+                1920 verkaufte Schuchmann sein Braurecht an die Rosenau. 1938
+                wurde die Adlerbrauerei ihren jüdischen Eigentümern genommen,
+                der Familie Würzburger. Rosenau und Cluss taten sich 1968
+                zusammen und fusionierten 1973; 1976 ging in der Rosenau das
+                Licht aus. Bei Cluss lief der Sud noch bis Ende 1995. Und als
+                die Kronenbrauerei Ende 2016 zum letzten Mal einbraute, war
+                Heilbronn eine Stadt ohne Brauerei.
+              </p>
+            </div>
+
+            <p
+              class="display text-[clamp(2.25rem,4.6vw,4.5rem)]"
+              data-auftauchen
+            >
+              Aus vielen wurden wenige,
+              <span class="text-white/55">aus wenigen keine.</span>
+            </p>
+
+            <div data-auftauchen>
+              <h3 class="kicker text-white/80">Heute</h3>
+              <p class="fliess mt-5 text-white/85">
+                Käthchen, Cluss, Kronenbräu — die Marken gibt es. Das Käthchen
+                wird in Nagold-Hochdorf gebraut, Cluss in Stuttgart, Kronenbräu
+                in Schwäbisch Hall. Das ist kein Vorwurf. Diese Brauereien
+                halten Heilbronner Markengeschichte am Leben; ohne sie wären die
+                Namen längst weg.
+              </p>
+              <p class="fliess mt-5 text-white/85">
+                Auch bei den bekannten Heilbronner Standorten mit
+                Brauhausbezug wird aktuell nicht vor Ort gebraut. Genau deshalb
+                geht es uns nicht um eine weitere Kulisse, sondern um eine
+                echte lokale Braustätte.
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <p
-        class="mt-16 font-display text-[clamp(1.85rem,3.6vw,2.9rem)] font-bold leading-[1.1] tracking-[-0.035em] text-cream lg:mt-24"
-        data-zeilen
-      >
-        <span>Aus vielen wurden wenige,</span>
-        <span>aus wenigen keine.</span>
-      </p>
-
-      <!-- Heute -->
-      <div
-        class="mt-16 grid gap-x-10 gap-y-4 border-t border-cream/10 pt-10 lg:mt-24 lg:grid-cols-12 lg:pt-12"
-      >
-        <p
-          class="font-mono text-[12px] uppercase tracking-[0.22em] text-cream/55 lg:col-span-3"
-        >
-          Heute
-        </p>
-        <div class="lg:col-span-8 lg:col-start-4">
-          <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
-            Käthchen, Cluss, Kronenbräu — die Marken gibt es. Das Käthchen wird
-            in Nagold-Hochdorf gebraut, Cluss in Stuttgart, Kronenbräu in
-            Schwäbisch Hall. Das ist kein Vorwurf. Diese Brauereien halten
-            Heilbronner Markengeschichte am Leben; ohne sie wären die Namen
-            längst weg.
-          </p>
-
-          <p
-            class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
-          >
-            Auch bei den bekannten Heilbronner Standorten mit Brauhausbezug wird
-            aktuell nicht vor Ort gebraut. Genau deshalb geht es uns nicht um
-            eine weitere Kulisse, sondern um eine echte lokale Braustätte.
-          </p>
+        <!--
+          GALERIE. Mit Scroll-Timeline klebt die Bühne, und die Bildspur fährt
+          beim senkrechten Scrollen waagerecht durch. Die Höhe der Bühne setzt
+          das Skript aus der Spurbreite. Ohne Unterstützung oder bei reduzierter
+          Bewegung: normale waagerecht scrollbare Reihe.
+        -->
+        <div data-galerie class="galerie relative">
+          <div class="galerie-buehne">
+            <p
+              class="display px-5 text-[clamp(2.25rem,5.6vw,6rem)] sm:px-8 lg:px-12"
+            >
+              Heilbronner Bier gibt es.
+              <span class="block text-white/55">Nur nicht aus Heilbronn.</span>
+            </p>
+            <div class="galerie-fenster mt-8 lg:mt-12">
+              <ul class="galerie-spur" data-galerie-spur>
+                <li>
+                  <img src="images/stadt/ortsschild.jpg" width="1400" height="907" loading="lazy" decoding="async" alt="Ortsschild „Universitätsstadt Heilbronn“ an einer Brücke, dahinter der Neckar" />
+                  <span>Am Neckar</span>
+                </li>
+                <li>
+                  <img src="images/stadt/kilianskirche.jpg" width="1050" height="1400" loading="lazy" decoding="async" alt="Die Kilianskirche vor blauem Winterhimmel" />
+                  <span>Kilianskirche</span>
+                </li>
+                <li>
+                  <img src="images/stadt/altstadt-von-oben.jpg" width="1400" height="795" loading="lazy" decoding="async" alt="Die Heilbronner Innenstadt von oben, in der Mitte der Turm der Kilianskirche" />
+                  <span>Innenstadt</span>
+                </li>
+                <li>
+                  <img src="images/stadt/bollwerksturm.jpg" width="825" height="1400" loading="lazy" decoding="async" alt="Der Bollwerksturm vor Wolkenhimmel" />
+                  <span>Bollwerksturm</span>
+                </li>
+                <li>
+                  <img src="images/stadt/neckar-boot.jpg" width="1400" height="851" loading="lazy" decoding="async" alt="Ein Ausflugsboot auf dem Neckar, dahinter die Kilianskirche" />
+                  <span>Neckar</span>
+                </li>
+                <li>
+                  <img src="images/stadt/goetzenturm-nacht.jpg" width="787" height="1400" loading="lazy" decoding="async" alt="Der Götzenturm bei Nacht, bunt angestrahlt" />
+                  <span>Götzenturm</span>
+                </li>
+                <li>
+                  <img src="images/stadt/experimenta-kran.jpg" width="1400" height="900" loading="lazy" decoding="async" alt="Die experimenta mit einem alten Hafenkran davor" />
+                  <span>experimenta</span>
+                </li>
+                <li>
+                  <img src="images/stadt/theaterschiff.jpg" width="1400" height="827" loading="lazy" decoding="async" alt="Das Theaterschiff vor dem Neckarturm im Herbst" />
+                  <span>Theaterschiff</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <p
-        class="mt-16 font-display text-[clamp(1.85rem,3.6vw,2.9rem)] font-bold leading-[1.1] tracking-[-0.035em] text-cream lg:mt-24"
-        data-zeilen
-      >
-        <span>Heilbronner Bier gibt es.</span>
-        <span>Nur nicht aus Heilbronn.</span>
-      </p>
-
-      <!-- Anderswo -->
-      <div
-        class="mt-16 grid gap-x-10 gap-y-4 border-t border-cream/10 pt-10 lg:mt-24 lg:grid-cols-12 lg:pt-12"
-      >
-        <p
-          class="font-mono text-[12px] uppercase tracking-[0.22em] text-cream/55 lg:col-span-3"
+        <div
+          class="mx-auto grid max-w-[1600px] gap-12 px-5 pb-28 pt-20 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-12 lg:pb-36 lg:pt-28"
         >
-          Anderswo
-        </p>
-        <div class="lg:col-span-8 lg:col-start-4">
-          <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
-            Schwäbisch Hall hat 43.000 Einwohner und die Haller Löwenbräu.
-            Eppingen hat 23.000 und die Palmbräu. Beide brauen vor Ort.
-            Heilbronn hat 133.000 Einwohner und lässt auswärts brauen.
-          </p>
-        </div>
-      </div>
-
-      <!--
-        Schluss. Die Frage steht wie die beiden Zwischenpointen an der linken
-        Kante, aber in Kapitelsatz-Größe: Der Abschnitt hat zwei Höhepunkte, die
-        Überschrift oben und diese Frage. Damit schließt sich die Klammer.
-
-        Die Antwort darunter sitzt in derselben Textspalte wie jeder andere
-        Absatz (col-start-4) und in derselben Größe. Eine frühere Fassung stellte
-        sie in eine eigene Nebenspalte und verkleinerte sie auf text-lg — nach
-        der stärksten Frage der Seite wurde der Text dadurch zur Fußnote.
-      -->
-      <div class="mt-20 border-t border-cream/10 pt-14 lg:mt-28 lg:pt-20">
-        <p
-          class="font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
-        >
-          Muss das so bleiben?
-        </p>
-
-        <div class="mt-12 grid gap-x-10 lg:mt-16 lg:grid-cols-12">
-          <div class="lg:col-span-8 lg:col-start-4">
-            <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
+          <div class="lg:col-span-5" data-auftauchen>
+            <h3 class="kicker text-white/80">Anderswo</h3>
+            <p class="fliess mt-5 text-white/85">
+              Schwäbisch Hall hat 43.000 Einwohner und die Haller Löwenbräu.
+              Eppingen hat 23.000 und die Palmbräu. Beide brauen vor Ort.
+              Heilbronn hat 133.000 Einwohner und lässt auswärts brauen.
+            </p>
+          </div>
+          <div class="lg:col-span-7">
+            <p class="display text-[clamp(2.75rem,6vw,6.5rem)]" data-auftauchen>
+              Muss das so bleiben?
+            </p>
+            <p class="fliess mt-8 text-white/85" data-auftauchen>
               Wir glauben nicht. Tugässer ist noch keine Brauerei — kein Bier,
               kein Sudhaus, kein Businessplan. Erst mal ist es eine Frage an
               diese Stadt: Gibt es hier genug Leute, die das ändern wollen?
             </p>
-            <p
-              class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
-            >
+            <p class="fliess mt-5 text-white/85" data-auftauchen>
               Wenn du dazugehörst, findest du uns auf
               <a
                 href="https://www.instagram.com/tugaesser/"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-cream underline decoration-brand-500 decoration-2 underline-offset-4 transition-colors duration-150 hover:text-brand-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+                class="textlink"
                 >Instagram</a
               >. Da fängt es gerade an.
             </p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-
-    <!--
-      Abschnitt 03 — Die Idee.
-
-      **Der Abschnitt endet seit 26.08.2026 mit einer Frage und nicht mehr mit
-      einem Aufruf.** Bis dahin hing die Anmeldung mit dran; das war ein
-      Abschnitt mit zwei Themen und ohne Schluss. Der Aufruf ist jetzt Phase 04,
-      die Begründung steht dort.
-
-      Was hier bleibt, ist die Herkunft und die Inventur — dieselbe Aussage wie
-      im Idee-Reel auf Instagram („Name ✓ Idee ✓ Stadt ✓ / Rezept ? Kessel ?
-      Ort ? Leute ?“), nur ausgeschrieben.
-
-      Typoskala und Raster sind identisch zu Abschnitt 02 und dort ausführlich
-      begründet: vier Größen, Rail links, Text auf col-start-4, Zwischenpointen
-      an der linken Kante. Keine fünfte Größe, keine Faktenkacheln.
-
-      DIE ZWISCHENPOINTE VOR DER INVENTUR („Irgendwann und irgendwie muss man ja
-      anfangen.“) war einmal eine Feststellung („Drei Sachen hab ich. Vier
-      nicht.“) — sie wiederholte nur, was der Absatz darüber schon gesagt hatte,
-      und lief ins Leere.
-
-      INHALT: Die Fassung geht auf die Antwort an die Heilbronner Stimme vom
-      20.08.2026 zurück. Zwei Dinge daraus bleiben stehen, auch wenn sie sich
-      klein anhören — sie sind der Grund, warum der Abschnitt glaubwürdig ist:
-      dass die Idee nicht vom Autor stammt, und dass es außer Idee, Seite und
-      Profil bisher nichts gibt.
-
-      DIE SEITE SPRICHT „WIR“, AUCH HIER. Abschnitt 02 sagt „Nach dem Traum
-      schauen wir“ und „Wir glauben nicht“ — ein „ich“ wäre ein Stimmbruch. Eine
-      frühere Fassung begann mit „ist nicht auf meinem Mist gewachsen“ und tat
-      damit zweierlei Falsches: Sie wechselte die Person und klang, als wolle
-      sich jemand von der eigenen Sache distanzieren. „Gehört keinem allein“
-      sagt dasselbe über die Herkunft und macht daraus das Prinzip, um das es
-      der Initiative geht.
-
-      DIESER ABSCHNITT HAT ALS EINZIGE PHASE KEIN EIGENES BILD. Das Gruppenmotiv
-      stand bis zum 26.08.2026 darüber und ist zu Phase 04 gewandert, wo es
-      hingehört — über der Inventur widersprach es dem Text, der dort gerade
-      „keine Mannschaft“ sagt. Sobald ein Motiv für die Idee vorliegt, kommt es
-      als `<figure id="phase-03" data-phase>` mit `scroll-mt-[55px]` und
-      `loading="lazy"` vor diesen Abschnitt; der Eintrag in der Kopfleiste zeigt
-      dann dorthin statt auf den Text.    -->
-    <!--
-      `data-phase` und `scroll-mt-[55px]` stehen hier am Textabschnitt statt an
-      einer `<figure>`, weil Phase 03 als einzige kein Bild hat. Das Skript unten
-      sammelt alle `[data-phase]` in DOM-Reihenfolge ein und markiert die letzte,
-      deren Oberkante die Leiste passiert hat — dafür ist egal, ob das Element
-      ein Bild oder ein Abschnitt ist. Kommt ein Motiv dazu, wandern beide
-      Attribute auf dessen `<figure id="phase-03">` und der Link in der
-      Kopfleiste mit.
-    -->
-    <section
-      id="idee"
-      data-phase
-      class="mx-auto max-w-[1600px] scroll-mt-[55px] border-t border-cream/10 px-5 py-20 sm:px-8 lg:py-28"
-    >
-      <div class="grid gap-x-10 gap-y-10 lg:grid-cols-12">
-        <div class="lg:col-span-7">
-          <p class="font-mono text-[13px] uppercase tracking-[0.22em] text-brand-400">
-            <span class="text-cream/55">03</span> &nbsp;Die Idee
-          </p>
-
-          <h2
-            class="mt-7 font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
-            data-zeilen
-          >
-            <span>Drei Jahre</span>
-            <span>gebrodelt.</span>
-          </h2>
-        </div>
-
-        <div class="flex flex-col justify-end lg:col-span-5">
-          <p
-            class="max-w-md text-[clamp(1.35rem,2.2vw,1.8rem)] leading-[1.5] text-cream/85"
-          >
-            Was jetzt noch fehlt, hat keiner von uns allein.
-          </p>
-        </div>
-      </div>
-
-      <!-- Woher -->
-      <div
-        class="mt-20 grid gap-x-10 gap-y-4 border-t border-cream/10 pt-10 lg:mt-28 lg:grid-cols-12 lg:pt-12"
+      <!-- ============================ 03 IDEE ============================= -->
+      <section
+        id="phase-03"
+        data-phase
+        class="scroll-mt-16 bg-tg-nacht text-white"
       >
-        <p
-          class="font-mono text-[12px] uppercase tracking-[0.22em] text-cream/55 lg:col-span-3"
+        <div
+          class="mx-auto grid max-w-[1600px] gap-12 px-5 py-24 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-12 lg:py-32"
         >
-          Woher
-        </p>
-        <div class="lg:col-span-8 lg:col-start-4">
-          <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
-            Diese Idee gehört keinem allein. Sie kommt aus einer Runde von
-            Freunden aus der Heilbronner Gastronomie und hat gut drei Jahre vor
-            sich hin gebrodelt.
-          </p>
+          <div class="lg:col-span-5">
+            <div class="lg:sticky lg:top-24">
+              <video
+                data-video
+                class="aspect-[4/5] w-full rounded-lg object-cover lg:aspect-[9/16] lg:max-h-[calc(100dvh-8rem)]"
+                src="video/zapfanlage.mp4"
+                poster="video/zapfanlage.jpg"
+                muted
+                loop
+                playsinline
+                preload="none"
+                aria-hidden="true"
+              ></video>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7">
+            <div class="flex flex-wrap-reverse items-end justify-between gap-x-6 gap-y-4">
+              <p class="kicker text-white/80" data-auftauchen>
+                <span class="kicker-strich" aria-hidden="true"></span>Die Idee
+              </p>
+              <p class="kapitel kapitel-hell" data-auftauchen>
+                <span class="kapitel-zahl">03</span
+                ><span class="kapitel-von">/05</span>
+              </p>
+            </div>
+            <h2
+              class="display mt-8 text-[clamp(3rem,7.4vw,8rem)]"
+              data-auftauchen
+            >
+              Drei Jahre <span class="text-white/55">gebrodelt.</span>
+            </h2>
+            <p
+              class="mt-8 text-[clamp(1.25rem,2vw,1.75rem)] font-black leading-snug"
+              data-auftauchen
+            >
+              Was jetzt noch fehlt, hat keiner von uns allein.
+            </p>
+
+            <div class="mt-16" data-auftauchen>
+              <h3 class="kicker text-white/80">Woher</h3>
+              <p class="fliess mt-5 text-white/85">
+                Diese Idee gehört keinem allein. Sie kommt aus einer Runde von
+                Freunden aus der Heilbronner Gastronomie und hat gut drei Jahre
+                vor sich hin gebrodelt.
+              </p>
+            </div>
+
+            <p
+              class="display mt-16 text-[clamp(2rem,3.8vw,3.75rem)]"
+              data-auftauchen
+            >
+              Irgendwann und irgendwie
+              <span class="text-white/55">muss man ja anfangen.</span>
+            </p>
+
+            <div class="mt-16" data-auftauchen>
+              <h3 class="kicker text-white/80">Was da ist</h3>
+              <p class="fliess mt-5 text-white/85">
+                Mehr als das, was hier zu sehen ist, gibt es nicht: die Idee,
+                diese Seite, ein Profil auf Instagram. Der Name ist beim
+                Deutschen Patent- und Markenamt angemeldet, die Prüfung läuft.
+                Das war es dann auch schon.
+              </p>
+            </div>
+
+            <!-- Die Inventur. Kommt in 05 als ✓ ✓ ✓ ✕ zurück. -->
+            <ul class="inventur mt-12" data-auftauchen>
+              <li>Kein Rezept.</li>
+              <li>Kein Kessel.</li>
+              <li>Kein Ort.</li>
+              <li>
+                Und keine Mannschaft,
+                <span class="block">die das zusammen macht.</span>
+              </li>
+            </ul>
+
+            <p
+              class="display mt-20 text-[clamp(2.5rem,5vw,5rem)]"
+              data-auftauchen
+            >
+              Wie kommen wir zusammen?
+            </p>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <!--
-        Fester Umbruch statt `text-balance`: Der Satz trägt den Zeilen-Effekt
-        mit, und der braucht ansprechbare Zeilen. Der Umbruch sitzt an der
-        Sinnfuge — „Irgendwann und irgendwie“ ist das Zögern, „muss man ja
-        anfangen“ der Entschluss.
-      -->
-      <p
-        class="mt-14 font-display text-[clamp(1.85rem,3.6vw,2.9rem)] font-bold leading-[1.05] tracking-[-0.035em] text-cream lg:mt-16"
-        data-zeilen
-      >
-        <span>Irgendwann und irgendwie</span>
-        <span>muss man ja anfangen.</span>
-      </p>
-
-      <!-- Was da ist -->
-      <div
-        class="mt-14 grid gap-x-10 gap-y-4 lg:mt-16 lg:grid-cols-12"
-      >
-        <p
-          class="font-mono text-[12px] uppercase tracking-[0.22em] text-cream/55 lg:col-span-3"
-        >
-          Was da ist
-        </p>
-        <div class="lg:col-span-8 lg:col-start-4">
-          <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
-            Mehr als das, was hier zu sehen ist, gibt es nicht: die Idee, diese
-            Seite, ein Profil auf Instagram. Der Name ist beim Deutschen Patent-
-            und Markenamt angemeldet, die Prüfung läuft. Das war es dann auch
-            schon.
-          </p>
-          <p
-            class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
+      <!-- ========================== 04 MITMACHEN ========================== -->
+      <section id="phase-04" data-phase class="scroll-mt-16 bg-white">
+        <figure class="relative isolate">
+          <img
+            src="images/tugaesser-rathaus-marktplatz-team.jpg"
+            alt="Der Heilbronner Marktplatz am Vormittag mit dem Rathaus und seiner astronomischen Uhr; davor stehen sechs KI-generierte Menschen im Kreis, die Arme umeinander gelegt wie eine Mannschaft vor dem Anpfiff"
+            width="1600"
+            height="900"
+            loading="lazy"
+            decoding="async"
+            class="aspect-[4/5] w-full object-cover object-[50%_62%] sm:aspect-[16/9] lg:h-[88dvh] lg:aspect-auto"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-tg-tiefe/90 via-tg-tiefe/20 to-transparent"
+            aria-hidden="true"
+          ></div>
+          <div
+            class="absolute inset-x-0 bottom-0 mx-auto max-w-[1600px] px-5 pb-10 text-white sm:px-8 lg:px-12 lg:pb-16"
           >
-            Kein Rezept. Kein Kessel. Kein Ort. Und keine Mannschaft, die das
-            zusammen macht.
-          </p>
-        </div>
-      </div>
+            <div class="flex flex-wrap-reverse items-end justify-between gap-x-6 gap-y-4">
+              <p class="kicker text-white/85">
+                <span class="kicker-strich" aria-hidden="true"></span>Mitmachen
+              </p>
+              <p class="kapitel kapitel-hell">
+                <span class="kapitel-zahl">04</span
+                ><span class="kapitel-von">/05</span>
+              </p>
+            </div>
+            <h2 class="display mt-6 text-[clamp(3rem,8vw,8.5rem)]">
+              Was fehlt,<br />bringst du mit.
+            </h2>
+          </div>
+          <figcaption class="bildzeile bildzeile-oben">Wie es ausgehen soll · Personen KI-generiert</figcaption>
+        </figure>
 
-      <!--
-        SCHLUSS VON ABSCHNITT 03 — und zugleich die Naht zu Phase 04.
-
-        Die Frage stand hier als Zwischenpointe mitten im Text, damals lief der
-        Abschnitt danach direkt in die Anmeldung weiter. Seit 04 eine eigene
-        Phase ist, ist sie der Kapitelschluss und steht wie „Muss das so
-        bleiben?“ in Abschnitt 02 an der linken Kante in Kapitelsatz-Größe.
-
-        **Ohne Antwort darunter, anders als in 02.** Die Antwort ist das Bild
-        der Mannschaft, das unmittelbar folgt. Ein erklärender Absatz an dieser
-        Stelle würde ihm die Arbeit abnehmen.
-      -->
-      <div class="mt-20 border-t border-cream/10 pt-14 lg:mt-28 lg:pt-20">
-        <p
-          class="text-balance font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
-        >
-          Wie kommen wir zusammen?
-        </p>
-      </div>
-    </section>
-
-    <!--
-      Phase 04 — Mitmachen.
-
-      DAS BILD SCHLIESST DIE SERIE: Dieselbe Frau, die oben nachts träumt und in
-      der Dämmerung nachdenkt, steht hier im Tageslicht — und nicht mehr allein.
-      Die Tageszeit trägt die Erzählung: Nacht, Dämmerung, Vormittag. Wer die
-      Reihenfolge umdreht oder das Motiv gegen ein beliebiges anderes tauscht,
-      nimmt der Seite ihr stärkstes Mittel.
-
-      **Es stand bis 26.08.2026 über Abschnitt 03 und ist bewusst hierher
-      gewandert.** Über der Inventur war es ein Widerspruch: Der Text darunter
-      sagt „keine Mannschaft, die das zusammen macht“, während das Bild genau
-      diese Mannschaft zeigt. Hier antwortet es auf die Frage, mit der Abschnitt
-      03 schließt — „Wie kommen wir zusammen?“ —, und das ohne einen einzigen
-      Satz. Abschnitt 03 hat dafür vorerst kein eigenes Motiv; das ist eine
-      offene Stelle, keine Gestaltungsabsicht.
-
-      Zurück auf den Marktplatz, also auf dieselbe Bühne wie der Auftakt. Der
-      Unterschied zwischen Abschnitt 01 und 04 ist damit nicht der Ort, sondern
-      die Zahl der Leute.
-
-      NIEMAND HÄLT EIN GLAS, und das bleibt so. Es gibt noch kein Bier; ein Bild
-      voller gefüllter Gläser wäre ein Produktversprechen, das die Seite
-      drei Abschnitte lang ausdrücklich nicht gibt.
-    -->
-    <figure
-      id="phase-04"
-      data-phase
-      class="relative scroll-mt-[55px] border-t border-cream/10"
-    >
-      <!--
-        Gleiche Höhen wie Abschnitt 02 (3:2 hochkant, 62dvh quer) — beide sind
-        Abschnittseröffnungen mitten auf der Seite und müssen keinen Einstieg
-        tragen.
-
-        `object-[58%_center]` im Hochformat: Die Gruppe steht rechts der Mitte,
-        das Rathaus dahinter mittig. Bei zentriertem Ausschnitt fiel der rechte
-        Rand der Gruppe weg — und eine angeschnittene Gruppe ist genau das
-        Gegenteil dessen, was das Bild sagen soll. Im Querformat liegt der
-        Schnitt vertikal: `center 62%` opfert Himmel, nicht die Gesichter.
-      -->
-      <div class="relative aspect-[3/2] overflow-hidden landscape:aspect-auto landscape:h-[62dvh]">
-        <img
-          src="images/tugaesser-rathaus-marktplatz-team.jpg"
-          alt="Der Heilbronner Marktplatz am Vormittag mit dem Rathaus und seiner astronomischen Uhr; davor stehen sechs KI-generierte Menschen im Kreis, die Arme umeinander gelegt wie eine Mannschaft vor dem Anpfiff, darunter dieselbe Frau wie in den beiden Bildern zuvor"
-          width="1600"
-          height="900"
-          loading="lazy"
-          decoding="async"
-          class="h-full w-full object-cover object-[58%_center] landscape:object-[center_62%]"
-        />
-
-        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-          <span class="absolute left-4 top-4 h-3 w-px bg-night/30"></span>
-          <span class="absolute left-4 top-4 h-px w-3 bg-night/30"></span>
-          <span class="absolute bottom-4 right-4 h-3 w-px bg-night/30"></span>
-          <span class="absolute bottom-4 right-4 h-px w-3 bg-night/30"></span>
-        </div>
-      </div>
-
-      <figcaption
-        class="mx-auto flex max-w-[1600px] items-center gap-2.5 border-t border-cream/10 px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] text-cream/55 sm:px-8"
-      >
-        <span class="h-1.5 w-1.5 shrink-0 bg-brand-500" aria-hidden="true"></span>
-        Wie es ausgehen soll
-      </figcaption>
-    </figure>
-
-    <!--
-      Abschnitt 04 — Mitmachen.
-
-      DIE PHASE IST AM 26.08.2026 AUS ABSCHNITT 03 HERAUSGELÖST WORDEN. Vorher
-      trug „03“ beides: die Idee samt Inventur und den Aufruf zum Mitmachen. Das
-      war spätestens unstimmig, als die Marginalie von „Was kommt“ auf „Was jetzt
-      geht“ wechselte — ein Abschnitt, der erklärt, woher eine Idee stammt, und
-      im selben Atemzug zum Eintragen auffordert, hat zwei Themen und keinen
-      Schluss.
-
-      **Die Trennung folgt der Instagram-Serie**, nicht einer Layout-Laune: Dort
-      sind „Die Idee“ (Reel mit Inventur und offenem Aufruf) und das Mitmachen
-      zwei getrennte Posts. Website und Profil erzählen dieselben Phasen in
-      derselben Reihenfolge — wer beides sieht, soll dieselbe Gliederung
-      wiedererkennen.
-
-      Typoskala und Raster sind identisch zu 02 und 03: vier Größen, Rail links,
-      Text auf col-start-4, Zwischenpointen an der linken Kante.
-
-      ANREDE: Du-Form wie in 02 und 03. Sie ist geschlechtsneutral ohne
-      Doppelnennung oder Sonderzeichen, und der Abschnitt ist ein Aufruf, kein
-      Bericht.
-
-      DIE ÜBERSCHRIFT KOMMT AUS DEM IDEE-REEL („Was fehlt, bringt ihr mit.“) und
-      antwortet Zeile für Zeile auf die Inventur, mit der Abschnitt 03 endet:
-      kein Rezept, kein Kessel, kein Ort, keine Mannschaft. Nicht gegen etwas
-      Allgemeines tauschen — der Bezug nach oben ist der ganze Witz.
-
-      DIE DREIERREIHE IST GESTAFFELT: Ziel, Mittel, Risiko — „wie es am Ende
-      aussehen soll, was dafür gebraucht wird, was wir vermeiden sollten“. Sie
-      beginnt bewusst mit dem guten Ausgang; wer eine Ideensammlung mit dem
-      Bedarf eröffnet, bekommt Mängellisten. Eine frühere Fassung zählte „was
-      gebraucht wird, was zu beachten ist, was schiefgehen kann“ auf und stand
-      damit zu zwei Dritteln im Vorsichtsmodus. „Was zu beachten ist“ ist
-      gestrichen, weil es dasselbe Feld abdeckt wie „was wir vermeiden sollten“.
-
-      DER SCHLUSSSATZ DES BLOCKS LEBT VOM GEGENSATZ KI ↔ WIR. Er beantwortet die
-      stille Frage, ob die KI das Ganze übernimmt. „Die Arbeit danach machen wir
-      gemeinsam“ war eine erwogene Fassung und ist verworfen: „gemeinsam“ macht
-      daraus eine Zusage, die der folgende Satz („ob das hier trägt“) wieder
-      offenlässt.
-
-      NICHT „Brainstorm“ schreiben. Im Deutschen gibt es „das Brainstorming“,
-      kein Substantiv „der Brainstorm“.
-
-      NICHT verschärfen zu „wir bauen eine Brauerei“. Der Phasenplan ist an
-      dieser Stelle ausdrücklich offen.
-    -->
-    <section
-      id="mitmachen"
-      class="mx-auto max-w-[1600px] border-t border-cream/10 px-5 py-20 sm:px-8 lg:py-28"
-    >
-      <div class="grid gap-x-10 gap-y-10 lg:grid-cols-12">
-        <div class="lg:col-span-7">
-          <p class="font-mono text-[13px] uppercase tracking-[0.22em] text-brand-400">
-            <span class="text-cream/55">04</span> &nbsp;Mitmachen
-          </p>
-
-          <h2
-            class="mt-7 font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
-            data-zeilen
-          >
-            <span>Was fehlt,</span>
-            <span>bringst du mit.</span>
-          </h2>
-        </div>
-
-        <div class="flex flex-col justify-end lg:col-span-5">
+        <div class="mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
           <p
-            class="max-w-md text-[clamp(1.35rem,2.2vw,1.8rem)] leading-[1.5] text-cream/85"
+            class="max-w-[44rem] text-[clamp(1.25rem,2vw,1.75rem)] font-black leading-snug"
+            data-auftauchen
           >
             Zwei Wege stehen offen: die Anmeldung und die Ideensammlung.
           </p>
-        </div>
-      </div>
 
-      <!-- Was jetzt geht — hiess "Was kommt", solange die Mitmachseite Ausblick war -->
-      <div class="mt-20 grid gap-x-10 gap-y-4 border-t border-cream/10 pt-10 lg:mt-28 lg:grid-cols-12 lg:pt-12">
-        <p
-          class="font-mono text-[12px] uppercase tracking-[0.22em] text-cream/55 lg:col-span-3"
-        >
-          Was jetzt geht
-        </p>
-        <div class="lg:col-span-8 lg:col-start-4">
-          <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
-            Der erste ist die Anmeldung: Du trägst ein, was du einbringen kannst
-            und willst — mitdenken, mitbrauen,
-            Geräte, Räume, oder einfach probieren und hinterher ehrlich sagen,
-            was du davon hältst. Vereine und Betriebe können sich genauso
-            eintragen wie einzelne Leute.
-          </p>
-          <p
-            class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
-          >
-            Der zweite ist die offene Ideensammlung. Dort kommt alles hinein, was dir
-            dazu einfällt: wie es am Ende aussehen soll, was dafür gebraucht
-            wird, was wir vermeiden sollten. Aus allen Einträgen entsteht eine
-            erste sortierte Liste der nötigen Schritte. Das Zusammenfassen
-            übernimmt eine KI — die Arbeit danach machen wir.
-          </p>
-        </div>
-      </div>
+          <div class="mt-12 grid gap-5 lg:grid-cols-2 lg:gap-6">
+            <a
+              href="https://mitmachen.tugaesser.de"
+              class="weg group bg-tg-blue text-white"
+              data-auftauchen
+            >
+              <span class="weg-nummer">01</span>
+              <span class="weg-titel">Die Anmeldung</span>
+              <span class="fliess block text-white/85">
+                Du trägst ein, was du einbringen kannst und willst — mitdenken,
+                mitbrauen, Geräte, Räume, oder einfach probieren und hinterher
+                ehrlich sagen, was du davon hältst. Vereine und Betriebe können
+                sich genauso eintragen wie einzelne Leute.
+              </span>
+              <span class="weg-pfeil">Eintragen <i aria-hidden="true">→</i></span>
+            </a>
+            <a
+              href="https://mitmachen.tugaesser.de/ideen"
+              class="weg group border-2 border-tg-blue bg-tg-surface text-tg-blue"
+              data-auftauchen
+            >
+              <span class="weg-nummer">02</span>
+              <span class="weg-titel">Die Ideen&shy;sammlung</span>
+              <span class="fliess block">
+                Dort kommt alles hinein, was dir dazu einfällt: wie es am Ende
+                aussehen soll, was dafür gebraucht wird, was wir vermeiden
+                sollten. Aus allen Einträgen entsteht eine erste sortierte Liste
+                der nötigen Schritte. Das Zusammenfassen übernimmt eine KI — die
+                Arbeit danach machen wir.
+              </span>
+              <span class="weg-pfeil">Idee einwerfen <i aria-hidden="true">→</i></span>
+            </a>
+          </div>
 
-      <!-- Schluss: Kapitelsatz-Größe, gleiche Setzung wie „Muss das so bleiben?“ -->
-      <div class="mt-20 border-t border-cream/10 pt-14 lg:mt-28 lg:pt-20">
-        <p
-          class="text-balance font-display text-[clamp(2.25rem,5.2vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-cream"
-        >
-          Danach wissen wir mehr.
-        </p>
-
-        <div class="mt-12 grid gap-x-10 lg:mt-16 lg:grid-cols-12">
-          <div class="lg:col-span-8 lg:col-start-4">
-            <p class="text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75">
-              Die vielleicht naive Hoffnung dahinter: dass sich auf diesem Weg
-              genug Heilbronner finden, die Lust darauf haben. Melden sich zu
-              wenige, ist das auch eine Antwort.
-            </p>
+          <div class="mt-24 grid gap-10 lg:grid-cols-12 lg:gap-16">
             <p
-              class="mt-8 text-[clamp(1.125rem,1.7vw,1.375rem)] leading-[1.7] text-cream/75"
+              class="display text-[clamp(2.5rem,5vw,5rem)] lg:col-span-5"
+              data-auftauchen
             >
-              Beides steht offen — eintragen kostet zwei Minuten, die
-              Ideensammlung nicht mal deinen Namen. Was sonst passiert, siehst du
-              auf
-              <a
-                href="https://www.instagram.com/tugaesser/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-cream underline decoration-brand-500 decoration-2 underline-offset-4 transition-colors duration-150 hover:text-brand-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
-                >Instagram</a
-              >.
+              Danach wissen wir mehr.
             </p>
-
-            <!--
-              HIER STAND EIN DRITTER „MACH MIT“, und er ist am 26.08.2026
-              entfernt worden. Das Argument dafür war richtig — der Abschluss der
-              Argumentation ist der stärkste Ort für die Handlung —, es hat nur
-              nicht mehr gestimmt, seit der Knopf auch oben in der Kopfleiste
-              sitzt: Am Ende der Seite standen dann Kopfleiste, dieser Knopf und
-              die Aktionsleiste gleichzeitig im Bild. Dreimal dieselbe Handlung
-              auf einem Bildschirm ist keine Betonung mehr, sondern Rauschen.
-
-              **Nicht wieder einbauen, ohne den Seitenschluss im Screenshot zu
-              prüfen.** Die beiden verbliebenen Knöpfe sind fixiert und damit
-              immer erreichbar — oben und unten, je nachdem, wo der Daumen
-              gerade liegt.
-            -->
+            <div class="lg:col-span-7 lg:pt-3">
+              <p class="fliess" data-auftauchen>
+                Die vielleicht naive Hoffnung dahinter: dass sich auf diesem Weg
+                genug Heilbronner finden, die Lust darauf haben. Melden sich zu
+                wenige, ist das auch eine Antwort.
+              </p>
+              <p class="fliess mt-5" data-auftauchen>
+                Beides steht offen — eintragen kostet zwei Minuten, die
+                Ideensammlung nicht mal deinen Namen. Was sonst passiert, siehst
+                du auf
+                <a
+                  href="https://www.instagram.com/tugaesser/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="textlink"
+                  >Instagram</a
+                >.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!--
-      Phase 05 — Die Antwort (seit 30.09.2026).
-
-      AB HIER STEHT DIE SEITE IM TUGÄSSER DESIGN SYSTEM 2.1.3: Weiß, Logo-Blau
-      `tg-blue`, Ziegelrot `tg-brick`, Public Sans. Alles darüber bleibt in der
-      alten Gestaltung. Der Bruch ist erzählt, nicht versehentlich: Oben träumt
-      jemand von einem Bierdeckel, den es nie gab — hier ist die Marke da, weil
-      die Leute da sind.
-
-      DIE PHASE ÖFFNET MIT DER WORTMARKE, wie 01, 02 und 04 mit einem Foto.
-      Davor liegt ein Verlauf vom Seitengrund nach Weiß (`data-zeichen-verlauf`).
-      An ihm hängen die Kopf- und die Aktionsleiste und wechseln stufenlos mit —
-      Mechanik und Begründung in `src/input.css`, „Der Wechsel ins Design
-      System“. **Im Verlauf steht bewusst kein Text:** Auf halbem Weg ist der
-      Grund mittelgrau, und weder helle noch dunkle Schrift hätte dort
-      Kontrast.
-
-      DIE LOGO-REGELN AUS DEM DESIGN SYSTEM: nur auf Weiß, unverzerrt,
-      vollständig, nicht einfärben, nicht beschneiden. Die Wortmarke ist die
-      Fassung ohne „74 BIER“ — das Siegel trägt diesen Zusatz, und was „74Bier“
-      sein soll, ist nicht entschieden (its_my_life/…/markenauftritt_ralf.md).
-
-      „AUSGEDACHT VON EINEM, DER MITMACHT“ ist der Hinweis auf die Herkunft,
-      ohne Namen: Nennung und Rechte sind mit dem Gestalter nicht schriftlich
-      besprochen. Hieß zuerst „Mitgebracht …“ — geändert auf Wunsch des
-      Auftraggebers (30.09.2026).
-    -->
-    <figure class="relative">
-      <div
-        data-zeichen-verlauf
-        class="h-[75dvh] bg-gradient-to-b from-white/0 to-white"
-        aria-hidden="true"
-      ></div>
-
+      <!-- ========================== 05 ANTWORT ============================ -->
       <!--
-        DIE BÜHNE FÜRS LOGO (30.09.2026). Beim Scrollen fliegen erst die beiden
-        Ä-Punkte riesig von links und rechts herein, dann zoomt das Logo aus
-        der Nähe auf seine Endgröße. Mechanik in `src/input.css`, „Das Logo
-        setzt sich zusammen“.
-
-        DAS LOGO IST HIER EINE VEKTOR-NACHZEICHNUNG, nicht das Original: Das
-        JPEG (984 px, `brand_assets/`) wäre beim Zoom sichtbar unscharf. Sobald
-        der Gestalter eine SVG liefert, die Datei ersetzen und die Punkte aus
-        ihr übernehmen. Die Punkte sind Kreise in Prozent der Logofläche:
-        Mittelpunkte 418/613 und 451/613, Radius 14,5 in 984×799.
-
-        `role="img"` plus `aria-label` am Rahmen, leeres alt am Bild: Für
-        Screenreader ist es ein Logo, nicht drei Teile.
+        Logo-Bühne wie auf main: leer, Ä-Punkte fliegen ein, Zoom 36 → 1.
+        Rechnung und Grenzen in src/input.css, „Das Logo setzt sich zusammen“.
       -->
-      <div
-        id="phase-05"
-        data-phase
-        data-logo-buehne
-        class="relative scroll-mt-[55px] bg-white"
-      >
-        <!--
-          Sprungziel der Kopfleiste: dort, wo das Logo FERTIG steht. Die Bühne
-          beginnt leer (36-fach gezoomt) — wer per Klick dort landet, sieht
-          eine weiße Fläche und weiß nicht, dass er scrollen muss. Mit Bühne
-          sitzt der Anker unten (input.css), ohne Bühne bleibt er oben.
-        -->
-        <span id="phase-05-logo" data-logo-anker class="block scroll-mt-[55px]" aria-hidden="true"></span>
-        <div data-logo-bild class="grid place-items-center px-5 pb-16 pt-8 sm:px-8 lg:pb-24">
+      <figure class="bg-white">
+        <div
+          id="phase-05"
+          data-phase
+          data-logo-buehne
+          class="relative scroll-mt-16 bg-white"
+        >
+          <span
+            id="phase-05-logo"
+            data-logo-anker
+            class="block scroll-mt-16"
+            aria-hidden="true"
+          ></span>
           <div
-            data-logo
-            role="img"
-            aria-label="Das Tugässer-Logo: eine Hopfendolde über den ineinandergesetzten Buchstaben T und G, links und rechts drei Wellenlinien, darunter der Schriftzug TUGÄSSER"
-            class="relative aspect-[984/799] w-[min(72vw,440px)]"
+            data-logo-bild
+            class="grid place-items-center px-5 pb-16 pt-8 sm:px-8 lg:pb-24"
           >
-            <img
-              src="images/tugaesser-wortmarke-ohne-punkte.svg"
-              alt=""
-              width="984"
-              height="799"
-              decoding="async"
-              class="absolute inset-0 h-full w-full"
-            />
-            <span
-              data-logo-punkt="links"
-              class="absolute left-[40.96%] top-[74.91%] aspect-square w-[2.947%] rounded-full bg-black"
-            ></span>
-            <span
-              data-logo-punkt="rechts"
-              class="absolute left-[44.36%] top-[74.91%] aspect-square w-[2.947%] rounded-full bg-black"
-            ></span>
-          </div>
-        </div>
-      </div>
-
-      <figcaption
-        class="border-t border-tg-line bg-white font-ds text-base font-black uppercase tracking-[0.06em] text-tg-blue"
-      >
-        <span class="mx-auto flex max-w-[1600px] items-center gap-3 px-5 py-4 sm:px-8">
-          <span class="h-2 w-2 shrink-0 bg-tg-brick" aria-hidden="true"></span>
-          Das Zeichen. Ausgedacht von einem, der mitmacht.
-        </span>
-      </figcaption>
-    </figure>
-
-    <!--
-      ANTWORTET AUF DEN SCHLUSS VON 04, Satz für Satz. Dort steht „die
-      vielleicht naive Hoffnung: dass sich genug Heilbronner finden, die Lust
-      darauf haben. Melden sich zu wenige, ist das auch eine Antwort.“ Hier
-      steht die Zahl, und rechts „Die Hoffnung war nicht naiv.“ Beide Bezüge
-      nicht gegen etwas Allgemeines tauschen.
-
-      DIE INVENTUR SPIEGELT DIE AUS 03 („Kein Rezept. Kein Kessel. Kein Ort.
-      Und keine Mannschaft.“). Übrig bleibt genau ein „Kein“ — der Ort. Der
-      Kessel ist eine Grainfather G40 (40 l), gebraut wird im Hobbymaßstab.
-
-      JEDE PHASE ENDET MIT EINER FRAGE AN DER LINKEN KANTE (02 „Muss das so
-      bleiben?“, 03 „Wie kommen wir zusammen?“). Hier „Wo brauen wir?“ — die
-      offene Stelle, an der die nächste Phase ansetzt.
-
-      ZAHL UND VEREINE KOMMEN LIVE von mitmachen.tugaesser.de/stand.json (Skript
-      unten). Was hier im HTML steht, ist nur der Fallback ohne JavaScript oder
-      bei Ausfall — Stand 30.09.2026 von der öffentlichen Liste abgezählt:
-      45 genannte Personen + 5 Vereine/Betriebe + 3 Ungenannte = 53, also
-      48 Leute.
-      **Keine Personennamen**: Deren Einwilligung gilt für die Liste auf der
-      Mitmachseite („darf unten öffentlich in der Liste stehen“), nicht für
-      eine zweite Website. Und eine Kopie hier bekäme eine Löschung nicht mit.
-
-      „Leute“ = alle Einträge minus die genannten Vereine und Betriebe. Wer als
-      Betrieb nicht genannt werden will, zählt deshalb bei den Leuten mit —
-      genau wie in der Restzahl der Mitmachseite, sonst verriete die Differenz
-      ihn.
-
-      TYPOGRAFIE NACH DEM DESIGN SYSTEM, nicht nach der Skala oben:
-
-      | Rolle | DS-Muster | Größe |
-      |---|---|---|
-      | Kicker, Rail-Label | `tg-label` | 1rem, 900, Versalien, 0.06em, Ziegelrot |
-      | Die Zahl | `tg-display` | clamp(3rem,7vw,7rem), 900 |
-      | Vereine, Schlussfrage | `tg-heading` | clamp(2rem,4vw,4rem), 900 |
-      | „Alles da. Nur kein Ort.“ | `tg-pullquote` | clamp(2rem,4.4vw,4.8rem), 900 |
-      | Leitsatz | `text-xl` | 1.375rem |
-      | Fließtext | `tg-body` | 1.125rem, 400, Zeilenabstand 1.6 |
-
-      Nichts unter 1rem — das Design System setzt `text-xs` auf 1rem.
-      `tg-muted` nie als Textfarbe (2,5:1 auf Weiß); leiser Text ist
-      `tg-blue/70` (5,1:1).
-    -->
-    <!--
-      FLÄCHEN STATT NUR TEXT (30.09.2026, „wirkt sehr eintönig“). Alle aus dem
-      Design System, keine erfundenen:
-
-      | Block | DS-Muster |
-      |---|---|
-      | Die Antwort | `tg-inverse` — Logo-Blau, weiße Schrift, randlos |
-      | Vereine/Betriebe | Kästen wie in der Namensliste der Mitmachseite |
-      | Inventur | vier Kacheln nach `tg-status` (Zeichen im Kreis + Text) |
-      | Ortsaufruf | Ziegelrote Fläche mit `tg-button--light` |
-
-      Die Anti-Karten-Regel aus „Anti-Generic Guardrails“ gilt für 01–04, nicht
-      hier. Weiterhin keine Schatten: `--tg-shadow-print` ist `none`.
-
-      Blau → Weiß → Rot folgt der Stadtflagge von oben nach unten, wie die
-      Schlusstafel der Reels.
-    -->
-    <section id="antwort" class="bg-white font-ds text-tg-blue">
-      <!-- Die Antwort, auf Logo-Blau -->
-      <div class="bg-tg-blue text-white">
-        <div class="mx-auto grid max-w-[1600px] gap-x-10 gap-y-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:py-24">
-          <div class="lg:col-span-7">
-            <p class="text-base font-black uppercase tracking-[0.06em]">
-              <span class="opacity-70">05</span> &nbsp;Die Antwort
-            </p>
-
-            <h2
-              class="mt-6 text-[clamp(3rem,7vw,7rem)] font-black leading-none tracking-[-0.065em]"
-              data-zeilen
+            <div
+              data-logo
+              role="img"
+              aria-label="Das Tugässer-Logo: eine Hopfendolde über den ineinandergesetzten Buchstaben T und G, links und rechts drei Wellenlinien, darunter der Schriftzug TUGÄSSER"
+              class="relative aspect-[984/799] w-[min(72vw,440px)]"
             >
-              <span><span data-stand-leute class="tabular-nums">48</span> Leute</span>
-              <span>machen mit.</span>
-            </h2>
-          </div>
-
-          <div class="flex flex-col justify-end lg:col-span-5">
-            <p class="max-w-md text-[1.375rem] leading-[1.5]">
-              Die Hoffnung war nicht naiv.
-            </p>
-            <p class="mt-3 text-base font-black uppercase tracking-[0.06em] opacity-75">
-              Stand <time data-stand-datum datetime="2026-09-30">30.09.2026</time>
-            </p>
+              <img
+                src="images/tugaesser-wortmarke-ohne-punkte.svg"
+                alt=""
+                width="984"
+                height="799"
+                decoding="async"
+                class="absolute inset-0 h-full w-full"
+              />
+              <span
+                data-logo-punkt="links"
+                class="absolute left-[40.96%] top-[74.91%] aspect-square w-[2.947%] rounded-full bg-black"
+              ></span>
+              <span
+                data-logo-punkt="rechts"
+                class="absolute left-[44.36%] top-[74.91%] aspect-square w-[2.947%] rounded-full bg-black"
+              ></span>
+            </div>
           </div>
         </div>
-      </div>
+        <figcaption
+          class="flex justify-center px-5 pb-20 text-center text-base font-black text-tg-blue/70"
+        >
+          Das Zeichen. Ausgedacht von einem, der mitmacht.
+        </figcaption>
+      </figure>
 
-      <div class="mx-auto max-w-[1600px] px-5 pb-20 pt-16 sm:px-8 lg:pb-28 lg:pt-24">
-        <!--
-          Vereine und Betriebe — als Kästen wie in der Namensliste der
-          Mitmachseite. Die Klassen stehen am `<ul>` (`[&>li]:`), weil das
-          Skript die `<li>` live neu anlegt und sie sonst ohne Rahmen kämen.
-        -->
-        <div data-stand-block class="grid gap-x-10 gap-y-6 lg:grid-cols-12">
-          <p
-            class="text-base font-black uppercase tracking-[0.06em] text-tg-brick lg:col-span-3 lg:pt-4"
+      <section id="antwort" class="bg-white">
+        <!-- Die Zahl -->
+        <div class="bg-tg-blue text-white">
+          <div
+            class="mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28"
           >
-            Und diese Vereine und Betriebe
+            <div class="flex flex-wrap-reverse items-end justify-between gap-x-6 gap-y-4">
+              <p class="kicker text-white/85" data-auftauchen>
+                <span class="kicker-strich" aria-hidden="true"></span>Die Antwort
+              </p>
+              <p class="kapitel kapitel-hell" data-auftauchen>
+                <span class="kapitel-zahl">05</span
+                ><span class="kapitel-von">/05</span>
+              </p>
+            </div>
+            <h2 class="mt-6" data-auftauchen>
+              <span
+                data-stand-leute
+                data-zaehler
+                class="block text-[clamp(8rem,30vw,26rem)] font-black leading-[0.8] tracking-[-0.05em] tabular-nums"
+                >48</span
+              >
+              <span class="display mt-4 block text-[clamp(2.5rem,6vw,6rem)]"
+                >Leute machen mit.</span
+              >
+            </h2>
+            <div
+              class="mt-10 flex flex-wrap items-baseline justify-between gap-x-10 gap-y-3"
+              data-auftauchen
+            >
+              <p class="text-[clamp(1.25rem,2vw,1.75rem)] font-black">
+                Die Hoffnung war nicht naiv.
+              </p>
+              <p class="text-base text-white/80">
+                Stand
+                <time data-stand-datum datetime="2026-09-30">30.09.2026</time>
+              </p>
+            </div>
+
+            <div data-stand-block class="mt-14 border-t border-white/20 pt-10">
+              <p class="kicker text-white/85">Und diese Vereine und Betriebe</p>
+              <ul
+                data-stand-organisationen
+                class="mt-6 flex flex-wrap gap-3 [&>li]:rounded-lg [&>li]:border-2 [&>li]:border-white [&>li]:px-5 [&>li]:py-3 [&>li]:text-lg [&>li]:font-black"
+              >
+                <li>BierKultur Heilbronn e.V.</li>
+                <li>Craftelicious</li>
+                <li>Kulturkeller e.V.</li>
+                <li>VfR Heilbronn</li>
+                <li>innovis - medienagentur</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inventur, gespiegelt aus 03 -->
+        <div class="mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+          <p class="display text-[clamp(3rem,8vw,8.5rem)]" data-auftauchen>
+            Alles da.
+            <span class="block text-tg-brick">Nur kein Ort.</span>
           </p>
-          <ul
-            data-stand-organisationen
-            class="flex flex-wrap gap-3 lg:col-span-9 lg:col-start-4 [&>li]:rounded-lg [&>li]:border-2 [&>li]:border-tg-blue [&>li]:bg-tg-surface [&>li]:px-5 [&>li]:py-3 [&>li]:text-[clamp(1.25rem,2vw,1.75rem)] [&>li]:font-black [&>li]:leading-tight [&>li]:tracking-[-0.02em]"
-          >
-            <li>BierKultur Heilbronn e.V.</li>
-            <li>Craftelicious</li>
-            <li>Kulturkeller e.V.</li>
-            <li>VfR Heilbronn</li>
-            <li>innovis - medienagentur</li>
+
+          <ul class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <li class="kachel" data-auftauchen>
+              <img
+                src="images/stadt/bierglas-voll.jpg"
+                width="787"
+                height="1400"
+                loading="lazy"
+                decoding="async"
+                alt=""
+                class="kachel-bild"
+              />
+              <div class="kachel-text">
+                <p class="kachel-titel">
+                  <span class="kachel-marke" aria-hidden="true">✓</span>
+                  Mannschaft<span class="sr-only">: da</span>
+                </p>
+                <p class="mt-3 text-base leading-relaxed text-white/90">
+                  Jeden Freitag ab 18 Uhr treffen wir uns zum Stammtisch im
+                  Craftelicious in der Fischergasse. Ohne Anmeldung, ohne
+                  Programm — wer uns kennenlernen will, kommt einfach vorbei.
+                </p>
+              </div>
+            </li>
+            <li class="kachel" data-auftauchen>
+              <video
+                data-video
+                class="kachel-bild"
+                src="video/hopfen.mp4"
+                poster="video/hopfen.jpg"
+                muted
+                loop
+                playsinline
+                preload="none"
+                aria-hidden="true"
+              ></video>
+              <div class="kachel-text">
+                <p class="kachel-titel">
+                  <span class="kachel-marke" aria-hidden="true">✓</span>
+                  Rezept<span class="sr-only">: da</span>
+                </p>
+                <p class="mt-3 text-base leading-relaxed text-white/90">
+                  Ein helles Bürgerbier, süffig, keine fünf Prozent.
+                </p>
+              </div>
+            </li>
+            <li class="kachel kachel-flaeche bg-tg-blue" data-auftauchen>
+              <p class="kachel-gross" aria-hidden="true">40&thinsp;L</p>
+              <div class="kachel-text">
+                <p class="kachel-titel">
+                  <span class="kachel-marke" aria-hidden="true">✓</span>
+                  Kessel<span class="sr-only">: da</span>
+                </p>
+                <p class="mt-3 text-base leading-relaxed text-white/90">
+                  40 Liter, für den Anfang. Der erste Probesud ist für Anfang
+                  Oktober angesetzt.
+                </p>
+              </div>
+            </li>
+            <li class="kachel kachel-flaeche bg-tg-brick" data-auftauchen>
+              <p class="kachel-gross" aria-hidden="true">?</p>
+              <div class="kachel-text">
+                <p class="kachel-titel">
+                  <span class="kachel-marke" aria-hidden="true">✕</span>
+                  Ort<span class="sr-only">: fehlt</span>
+                </p>
+                <p class="mt-3 text-base leading-relaxed text-white/90">
+                  Fehlt noch.
+                </p>
+              </div>
+            </li>
           </ul>
         </div>
 
-        <!--
-          Spiegel der Inventur aus 03 („Kein Rezept. Kein Kessel. Kein Ort. Und
-          keine Mannschaft.“) — übrig bleibt ein einziges „Kein“. „Alles da. Nur
-          kein Ort.“ stammt aus Reel 4. Die vier Kacheln ersetzen den früheren
-          Absatz „Seitdem“; Stammtisch, Rezept und Probesud stehen jetzt dort.
-
-          Status nicht nur über Farbe (DS „Feedback“): Zeichen ✓/✕ plus
-          versteckter Text „da“/„fehlt“ für Screenreader.
-        -->
-        <p
-          class="mt-20 text-[clamp(2rem,4.4vw,4.8rem)] font-black leading-[0.98] tracking-[-0.05em] lg:mt-28"
-          data-zeilen
-        >
-          <span>Alles da.</span>
-          <span>Nur kein Ort.</span>
-        </p>
-
-        <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4">
-          <li class="rounded-lg border-2 border-tg-line bg-tg-surface p-6">
-            <p class="flex items-center gap-3 text-base font-black uppercase tracking-[0.06em]">
-              <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-current" aria-hidden="true">✓</span>
-              Mannschaft<span class="sr-only">: da</span>
-            </p>
-            <p class="mt-4 text-lg leading-[1.6]">
-              Jeden Freitag ab 18 Uhr treffen wir uns zum Stammtisch im
-              Craftelicious in der Fischergasse. Ohne Anmeldung, ohne Programm —
-              wer uns kennenlernen will, kommt einfach vorbei.
-            </p>
-          </li>
-          <li class="rounded-lg border-2 border-tg-line bg-tg-surface p-6">
-            <p class="flex items-center gap-3 text-base font-black uppercase tracking-[0.06em]">
-              <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-current" aria-hidden="true">✓</span>
-              Rezept<span class="sr-only">: da</span>
-            </p>
-            <p class="mt-4 text-lg leading-[1.6]">
-              Ein helles Bürgerbier, süffig, keine fünf Prozent.
-            </p>
-          </li>
-          <li class="rounded-lg border-2 border-tg-line bg-tg-surface p-6">
-            <p class="flex items-center gap-3 text-base font-black uppercase tracking-[0.06em]">
-              <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-current" aria-hidden="true">✓</span>
-              Kessel<span class="sr-only">: da</span>
-            </p>
-            <p class="mt-4 text-lg leading-[1.6]">
-              40 Liter, für den Anfang. Der erste Probesud ist für Anfang Oktober
-              angesetzt.
-            </p>
-          </li>
-          <li class="rounded-lg border-2 border-tg-brick bg-white p-6 text-tg-brick">
-            <p class="flex items-center gap-3 text-base font-black uppercase tracking-[0.06em]">
-              <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-current" aria-hidden="true">✕</span>
-              Ort<span class="sr-only">: fehlt</span>
-            </p>
-            <p class="mt-4 text-lg leading-[1.6]">
-              Fehlt noch.
-            </p>
-          </li>
-        </ul>
-
-        <!--
-          Schluss: die Frage, wie 02 und 03 mit einer Frage enden — hier auf der
-          roten Fläche, weil sie die offene Stelle ist. Der Knopf ist
-          `tg-button--light` (DS: auf Markenflächen). Er ist keine dritte
-          „Mach mit“-Handlung, sondern eine eigene: Ort melden.
-        -->
-        <div class="mt-16 rounded-lg bg-tg-brick px-6 py-10 text-white sm:px-10 lg:mt-24 lg:px-14 lg:py-16">
-          <div class="grid gap-x-10 gap-y-6 lg:grid-cols-12">
-            <p
-              class="text-balance text-[clamp(2rem,4vw,4rem)] font-black leading-[1.06] tracking-[-0.045em] lg:col-span-5"
+        <!-- Ortsaufruf -->
+        <div class="relative isolate overflow-clip">
+          <img
+            src="images/stadt/halle-abendrot.jpg"
+            width="1400"
+            height="968"
+            loading="lazy"
+            decoding="async"
+            alt=""
+            class="absolute inset-0 -z-10 h-full w-full object-cover"
+          />
+          <div
+            class="mx-auto max-w-[1600px] px-5 py-24 sm:px-8 lg:px-12 lg:py-40"
+          >
+            <div
+              class="max-w-[40rem] rounded-lg bg-tg-brick p-8 text-white shadow-2xl sm:p-12"
+              data-auftauchen
             >
-              Wo brauen wir?
-            </p>
-            <div class="max-w-[60ch] lg:col-span-7">
-              <p class="text-lg leading-[1.6]">
+              <p class="display text-[clamp(2.75rem,5vw,5rem)]">Wo brauen wir?</p>
+              <p class="fliess mt-6 text-white/90">
                 Der richtige Ort in Heilbronn fehlt noch — Halle, Hof, Keller,
                 leerstehende Werkstatt. Wenn dir was einfällt, schreib uns.
               </p>
               <a
                 href="mailto:kontakt@tugaesser.de"
-                class="mt-6 inline-flex min-h-[48px] items-center justify-center rounded-lg border-2 border-white bg-white px-6 py-3 font-black leading-tight text-tg-blue transition-colors duration-150 hover:border-tg-blue hover:bg-tg-blue hover:text-white focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-white active:translate-y-px"
+                class="knopf-weiss mt-8"
                 >kontakt@tugaesser.de</a
               >
             </div>
           </div>
+          <p class="bildzeile">Symbolbild</p>
         </div>
 
-        <p class="mt-12 max-w-[70ch] text-lg leading-[1.6] lg:mt-16">
-          Mitmachen geht weiter. Du musst nichts können, mitdenken reicht. Und
-          wenn du später einfach mittrinken willst — auch das zählt. Ohne Leute,
-          die es trinken, braucht man nicht zu brauen.
-        </p>
-      </div>
-    </section>
+        <!-- Schluss -->
+        <div class="mx-auto max-w-[1600px] px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
+          <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
+            <p class="fliess lg:col-span-6" data-auftauchen>
+              Mitmachen geht weiter. Du musst nichts können, mitdenken reicht.
+              Und wenn du später einfach mittrinken willst — auch das zählt.
+              Ohne Leute, die es trinken, braucht man nicht zu brauen.
+            </p>
+          </div>
+          <a
+            href="https://mitmachen.tugaesser.de"
+            class="schluss-cta group mt-14"
+            data-auftauchen
+          >
+            <span>Mach mit.</span>
+            <i aria-hidden="true">→</i>
+          </a>
+        </div>
+      </section>
+    </main>
 
-    <!--
-      Transparenzhinweis nach Art. 50 Abs. 4 EU AI Act. Zwei verschiedene Fälle,
-      deshalb **ein Satz je Bild**: Beim Auftaktbild ist nur die Person
-      synthetisch, beim Dämmerungsbild das ganze Bild — und „vollständig“
-      schließt die Person dort bereits ein. Eine frühere Fassung hängte einen
-      dritten Satz an, der die Person für *beide* Bilder nannte und damit für das
-      Dämmerungsbild dasselbe zweimal sagte.
-
-      Beides steht zusätzlich im jeweiligen Alt-Text. Nicht kürzen und nicht
-      unauffälliger machen — wird ein Bild getauscht, muss der zugehörige Satz
-      mitgeführt oder bewusst gestrichen werden.
-    -->
-    <!--
-      pb-32 statt py-5: Die Aktionsleiste liegt fixiert darüber und deckte den
-      Transparenzhinweis sonst zu — ausgerechnet den Text, der sichtbar sein
-      muss. Wird die Leiste höher, muss der Wert mit.
-    -->
-    <!--
-      Der Footer steht im Design System wie Phase 05 davor: Public Sans, 1rem,
-      tg-blue/70 auf Weiß (5,1:1). Der KI-Hinweis ist damit größer und
-      kontrastreicher als vorher in 11 px Mono auf Nachtblau — nicht
-      unauffälliger, wie es die Hard Rules verlangen.
-    -->
-    <footer class="border-t border-tg-line bg-white font-ds">
-      <div class="mx-auto max-w-[1600px] px-5 pb-32 pt-6 sm:px-8">
-        <p class="max-w-3xl text-base leading-[1.6] text-tg-blue/70">
-          Auftaktbild: Foto Frank Beck, die abgebildete Person ist mit künstlicher
-          Intelligenz erzeugt. Das Bild des Marktplatzes in der Dämmerung ist
-          vollständig mit künstlicher Intelligenz erzeugt. Ebenso das Bild der
-          Gruppe auf dem Marktplatz.
+    <footer class="border-t border-tg-line bg-tg-surface pb-32 lg:pb-12">
+      <div
+        class="mx-auto grid max-w-[1600px] gap-10 px-5 py-14 sm:px-8 lg:grid-cols-12 lg:px-12"
+      >
+        <div class="lg:col-span-4">
+          <img
+            src="images/tugaesser-bildmarke.jpeg"
+            alt="Tugässer"
+            width="362"
+            height="360"
+            loading="lazy"
+            class="h-16 w-16"
+          />
+          <p class="mt-4 text-lg font-black uppercase tracking-[0.08em]">
+            Ein neues Bier belebt Heilbronn
+          </p>
+        </div>
+        <ul class="flex flex-col gap-3 text-base font-extrabold lg:col-span-3">
+          <li><a class="textlink" href="https://mitmachen.tugaesser.de">Mitmachen</a></li>
+          <li><a class="textlink" href="https://mitmachen.tugaesser.de/ideen">Ideensammlung</a></li>
+          <li>
+            <a class="textlink" href="https://www.instagram.com/tugaesser/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          </li>
+          <li><a class="textlink" href="mailto:kontakt@tugaesser.de">kontakt@tugaesser.de</a></li>
+        </ul>
+        <p class="text-base leading-relaxed text-tg-blue/70 lg:col-span-5">
+          Auftaktbild 01: Foto Frank Beck, die abgebildete Person ist mit
+          künstlicher Intelligenz erzeugt. Das Bild der Gruppe auf dem
+          Marktplatz in 04 ist vollständig mit künstlicher Intelligenz erzeugt.
+          Alle anderen Fotos und Videos sind echte Aufnahmen.
         </p>
       </div>
     </footer>
 
     <!--
-      Aktionsleiste — das Gegenstück zur Kopfleiste am unteren Rand.
-
-      **Das Ziel hat gewechselt.** Bis die Mitmachseite stand, war Instagram die
-      einzige Handlung; seither ist es der Eintrag auf mitmachen.tugaesser.de.
-      Deshalb trägt „Mach mit“ jetzt das gefüllte Rot — den einzigen Akzent der
-      Seite, sparsam gesetzt und der einen Handlung vorbehalten. Instagram steht
-      umrandet daneben und ist damit zweite Wahl, nicht weg.
-
-      Auf schmalen Bildschirmen schrumpft der Instagram-Knopf auf sein Symbol.
-      „Mach mit“ und „Folg uns auf Instagram“ nebeneinander passen bei 390px
-      nicht in eine Zeile, und untereinander wäre die Leiste doppelt so hoch —
-      dann deckt sie den Text zu, den sie überlagert.
-
-      **Sie steht von Anfang an.** Vorher fuhr sie erst ein, wenn der Auftakt
-      durchgescrollt war — mit dem Argument, ein Handlungsaufruf habe keinen Zug,
-      bevor jemand weiß, worum es geht. Seit der Zeitungsartikel Leute herschickt,
-      stimmt die Annahme nicht mehr: Wer kommt, weiß es schon und soll nicht erst
-      scrollen müssen. Der Preis ist, dass sie den unteren Rand des Hero-Motivs
-      überlagert. Bewusst in Kauf genommen.
-
-      Nebeneffekt: Ohne JavaScript war die Leiste früher unsichtbar. Jetzt steht
-      sie im HTML und funktioniert immer.
-
-      `env(safe-area-inset-bottom)`: Auf iPhones ohne Knopf läge die Leiste
-      sonst unter dem Home-Indikator. Der Footer bekommt entsprechend
-      Bodenfreiheit, sonst deckt die Leiste den KI-Hinweis zu.
-
-      **Wirkt nur mit `viewport-fit=cover` im Viewport-Meta oben.** Ohne das
-      liefert jedes `env(safe-area-inset-*)` schlicht 0, und diese Zeile tut
-      nichts — so war es hier bis zum 26.08.2026.
+      AKTIONSLEISTE, nur unter lg. „Mach mit“ steht zusätzlich oben — auf iOS
+      rutscht die untere Leiste beim Scrollen weg (CLAUDE.md). Deckend, ohne
+      backdrop-filter.
     -->
     <div
       id="aktionsleiste"
-      class="leiste fixed inset-x-0 bottom-0 z-20 border-t pb-[env(safe-area-inset-bottom)] backdrop-blur-md"
+      class="fixed inset-x-0 bottom-0 z-20 border-t border-white/10 bg-tg-blue pb-[env(safe-area-inset-bottom)] lg:hidden"
     >
-      <div
-        class="mx-auto flex max-w-[1600px] items-center justify-between gap-5 px-5 py-3 sm:px-8"
-      >
-        <!--
-          Die Zeile sagt seit 26.08.2026 die Sache statt des Claims. Vorher
-          stand hier „Ein neues Bier belebt Heilbronn“ — genau das, was der
-          Bierdeckel im Auftaktbild ohnehin schon zeigt, und damit die einzige
-          Textzeile über der Falz an eine Wiederholung verschenkt. Auf 1440×900
-          endet das Foto samt Bildunterschrift bei 803 px, der Klartext im
-          Auftakt beginnt bei 940 — wer nicht scrollt, sieht sonst nur ein Foto.
-
-          Erst ab `lg` sichtbar, nicht ab `md`: Der Satz ist rund 340 px breit,
-          daneben stehen zwei Knöpfe à 190 px. Bei 768 px reicht die Zeile
-          nicht.
-        -->
-        <p
-          class="leiste-leise hidden lg:block"
+      <div class="flex gap-3 px-4 py-3">
+        <a
+          href="https://mitmachen.tugaesser.de"
+          class="knopf min-h-[52px] flex-1 text-base"
+          >Mach mit</a
         >
-          Ein neues Bier belebt Heilbronn
-        </p>
-
-        <div class="flex w-full items-center gap-2.5 md:w-auto">
-          <!--
-            Plastisch statt flach: Verlauf nach unten, helle Kante oben,
-            geworfener Schatten. Beim Zeigen hebt er sich, beim Drücken sinkt er
-            ein. Das ist der einzige Knopf der Seite mit dieser Behandlung — es
-            ist die eine Handlung, um die es geht.
-
-            Der Verlauf läuft von brand-500 nach brand-700, nicht von brand-400
-            aus: Auf brand-400 kommt cream nur auf 3,01:1 und fiele unter das
-            WCAG-AA-Minimum von 4,5:1. Auch brand-500 liegt mit 4,65:1 nur knapp
-            darüber — **die Fläche hat nach oben keinen Spielraum.**
-
-            Der Hover kehrt deshalb die beiden Farben um, statt aufzuhellen:
-            Fläche wird cream, Schrift wird brand-700 — 7,97:1. Beides sind
-            Farben, die die Seite ohnehin trägt; der Knopf wird für den Moment
-            zum Bierdeckel-Papier.
-
-            Zwei Wege, die hier zuerst standen und beide verworfen sind: Ein
-            schwarzer Schlagschatten, der wächst, ist auf night unsichtbar —
-            dunkel auf dunkel. Und ein weicher Schein in Markenrot war zwar
-            deutlich, gehörte aber nicht hierher: Auf einer Seite ohne einen
-            einzigen Radius ist eine diffuse Leuchtwolke ein Fremdkörper.
-
-            **Kein Weichzeichner, kein Hub.** Der Farbwechsel ist das Signal,
-            und er schaltet hart um statt zu überblenden — die Transition
-            umfasst bewusst nur transform und box-shadow.
-          -->
-          <a
-            href="https://mitmachen.tugaesser.de"
-            class="knopf-mach-mit knopf-gross flex min-h-[52px] flex-1 items-center justify-center gap-2.5 px-3 transition-[transform,box-shadow] duration-150 active:translate-y-px sm:px-6 md:min-w-[190px] md:flex-none md:px-8"
+        <a
+          href="https://www.instagram.com/tugaesser/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="knopf-rahmen knopf-rahmen-hell min-h-[52px] flex-1 justify-center"
+          aria-label="Folg uns auf Instagram"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
           >
-            <span>Mach mit</span>
-          </a>
-
-          <a
-            href="https://www.instagram.com/tugaesser/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Folg uns auf Instagram"
-            class="knopf-folg knopf-gross flex min-h-[52px] flex-1 items-center justify-center px-3 active:translate-y-px md:min-w-[190px] md:flex-none md:px-5"
-          >
-            <span class="flex items-center gap-2.5">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              class="h-4 w-4 shrink-0"
-              aria-hidden="true"
-            >
-              <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.4" />
-              <circle cx="12" cy="12" r="4.1" />
-              <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
-            </svg>
-            <span>Folg uns</span>
-            </span>
-          </a>
-        </div>
+            <rect x="3" y="3" width="18" height="18" rx="5.4" />
+            <circle cx="12" cy="12" r="4.2" />
+            <circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none" />
+          </svg>
+          Folg uns
+        </a>
       </div>
     </div>
 
     <script>
       (() => {
-        const lead = document.getElementById('lead');
-        const clock = document.getElementById('clock');
+        const bewegung = matchMedia('(prefers-reduced-motion: no-preference)');
+        const kopf = document.getElementById('kopf');
+        const auftakt = document.getElementById('auftakt');
 
-        const fmt = new Intl.DateTimeFormat('de-DE', {
-          timeZone: 'Europe/Berlin',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        });
-        const tick = () => {
-          const now = new Date();
-          clock.textContent = fmt.format(now);
-          clock.setAttribute('datetime', now.toISOString());
-        };
-        tick();
-        setInterval(tick, 15000);
-
-        // Text erst einblenden, wenn er tatsächlich im Blick ist.
+        // Kopfleiste deckend, sobald der Auftakt fast durch ist.
         new IntersectionObserver(
-          (entries, obs) => {
-            entries.forEach((e) => {
-              if (!e.isIntersecting) return;
-              lead.classList.add('is-in');
-              obs.unobserve(e.target);
-            });
-          },
-          { threshold: 0.25 }
-        ).observe(lead);
+          ([e]) => kopf.toggleAttribute('data-fest', !e.isIntersecting),
+          { rootMargin: '-64px 0px 0px 0px', threshold: 0.12 }
+        ).observe(auftakt);
 
         /*
-          Kopfleiste: markieren, in welcher Phase man gerade steht.
-
-          Bewusst über die Scrollposition und nicht per IntersectionObserver.
-          Die Phasen sind mehrere Bildschirme hoch, deshalb sind regelmäßig
-          zwei gleichzeitig im Blick — ein Observer müsste dann raten, welche
-          „die aktuelle“ ist. Die Regel hier ist eindeutig: Es gilt die letzte
-          Phase, deren Oberkante die Unterkante der Kopfleiste passiert hat.
-
-          rAF-Drosselung, damit beim Scrollen nicht pro Ereignis das Layout neu
-          berechnet wird.
+          Videos: nur abspielen, solange sie im Bild sind. Bei reduzierter
+          Bewegung gar nicht — dann bleibt das Standbild (poster).
         */
-        const header = document.getElementById('kopfleiste');
-        const phases = [...document.querySelectorAll('[data-phase]')];
-        const navLinks = [...document.querySelectorAll('[data-phase-link]')];
-
-        if (header && phases.length && navLinks.length) {
-          let aktuell = null;
-          let wartet = false;
-
-          const markieren = () => {
-            wartet = false;
-            const linie = header.offsetHeight + 8;
-            let treffer = phases[0].id;
-            for (const p of phases) {
-              if (p.getBoundingClientRect().top <= linie) treffer = p.id;
+        const videos = [...document.querySelectorAll('[data-video]')];
+        const sichtbar = new IntersectionObserver(
+          (eintraege) => {
+            for (const e of eintraege) {
+              const v = e.target;
+              if (e.isIntersecting && bewegung.matches) {
+                if (v.preload === 'none') v.preload = 'auto';
+                v.play().catch(() => {});
+              } else {
+                v.pause();
+              }
             }
-            if (treffer === aktuell) return;
-            aktuell = treffer;
-            navLinks.forEach((l) => {
-              if (l.dataset.phaseLink === treffer) l.setAttribute('aria-current', 'true');
-              else l.removeAttribute('aria-current');
-            });
-          };
-
-          const anstossen = () => {
-            if (wartet) return;
-            wartet = true;
-            requestAnimationFrame(markieren);
-          };
-
-          markieren();
-          addEventListener('scroll', anstossen, { passive: true });
-          addEventListener('resize', anstossen, { passive: true });
-        }
+          },
+          { threshold: 0.15 }
+        );
+        videos.forEach((v) => sichtbar.observe(v));
 
         /*
-          Leisten-Wechsel ins Design System — Ersatzweg.
-
-          Wo der Browser Scroll-Timelines kennt, macht das CSS alles stufenlos
-          (input.css, „Der Wechsel ins Design System“). Hier nur der Rest:
-          Firefox, ältere Safari, reduzierte Bewegung. Jede Leiste schaltet um,
-          sobald die Mitte des Verlaufs ihren Bildschirmrand passiert hat — ab
-          dort ist der Grund hinter ihr heller als dunkel.
+          Kapitelmarkierung: die letzte Phase, deren Oberkante die Kopfleiste
+          passiert hat. Scrollposition statt Observer — Phasen sind mehrere
+          Bildschirme hoch, oft sind zwei gleichzeitig im Blick.
         */
-        const verlauf = document.querySelector('[data-zeichen-verlauf]');
-        const fuss = document.getElementById('aktionsleiste');
-        const stufenlos =
-          CSS.supports('animation-timeline', 'view()') &&
-          CSS.supports('timeline-scope', '--a') &&
-          matchMedia('(prefers-reduced-motion: no-preference)').matches;
-
-        if (verlauf && header && fuss && !stufenlos) {
-          let wartetLeiste = false;
-          const umschalten = () => {
-            wartetLeiste = false;
-            const r = verlauf.getBoundingClientRect();
-            const mitte = r.top + r.height / 2;
-            header.toggleAttribute('data-neu', mitte <= 0);
-            fuss.toggleAttribute('data-neu', mitte <= innerHeight);
-          };
-          const anstossenLeiste = () => {
-            if (wartetLeiste) return;
-            wartetLeiste = true;
-            requestAnimationFrame(umschalten);
-          };
-          umschalten();
-          addEventListener('scroll', anstossenLeiste, { passive: true });
-          addEventListener('resize', anstossenLeiste, { passive: true });
-        }
+        const phasen = [...document.querySelectorAll('[data-phase]')];
+        const links = [...document.querySelectorAll('[data-phase-link]')];
+        let aktuell = null;
+        let wartet = false;
+        const markieren = () => {
+          wartet = false;
+          let treffer = null;
+          for (const p of phasen) {
+            if (p.getBoundingClientRect().top <= kopf.offsetHeight + 8) treffer = p.id;
+          }
+          if (treffer === aktuell) return;
+          aktuell = treffer;
+          links.forEach((l) =>
+            l.dataset.phaseLink === treffer
+              ? l.setAttribute('aria-current', 'true')
+              : l.removeAttribute('aria-current')
+          );
+        };
+        const anstossen = () => {
+          if (wartet) return;
+          wartet = true;
+          requestAnimationFrame(markieren);
+        };
+        markieren();
+        addEventListener('scroll', anstossen, { passive: true });
 
         /*
-          Phase 05: Zahl und Vereine tagesaktuell von der Mitmachseite.
-
-          Eigene Subdomain, kein fremder Host. Schlägt der Abruf fehl, bleibt
-          der Stand aus dem HTML stehen — mit seinem Datum, also nie falsch,
-          höchstens älter. Kein Ladezustand, kein Fehlertext.
-
-          Leute = alle Einträge minus genannte Vereine/Betriebe. Ungenannte
-          Betriebe stecken damit in den Leuten, wie in der Restzahl dort.
+          Galerie: Bühnenhöhe = Spurbreite − Fensterbreite + Fensterhöhe. Dann
+          entspricht jeder senkrechte Pixel einem waagerechten, und die Spur
+          endet genau am rechten Rand.
         */
-        const leute = document.querySelector('[data-stand-leute]');
+        const galerie = document.querySelector('[data-galerie]');
+        const spur = document.querySelector('[data-galerie-spur]');
+        const faehrt = () =>
+          CSS.supports('animation-timeline', 'view()') && bewegung.matches;
+        const galerieMessen = () => {
+          if (!faehrt()) {
+            galerie.style.height = '';
+            return;
+          }
+          const weg = spur.scrollWidth - document.documentElement.clientWidth;
+          galerie.style.height = `${Math.max(0, weg) + innerHeight}px`;
+        };
+        galerieMessen();
+        addEventListener('resize', galerieMessen, { passive: true });
+        spur.querySelectorAll('img').forEach((img) =>
+          img.addEventListener('load', galerieMessen, { once: true })
+        );
+
+        /* Zähler: zählt hoch, sobald die Zahl ins Bild kommt. */
+        const zaehler = document.querySelector('[data-zaehler]');
+        let gezaehlt = false;
+        const zaehlen = () => {
+          const ziel = Number(zaehler.dataset.ziel);
+          if (!bewegung.matches) {
+            zaehler.textContent = String(ziel);
+            return;
+          }
+          const start = performance.now();
+          const dauer = 1400;
+          const schritt = (t) => {
+            const p = Math.min(1, (t - start) / dauer);
+            const weich = 1 - Math.pow(1 - p, 3);
+            // Ziel bei jedem Schritt neu lesen: der Live-Stand kann mitten
+            // im Zählen eintreffen.
+            const jetzt = Number(zaehler.dataset.ziel);
+            zaehler.textContent = String(Math.round(jetzt * weich));
+            if (p < 1) requestAnimationFrame(schritt);
+          };
+          requestAnimationFrame(schritt);
+        };
+        zaehler.dataset.ziel = zaehler.textContent.trim();
+        new IntersectionObserver(
+          ([e], obs) => {
+            if (!e.isIntersecting || gezaehlt) return;
+            gezaehlt = true;
+            obs.disconnect();
+            zaehlen();
+          },
+          { threshold: 0.5 }
+        ).observe(zaehler);
+
+        /*
+          Stand live von der Mitmachseite. Schlägt der Abruf fehl, bleibt der
+          Stand aus dem HTML mit seinem Datum stehen.
+          Leute = alle Einträge minus genannte Vereine/Betriebe.
+        */
+        const gesamt = document.querySelector('[data-stand-gesamt]');
         const orgListe = document.querySelector('[data-stand-organisationen]');
         const datum = document.querySelector('[data-stand-datum]');
-
-        if (leute && orgListe && datum) {
-          fetch('https://mitmachen.tugaesser.de/stand.json', {
-            signal: AbortSignal.timeout(5000),
+        fetch('https://mitmachen.tugaesser.de/stand.json', {
+          signal: AbortSignal.timeout(5000),
+        })
+          .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+          .then(({ mitmacher, organisationen, stand }) => {
+            if (!Number.isInteger(mitmacher) || !Array.isArray(organisationen)) return;
+            gesamt.textContent = String(mitmacher);
+            const leute = String(mitmacher - organisationen.length);
+            zaehler.dataset.ziel = leute;
+            // Noch nicht gezählt: Zahl direkt setzen. Zählt gerade: die
+            // Animation liest das neue Ziel selbst.
+            if (!gezaehlt) zaehler.textContent = leute;
+            orgListe.replaceChildren(
+              ...organisationen.map((name) => {
+                const li = document.createElement('li');
+                li.textContent = name;
+                return li;
+              })
+            );
+            orgListe
+              .closest('[data-stand-block]')
+              .classList.toggle('hidden', organisationen.length === 0);
+            const d = new Date(stand);
+            datum.dateTime = d.toISOString().slice(0, 10);
+            datum.textContent = d.toLocaleDateString('de-DE', {
+              timeZone: 'Europe/Berlin',
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+            });
           })
-            .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-            .then(({ mitmacher, organisationen, stand }) => {
-              if (!Number.isInteger(mitmacher) || !Array.isArray(organisationen)) return;
-              leute.textContent = String(mitmacher - organisationen.length);
-              orgListe.replaceChildren(
-                ...organisationen.map((name) => {
-                  const li = document.createElement('li');
-                  li.textContent = name;
-                  return li;
-                })
-              );
-              // Ohne genannte Organisation fällt der ganze Block weg, nicht
-              // nur die Liste — sonst stünde eine Überschrift über nichts.
-              // Klasse statt `hidden`-Attribut: `.grid` schlägt das Attribut.
-              orgListe
-                .closest('[data-stand-block]')
-                .classList.toggle('hidden', organisationen.length === 0);
-              const d = new Date(stand);
-              datum.dateTime = d.toISOString().slice(0, 10);
-              datum.textContent = d.toLocaleDateString('de-DE', {
-                timeZone: 'Europe/Berlin',
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-              });
-            })
-            .catch(() => {});
-        }
-
-        /*
-          Hier stand ein IntersectionObserver, der die Aktionsleiste erst
-          einblendete, sobald der Auftakt durchgescrollt war. Er ist weg: Die
-          Leiste steht jetzt von Anfang an im HTML und braucht kein Skript mehr.
-          Begründung im Kommentar an der Leiste selbst.
-        */
-
-        /*
-          Hier stand eine Korrektur, die die untere Aktionsleiste per
-          `visualViewport` am sichtbaren Rand halten sollte. Sie ist entfernt,
-          weil sie das Problem nicht lösen konnte: iOS Safari meldet dort keine
-          Differenz. Am Gerät gemessen — innerHeight 749, visualViewport.height
-          749, Leiste rechnerisch bei 749, sichtbar nur ihre Oberkante. Was das
-          Gerät nicht herausgibt, kann kein Skript ausgleichen.
-
-          Die Leiste bleibt trotzdem überall stehen — auf dem iPhone rutscht sie
-          beim Scrollen weg, aber „Mach mit" steht zusätzlich oben in der
-          Kopfleiste, wo `fixed` verlässlich ist.
-        */
+          .catch(() => {});
       })();
     </script>
   </body>

@@ -60,6 +60,10 @@ module.exports = {
           surface: '#F5F7FA',
           muted: '#8CA3C2', // nur Fläche/Linie, als Text auf Weiß 2,5:1 — zu blass
           line: '#DBE2EC',
+          // NICHT aus dem DS — für dunkle Flächen des Redesign-Vorschlags aus
+          // tg-blue abgedunkelt. Vor Übernahme mit dem DS abstimmen.
+          tiefe: '#001A33',
+          nacht: '#0B0F14', // neutraler Grund unter den Schwarzweiß-Videos
         },
       },
       // Scroll-Hinweis: sinkt leicht ab und wird dabei heller. Bewusst nur

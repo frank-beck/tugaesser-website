@@ -11,6 +11,32 @@ Aufgebaut nach dem Vorbild des Schwesterprojekts `../knoedelstube-website`
 (statische Single-Page-Site, lokal gebautes Tailwind, Screenshot-getriebene
 Design-Schleife).
 
+## Redesign-Vorschlag (nur Branch `redesign-vorschlag`, 30.09.2026)
+
+Ganze Seite im Design System, Anmutung nach stonebrewing.com. **Bricht bewusst
+Regeln weiter unten** (Swiss-industrial, Mono, radiusfrei, keine Karten, Foto
+unbehandelt, Text nie auf Foto) — gelten nur für main, bis entschieden ist.
+
+| Was | Wo |
+|---|---|
+| Videos (s/w Zapfhahn, Zapfanlage; Hopfen-Wandbild als Pingpong-Schleife) | `video/*.mp4` + `.jpg` (Standbild) |
+| Heilbronn-Fotos, 1400 px, ohne EXIF/GPS | `images/stadt/` |
+| Galerie fährt waagerecht beim Scrollen | `.galerie*` in `src/input.css`, Höhe setzt das Skript |
+| Bildmarke weiß für die blaue Leiste | `images/tugaesser-bildmarke-weiss.png` (aus der DS-Maske) |
+
+- **Videos aus der Fotos-Mediathek sind HDR (HLG, BT.2020).** ffmpeg hier ohne
+  zscale → erst `avconvert --preset Preset1920x1080` (macOS, mappt auf SDR),
+  dann ffmpeg: `-an -map_metadata -1`, H.264 CRF 26, 720 px breit. Sonst
+  flaue Farben und GPS im Container.
+- **Quellen:** Originale in `~/Pictures/Fotos Library.photoslibrary/resources/renders/`
+  (bearbeitete s/w-Fassung), Fotos aus `project_tugaesser/assets/heilbronn/reel*/`.
+- `tg-tiefe` #001A33 und `tg-nacht` #0B0F14 **stehen nicht im DS** — abgeleitet.
+- `serve.mjs` kennt jetzt `.mp4`. Ohne Range-Support: `networkidle0` hängt bei
+  reduzierter Bewegung (Video lädt nie fertig) — in Tests `load` nehmen.
+- Gemessen 30.09.2026: 320–1920 ohne Querlauf, Auftakt = Bildschirmhöhe;
+  WebKit 26.6 fehlerfrei; Trace 390 px ganze Seite: Paint 110 ms, Style 126 ms,
+  Raster 66 ms (534 Scrollschritte).
+
 ## Aktueller Stand
 
 **Teaser-Seite**: `index.html` — Hero-Foto, Claim „Tugässer, schaffen wir's." /
