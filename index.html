@@ -62,7 +62,7 @@
     <meta name="theme-color" content="#013565" />
     <!-- Nur Public Sans, lokal. Inter/JetBrains Mono braucht der Vorschlag nicht mehr. -->
     <link rel="stylesheet" href="fonts/public-sans.css" />
-    <link rel="stylesheet" href="tailwind.css?v=43522bef" />
+    <link rel="stylesheet" href="tailwind.css?v=0a598799" />
   </head>
   <body class="bg-white font-ds text-tg-blue antialiased">
     <a
@@ -416,23 +416,50 @@
         </div>
 
         <!--
-          GALERIE. Mit Scroll-Timeline klebt die Bühne, und die Bildspur fährt
-          beim senkrechten Scrollen waagerecht durch. Die Höhe der Bühne setzt
-          das Skript aus der Spurbreite. Ohne Unterstützung oder bei reduzierter
-          Bewegung: normale waagerecht scrollbare Reihe.
+          GALERIE als Karussell (seit 30.09.2026). Vorher fuhr die Bildspur beim
+          senkrechten Scrollen waagerecht durch — „nervig“: man kam nicht
+          vorbei. Jetzt: normale waagerechte Reihe mit Einrasten. Senkrechtes
+          Scrollen geht darüber hinweg, Wischen/Pfeile gehen durch die Bilder.
+          Erkennbar über das angeschnittene nächste Bild, die Pfeile und den
+          Fortschrittsbalken.
         -->
-        <div data-galerie class="galerie relative">
-          <div class="galerie-buehne">
-            <p
-              class="display px-5 text-[clamp(2.25rem,5.6vw,6rem)] sm:px-8 lg:px-12"
-            >
+        <div data-galerie class="galerie py-16 lg:py-24">
+          <div
+            class="flex flex-wrap items-end justify-between gap-x-10 gap-y-6 px-5 sm:px-8 lg:px-12"
+          >
+            <p class="display text-[clamp(2.25rem,5.6vw,6rem)]">
               Heilbronner Bier gibt es.
               <span class="block text-white/55">Nur nicht aus Heilbronn.</span>
             </p>
-            <div class="galerie-fenster mt-8 lg:mt-12">
+            <div class="flex gap-3">
+              <button
+                type="button"
+                class="galerie-pfeil"
+                data-galerie-zurueck
+                aria-label="Vorheriges Foto"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+              </button>
+              <button
+                type="button"
+                class="galerie-pfeil"
+                data-galerie-weiter
+                aria-label="Nächstes Foto"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+              </button>
+            </div>
+          </div>
+            <div
+              class="galerie-fenster mt-8 lg:mt-12"
+              data-galerie-fenster
+              tabindex="0"
+              role="region"
+              aria-label="Fotos aus Heilbronn, waagerecht zum Durchwischen"
+            >
               <ul class="galerie-spur" data-galerie-spur>
                 <li>
-                  <img src="images/stadt/ortsschild.jpg" width="1400" height="907" loading="lazy" decoding="async" alt="Ortsschild „Universitätsstadt Heilbronn“ an einer Brücke, dahinter der Neckar" />
+                  <img class="object-[18%_50%]" src="images/stadt/ortsschild.jpg" width="1400" height="907" loading="lazy" decoding="async" alt="Ortsschild „Universitätsstadt Heilbronn“ an einer Brücke, dahinter der Neckar" />
                   <span>Am Neckar</span>
                 </li>
                 <li>
@@ -440,7 +467,7 @@
                   <span>Kilianskirche</span>
                 </li>
                 <li>
-                  <img src="images/stadt/altstadt-von-oben.jpg" width="1400" height="795" loading="lazy" decoding="async" alt="Die Heilbronner Innenstadt von oben, in der Mitte der Turm der Kilianskirche" />
+                  <img class="object-[42%_50%]" src="images/stadt/altstadt-von-oben.jpg" width="1400" height="795" loading="lazy" decoding="async" alt="Die Heilbronner Innenstadt von oben, in der Mitte der Turm der Kilianskirche" />
                   <span>Innenstadt</span>
                 </li>
                 <li>
@@ -448,7 +475,7 @@
                   <span>Bollwerksturm</span>
                 </li>
                 <li>
-                  <img src="images/stadt/neckar-boot.jpg" width="1400" height="851" loading="lazy" decoding="async" alt="Ein Ausflugsboot auf dem Neckar, dahinter die Kilianskirche" />
+                  <img class="object-[58%_50%]" src="images/stadt/neckar-boot.jpg" width="1400" height="851" loading="lazy" decoding="async" alt="Ein Ausflugsboot auf dem Neckar, dahinter die Kilianskirche" />
                   <span>Neckar</span>
                 </li>
                 <li>
@@ -456,7 +483,7 @@
                   <span>Götzenturm</span>
                 </li>
                 <li>
-                  <img src="images/stadt/experimenta-kran.jpg" width="1400" height="900" loading="lazy" decoding="async" alt="Die experimenta mit einem alten Hafenkran davor" />
+                  <img class="object-[40%_50%]" src="images/stadt/experimenta-kran.jpg" width="1400" height="900" loading="lazy" decoding="async" alt="Die experimenta mit einem alten Hafenkran davor" />
                   <span>experimenta</span>
                 </li>
                 <li>
@@ -465,6 +492,17 @@
                 </li>
               </ul>
             </div>
+          <div class="mt-6 flex items-center gap-5 px-5 sm:px-8 lg:px-12">
+            <div class="galerie-balken" aria-hidden="true">
+              <span data-galerie-daumen></span>
+            </div>
+            <!-- Hinweis nur auf Touch-Geräten; mit Maus reichen die Pfeile. -->
+            <p
+              class="flex shrink-0 items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-white/75 [@media(pointer:fine)]:hidden"
+            >
+              Wischen
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M4 12h16m0 0-6-6m6 6-6 6" /></svg>
+            </p>
           </div>
         </div>
 
@@ -1098,27 +1136,43 @@
         addEventListener('scroll', anstossen, { passive: true });
 
         /*
-          Galerie: Bühnenhöhe = Spurbreite − Fensterbreite + Fensterhöhe. Dann
-          entspricht jeder senkrechte Pixel einem waagerechten, und die Spur
-          endet genau am rechten Rand.
+          Galerie-Karussell: Pfeile blättern um knapp eine Fensterbreite, das
+          Einrasten (scroll-snap) sucht das nächste Bild. Balken zeigt, wo man
+          steht und wie viel noch kommt.
         */
-        const galerie = document.querySelector('[data-galerie]');
-        const spur = document.querySelector('[data-galerie-spur]');
-        const faehrt = () =>
-          CSS.supports('animation-timeline', 'view()') && bewegung.matches;
-        const galerieMessen = () => {
-          if (!faehrt()) {
-            galerie.style.height = '';
-            return;
-          }
-          const weg = spur.scrollWidth - document.documentElement.clientWidth;
-          galerie.style.height = `${Math.max(0, weg) + innerHeight}px`;
+        const fenster = document.querySelector('[data-galerie-fenster]');
+        const zurueck = document.querySelector('[data-galerie-zurueck]');
+        const weiter = document.querySelector('[data-galerie-weiter]');
+        const daumen = document.querySelector('[data-galerie-daumen]');
+        const blaettern = (richtung) =>
+          fenster.scrollBy({
+            left: richtung * fenster.clientWidth * 0.8,
+            behavior: bewegung.matches ? 'smooth' : 'auto',
+          });
+        zurueck.addEventListener('click', () => blaettern(-1));
+        weiter.addEventListener('click', () => blaettern(1));
+        let wartetGalerie = false;
+        const galerieStand = () => {
+          wartetGalerie = false;
+          const max = fenster.scrollWidth - fenster.clientWidth;
+          const anteil = fenster.clientWidth / fenster.scrollWidth;
+          const pos = max > 0 ? fenster.scrollLeft / max : 0;
+          daumen.style.width = `${anteil * 100}%`;
+          daumen.style.transform = `translateX(${(pos * (1 - anteil) * 100) / anteil}%)`;
+          zurueck.disabled = fenster.scrollLeft <= 2;
+          weiter.disabled = fenster.scrollLeft >= max - 2;
         };
-        galerieMessen();
-        addEventListener('resize', galerieMessen, { passive: true });
-        spur.querySelectorAll('img').forEach((img) =>
-          img.addEventListener('load', galerieMessen, { once: true })
-        );
+        const galerieAnstossen = () => {
+          if (wartetGalerie) return;
+          wartetGalerie = true;
+          requestAnimationFrame(galerieStand);
+        };
+        galerieStand();
+        fenster.addEventListener('scroll', galerieAnstossen, { passive: true });
+        addEventListener('resize', galerieAnstossen, { passive: true });
+        fenster
+          .querySelectorAll('img')
+          .forEach((img) => img.addEventListener('load', galerieAnstossen, { once: true }));
 
         /*
           LOGO-ZOOM über die viewBox (seit 30.09.2026, vorher CSS scale(36)).

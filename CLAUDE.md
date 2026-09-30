@@ -21,7 +21,7 @@ unbehandelt, Text nie auf Foto) — gelten nur für main, bis entschieden ist.
 |---|---|
 | Videos: Zapfanlage im Auftakt, brodelnder Sud in 03 („Drei Jahre gebrodelt“), Hopfen-Wandbild (Pingpong-Schleife) in 05 | `video/*.mp4` + `.jpg` (Standbild) |
 | Heilbronn-Fotos, 1400 px, ohne EXIF/GPS | `images/stadt/` |
-| Galerie fährt waagerecht beim Scrollen | `.galerie*` in `src/input.css`, Höhe setzt das Skript |
+| Galerie als Karussell (Wischen, Pfeile, Fortschrittsbalken) | `.galerie*` in `src/input.css`, Skript „Galerie-Karussell“ |
 | Bildmarke weiß für die blaue Leiste | `images/tugaesser-bildmarke-weiss.png` (aus der DS-Maske) |
 
 - **Videos aus der Fotos-Mediathek sind HDR (HLG, BT.2020).** ffmpeg hier ohne
@@ -44,6 +44,11 @@ unbehandelt, Text nie auf Foto) — gelten nur für main, bis entschieden ist.
 - **Videos laufen mit 0,6-facher Geschwindigkeit** (`playbackRate` im Skript,
   je Video über `data-tempo` änderbar) — in Echtzeit wirkten sie hektisch.
   Kein Neukodieren nötig.
+- **Galerie ist ein Karussell, kein Scroll-Kapern mehr** (30.09.2026, „nervig“):
+  vorher klebte die Bühne und die Bildspur fuhr beim senkrechten Scrollen
+  waagerecht — man kam nicht vorbei. Jetzt `overflow-x` mit `scroll-snap`;
+  senkrecht scrollt die Seite einfach weiter. Handy: Karten 80vw in 4:5, der
+  Ausschnitt je Bild steht als `object-[x_y]` am `<img>`.
 - **Logo-Zoom über die viewBox, nicht `transform: scale(36)`** (30.09.2026).
   Safari rastert eine skalierte Ebene in Normalgröße und vergrößert das
   Rasterbild — die Ä-Punkte waren auf dem iPhone pixelig. Die viewBox
