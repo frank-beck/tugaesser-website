@@ -441,6 +441,35 @@
       transform 150ms;
   }
 
+  /* Instagram am Schluss: Zweitknopf zu .schluss-cta, umrandet statt
+     gefüllt, gleiche Breite und Ecken. */
+  .schluss-folg {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 2px solid #013565;
+    border-radius: 16px;
+    color: #013565;
+    padding: clamp(1rem, 2vw, 1.5rem) clamp(1.5rem, 4vw, 3.5rem);
+    font-size: clamp(1.125rem, 2.2vw, 1.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    transition:
+      background-color 200ms,
+      color 200ms,
+      transform 150ms;
+  }
+
+  .schluss-folg i {
+    font-style: normal;
+    transition: transform 200ms;
+  }
+
+  .schluss-folg:active {
+    transform: translateY(1px);
+  }
+
   /* ----------------------------------------------------------- Galerie */
   /* Karussell: waagerecht scrollbar mit Einrasten. Senkrecht geht die Seite
      einfach weiter — nichts hält fest. */
@@ -604,6 +633,13 @@
     }
     .schluss-cta:hover {
       background: #013565;
+    }
+    .schluss-folg:hover {
+      background: #013565;
+      color: #fff;
+    }
+    .schluss-folg:hover i {
+      transform: translate(4px, -4px);
     }
   }
 }

@@ -62,7 +62,7 @@
     <meta name="theme-color" content="#013565" />
     <!-- Nur Public Sans, lokal. Inter/JetBrains Mono braucht der Vorschlag nicht mehr. -->
     <link rel="stylesheet" href="fonts/public-sans.css" />
-    <link rel="stylesheet" href="tailwind.css?v=0a598799" />
+    <link rel="stylesheet" href="tailwind.css?v=3db0b77f" />
   </head>
   <body class="bg-white font-ds text-tg-blue antialiased">
     <a
@@ -130,8 +130,29 @@
         </nav>
 
         <a
+          href="https://www.instagram.com/tugaesser/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="knopf-rahmen knopf-rahmen-hell hidden shrink-0 gap-2 px-3.5 py-2 text-[13px] md:ml-2 md:inline-flex"
+          aria-label="Folg uns auf Instagram"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="5.4" />
+            <circle cx="12" cy="12" r="4.2" />
+            <circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none" />
+          </svg>
+          Folg uns
+        </a>
+        <a
           href="https://mitmachen.tugaesser.de"
-          class="knopf ml-1 shrink-0 px-3 py-2.5 text-[13px] sm:ml-2 sm:px-5"
+          class="knopf ml-1 shrink-0 px-3 py-2.5 text-[13px] sm:ml-2 sm:px-5 md:ml-0"
           >Mach mit</a
         >
       </div>
@@ -989,6 +1010,38 @@
           >
             <span>Mach mit.</span>
             <i aria-hidden="true">→</i>
+          </a>
+          <!--
+            Instagram: zweite Handlung, gleiche Breite und Ecken wie „Mach
+            mit.“, aber umrandet und ein Drittel so hoch — gehört dazu, drängt
+            sich nicht vor. Ein zweiter Riesenknopf war „übertrieben“ (10.10.2026).
+          -->
+          <a
+            href="https://www.instagram.com/tugaesser/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="schluss-folg group mt-4"
+            data-auftauchen
+          >
+            <span class="flex items-center gap-3">
+              <svg
+              class="h-[1.1em] w-[1.1em] shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="5.4" />
+              <circle cx="12" cy="12" r="4.2" />
+              <circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none" />
+            </svg>
+              Folg uns auf Instagram
+            </span>
+            <span class="flex items-center gap-3">
+              <span class="hidden font-extrabold sm:inline">@tugaesser</span>
+              <i aria-hidden="true">↗</i>
+            </span>
           </a>
         </div>
       </section>

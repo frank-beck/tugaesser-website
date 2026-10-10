@@ -213,6 +213,15 @@ Bierdeckel, hier die echte Marke, weil die Leute da sind.
   640 px ersetzt die Bildmarke den Schriftzug, unter 360 px entfällt er ganz
   (lief sonst 5 px über). Bei jeder Änderung an Leiste oder Einträgen alle
   Breiten neu messen.
+- **Instagram seit 10.10.2026 wieder sichtbar** — war seit dem Redesign auf
+  Desktop nur Textlink (Aktionsleiste `lg:hidden`).
+  - Kopfleiste: „[IG] Folg uns“ umrandet, **erst ab `md`** (bei 640 lief die
+    Leiste 55 px über). Darunter übernimmt die Aktionsleiste.
+  - Schluss: `.schluss-folg` direkt unter „Mach mit.“ — gleiche Breite und
+    Ecken, umrandet, ~84 px hoch. Verworfen: reines Symbol in der Kopfleiste
+    („erkennt niemand“) und ein zweiter Riesenknopf in Blau („übertrieben“).
+  - Gemessen 320–1920 ohne Querlauf; bei 320 bricht „Folg uns auf
+    Instagram“ zweizeilig um.
 - In 05: nichts unter 1rem, `tg-muted` nie als Textfarbe (2,5:1), leiser Text
   `tg-blue/70` (5,1:1). Typo-Rollen im Kommentar über `<section id="antwort">`.
 - **Flächen und Kästen in 05** (auf Wunsch, „wirkt sehr eintönig“): Antwort auf
