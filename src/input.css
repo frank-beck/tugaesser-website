@@ -175,10 +175,14 @@
       box-shadow 250ms;
   }
 
+  /* Durchscheinend mit Weichzeichner (10.10.2026), wie .leiste-glas unten.
+     78 % war über Weiß zu blass. */
   .kopf[data-fest] {
-    background-color: #013565;
+    background-color: rgb(1 53 101 / 0.85);
     background-image: none;
     box-shadow: 0 1px 0 rgb(255 255 255 / 0.1);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    backdrop-filter: blur(14px) saturate(1.4);
   }
 
   .kopf-link {
@@ -209,6 +213,15 @@
     height: 3px;
     border-radius: 2px;
     background: #fff;
+  }
+
+  /* Aktionsleiste. Ohne Weichzeichner schien der Text dahinter scharf
+     durch die Knöpfe. iOS-Verdacht gegen fixed + backdrop-filter: siehe
+     CLAUDE.md — die Leiste rutschte aber auch deckend weg. */
+  .leiste-glas {
+    background-color: rgb(1 53 101 / 0.85);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    backdrop-filter: blur(14px) saturate(1.4);
   }
 
   /* ------------------------------------------------------------- Bilder */

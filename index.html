@@ -62,7 +62,7 @@
     <meta name="theme-color" content="#013565" />
     <!-- Nur Public Sans, lokal. Inter/JetBrains Mono braucht der Vorschlag nicht mehr. -->
     <link rel="stylesheet" href="fonts/public-sans.css" />
-    <link rel="stylesheet" href="tailwind.css?v=3db0b77f" />
+    <link rel="stylesheet" href="tailwind.css?v=702e4995" />
   </head>
   <body class="bg-white font-ds text-tg-blue antialiased">
     <a
@@ -72,10 +72,8 @@
     >
 
     <!--
-      KOPFLEISTE. Über dem Auftakt durchsichtig, danach Logo-Blau (`data-fest`,
-      gesetzt vom Skript). Bewusst ohne backdrop-filter: auf iOS steht
-      fixed + backdrop-filter im Verdacht, beim Scrollen nicht neu gezeichnet
-      zu werden (CLAUDE.md, „Aktionsleiste unten“).
+      KOPFLEISTE. Über dem Auftakt durchsichtig, danach Logo-Blau 85 % mit
+      Weichzeichner (`data-fest`, gesetzt vom Skript).
     -->
     <header id="kopf" class="kopf fixed inset-x-0 top-0 z-30 text-white">
       <div
@@ -1087,12 +1085,12 @@
 
     <!--
       AKTIONSLEISTE, nur unter lg. „Mach mit“ steht zusätzlich oben — auf iOS
-      rutscht die untere Leiste beim Scrollen weg (CLAUDE.md). Deckend, ohne
-      backdrop-filter.
+      rutscht die untere Leiste beim Scrollen weg (CLAUDE.md). Durchscheinend
+      mit Weichzeichner seit 10.10.2026 — am iPhone prüfen.
     -->
     <div
       id="aktionsleiste"
-      class="fixed inset-x-0 bottom-0 z-20 border-t border-white/10 bg-tg-blue pb-[env(safe-area-inset-bottom)] lg:hidden"
+      class="fixed inset-x-0 bottom-0 z-20 border-t border-white/10 leiste-glas pb-[env(safe-area-inset-bottom)] lg:hidden"
     >
       <div class="flex gap-3 px-4 py-3">
         <a

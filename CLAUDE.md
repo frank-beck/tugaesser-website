@@ -222,6 +222,13 @@ Bierdeckel, hier die echte Marke, weil die Leute da sind.
     („erkennt niemand“) und ein zweiter Riesenknopf in Blau („übertrieben“).
   - Gemessen 320–1920 ohne Querlauf; bei 320 bricht „Folg uns auf
     Instagram“ zweizeilig um.
+- **Beide Leisten durchscheinend seit 10.10.2026**: `tg-blue` 85 % plus
+  `backdrop-filter: blur(14px) saturate(1.4)` (`.kopf[data-fest]`,
+  `.leiste-glas`). Unten ohne Weichzeichner schien Text scharf durch die
+  Knöpfe — verworfen. **Unten ist das der alte iOS-Verdacht** (siehe
+  „Aktionsleiste unten“); am iPhone prüfen, ob die Leiste beim Scrollen
+  schlechter wird. Rückweg: `.leiste-glas` → `bg-tg-blue`. 78 % war über
+  Weiß zu blass.
 - In 05: nichts unter 1rem, `tg-muted` nie als Textfarbe (2,5:1), leiser Text
   `tg-blue/70` (5,1:1). Typo-Rollen im Kommentar über `<section id="antwort">`.
 - **Flächen und Kästen in 05** (auf Wunsch, „wirkt sehr eintönig“): Antwort auf
