@@ -160,6 +160,7 @@
       transform 150ms;
   }
 
+  .menue-knopf:active,
   .knopf:active,
   .knopf-rahmen:active,
   .knopf-weiss:active,
@@ -177,7 +178,8 @@
 
   /* Durchscheinend mit Weichzeichner (10.10.2026), wie .leiste-glas unten.
      78 % war über Weiß zu blass. */
-  .kopf[data-fest] {
+  .kopf[data-fest],
+  .kopf[data-menue-offen] {
     background-color: rgb(1 53 101 / 0.85);
     background-image: none;
     box-shadow: 0 1px 0 rgb(255 255 255 / 0.1);
@@ -193,15 +195,6 @@
     transition: color 150ms;
   }
 
-  /* Unter 380 px: sonst 23 px Querlauf bei 320 (gemessen 30.09.2026). */
-  @media (max-width: 379px) {
-    .kopf-link {
-      padding-inline: 0.15rem;
-      font-size: 12px;
-      letter-spacing: 0.02em;
-    }
-  }
-
   .kopf-link[aria-current='true'] {
     color: #fff;
   }
@@ -211,6 +204,125 @@
     position: absolute;
     inset: auto 0.3rem 0.15rem;
     height: 3px;
+    border-radius: 2px;
+    background: #fff;
+  }
+
+  /* ------------------------------------------------------- Klappmenü < lg */
+  /* Burger: drei Striche — die äußeren als Pseudos des Knopfs, die Mitte als
+     eigenes Element. **Nicht die Pseudos an den Mittelstrich hängen:** beim
+     Öffnen schrumpft der auf null, und eine Transformation der Eltern nimmt
+     die Kinder mit — das Kreuz war unsichtbar (gemessen 14.10.2026).
+     Bewegt werden nur transform und opacity. */
+  .menue-knopf {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    color: #fff;
+  }
+
+  .menue-balken,
+  .menue-knopf::before,
+  .menue-knopf::after {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: currentColor;
+    transition:
+      transform 180ms ease,
+      opacity 180ms ease;
+  }
+
+  .menue-knopf::before,
+  .menue-knopf::after {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 21px;
+  }
+
+  .menue-knopf::before {
+    transform: translateY(-7px);
+  }
+
+  .menue-knopf::after {
+    transform: translateY(7px);
+  }
+
+  .menue-knopf[aria-expanded='true'] .menue-balken {
+    opacity: 0;
+  }
+
+  .menue-knopf[aria-expanded='true']::before {
+    transform: rotate(45deg);
+  }
+
+  .menue-knopf[aria-expanded='true']::after {
+    transform: rotate(-45deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menue-balken,
+    .menue-knopf::before,
+    .menue-knopf::after {
+      transition: none;
+    }
+  }
+
+  /* Deckend, anders als die beiden Leisten: hier liegt Text über Text. Bei
+     97 % plus Weichzeichner las sich die Riesenschrift aus 01 noch durch
+     (gemessen 14.10.2026: 8 von 255 je Kanal — am Gerät deutlich sichtbar).
+     Ohne backdrop-filter zugleich außerhalb des iOS-Verdachts aus CLAUDE.md. */
+  .menue {
+    background-color: #013565;
+    /* Keine eigene Oberkante: die Leiste trägt mit [data-menue-offen] schon
+       eine, sonst stehen zwei Haarlinien übereinander. */
+    box-shadow: 0 16px 32px -24px rgb(0 0 0 / 0.6);
+  }
+
+  .menue-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.1);
+    padding: 0.95rem 0.25rem;
+    color: rgb(255 255 255 / 0.78);
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: color 150ms;
+  }
+
+  .menue-link:last-child {
+    border-bottom: 0;
+  }
+
+  .menue-zahl {
+    color: rgb(255 255 255 / 0.5);
+  }
+
+  .menue-link[aria-current='true'] {
+    color: #fff;
+  }
+
+  .menue-link[aria-current='true'] .menue-zahl {
+    color: #fff;
+  }
+
+  /* Marke der laufenden Phase: Balken an der Kante, wie die Rail im Text.
+     Sitzt im Außenabstand der Spalte, verschiebt also keine Zeile. */
+  .menue-link[aria-current='true']::before {
+    content: '';
+    position: absolute;
+    left: -0.75rem;
+    top: 0.95rem;
+    bottom: 0.95rem;
+    width: 3px;
     border-radius: 2px;
     background: #fff;
   }
@@ -632,6 +744,12 @@
       color: #fff;
     }
     .kopf-link:hover {
+      color: #fff;
+    }
+    .menue-knopf:hover {
+      background: rgb(255 255 255 / 0.14);
+    }
+    .menue-link:hover {
       color: #fff;
     }
     .textlink:hover {

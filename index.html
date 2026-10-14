@@ -62,7 +62,7 @@
     <meta name="theme-color" content="#013565" />
     <!-- Nur Public Sans, lokal. Inter/JetBrains Mono braucht der Vorschlag nicht mehr. -->
     <link rel="stylesheet" href="fonts/public-sans.css" />
-    <link rel="stylesheet" href="tailwind.css?v=702e4995" />
+    <link rel="stylesheet" href="tailwind.css?v=ff7d8cb8" />
   </head>
   <body class="bg-white font-ds text-tg-blue antialiased">
     <a
@@ -97,35 +97,44 @@
           >
         </a>
 
+        <!--
+          Kapitel: ab 1120 px als Zeile mit Text, darunter im Klappmenü. Die
+          Zwischenstufe "nur Ziffern" ist entfallen (14.10.2026) — "01" allein
+          sagt nicht, wohin es führt. 1120 ist gemessen: mit Text braucht die
+          Zeile 1093 px (Marke 160 + Kapitel 547 + "Folg uns" 136 + "Mach mit"
+          117 + Abstände), bei 1024 lief "Mach mit" 37 px über den Rand.
+        -->
         <nav
           aria-label="Kapitel"
-          class="ml-auto flex items-center gap-1 text-[13px] font-black uppercase tracking-[0.08em] min-[380px]:gap-2 lg:gap-6"
+          class="ml-auto hidden items-center gap-3 text-[13px] font-black uppercase tracking-[0.08em] min-[1120px]:flex xl:gap-5"
         >
           <a href="#phase-01" data-phase-link="phase-01" class="kopf-link">
-            <span class="tabular-nums">01</span
-            ><span class="hidden xl:inline">&nbsp;Traum</span>
+            <span class="tabular-nums">01</span>&nbsp;Traum
           </a>
           <a href="#phase-02" data-phase-link="phase-02" class="kopf-link">
-            <span class="tabular-nums">02</span
-            ><span class="hidden xl:inline">&nbsp;Bestand</span>
+            <span class="tabular-nums">02</span>&nbsp;Bestand
           </a>
           <a href="#phase-03" data-phase-link="phase-03" class="kopf-link">
-            <span class="tabular-nums">03</span
-            ><span class="hidden xl:inline">&nbsp;Idee</span>
+            <span class="tabular-nums">03</span>&nbsp;Idee
           </a>
           <a href="#phase-04" data-phase-link="phase-04" class="kopf-link">
-            <span class="tabular-nums">04</span
-            ><span class="hidden xl:inline">&nbsp;Mitmachen</span>
+            <span class="tabular-nums">04</span>&nbsp;Mitmachen
           </a>
-          <a
-            href="#phase-05-logo"
-            data-phase-link="phase-05"
-            class="kopf-link"
-          >
-            <span class="tabular-nums">05</span
-            ><span class="hidden xl:inline">&nbsp;Antwort</span>
+          <a href="#phase-05-logo" data-phase-link="phase-05" class="kopf-link">
+            <span class="tabular-nums">05</span>&nbsp;Antwort
           </a>
         </nav>
+
+        <button
+          type="button"
+          data-menue-knopf
+          aria-controls="menue"
+          aria-expanded="false"
+          class="menue-knopf ml-auto shrink-0 min-[1120px]:hidden"
+        >
+          <span class="sr-only">Kapitel</span>
+          <span class="menue-balken" aria-hidden="true"></span>
+        </button>
 
         <a
           href="https://www.instagram.com/tugaesser/"
@@ -153,6 +162,36 @@
           class="knopf ml-1 shrink-0 px-3 py-2.5 text-[13px] sm:ml-2 sm:px-5 md:ml-0"
           >Mach mit</a
         >
+      </div>
+
+      <!-- Klappmenü. Liegt absolut unter der Leiste, damit die Leiste ihre
+           Höhe behält (an ihr hängen pt-16 und alle scroll-mt-16). -->
+      <div
+        id="menue"
+        data-menue
+        hidden
+        class="menue absolute inset-x-0 top-full min-[1120px]:hidden"
+      >
+        <nav
+          aria-label="Kapitel"
+          class="mx-auto max-w-[1600px] px-3 min-[380px]:px-4 sm:px-8"
+        >
+          <a href="#phase-01" data-phase-link="phase-01" class="menue-link">
+            <span class="menue-zahl tabular-nums">01</span>Traum
+          </a>
+          <a href="#phase-02" data-phase-link="phase-02" class="menue-link">
+            <span class="menue-zahl tabular-nums">02</span>Bestand
+          </a>
+          <a href="#phase-03" data-phase-link="phase-03" class="menue-link">
+            <span class="menue-zahl tabular-nums">03</span>Idee
+          </a>
+          <a href="#phase-04" data-phase-link="phase-04" class="menue-link">
+            <span class="menue-zahl tabular-nums">04</span>Mitmachen
+          </a>
+          <a href="#phase-05-logo" data-phase-link="phase-05" class="menue-link">
+            <span class="menue-zahl tabular-nums">05</span>Antwort
+          </a>
+        </nav>
       </div>
     </header>
 
@@ -1151,6 +1190,40 @@
           { threshold: 0.15 }
         );
         videos.forEach((v) => sichtbar.observe(v));
+
+        /*
+          Klappmenü unter 1120 px. Schließt beim Sprung in ein Kapitel, mit
+          Escape, bei einem Klick daneben und sobald die Zeile mit Text wieder
+          passt — sonst stünde aria-expanded auf true, während das Menü schon
+          weggeblendet ist.
+        */
+        const menueKnopf = document.querySelector('[data-menue-knopf]');
+        const menue = document.querySelector('[data-menue]');
+        // Dieselbe Schwelle wie min-[1120px] im Markup.
+        const breit = matchMedia('(min-width: 1120px)');
+        const menueSetzen = (offen) => {
+          menue.hidden = !offen;
+          menueKnopf.setAttribute('aria-expanded', String(offen));
+          // Über dem Auftakt ist die Leiste durchsichtig; mit offenem Menü
+          // stünde eine deckende Fläche unter einer durchsichtigen.
+          kopf.toggleAttribute('data-menue-offen', offen);
+        };
+        const menueZu = () => {
+          if (!menue.hidden) menueSetzen(false);
+        };
+        menueKnopf.addEventListener('click', () => menueSetzen(menue.hidden));
+        menue.addEventListener('click', (e) => {
+          if (e.target.closest('a')) menueZu();
+        });
+        addEventListener('keydown', (e) => {
+          if (e.key !== 'Escape' || menue.hidden) return;
+          menueZu();
+          menueKnopf.focus();
+        });
+        addEventListener('pointerdown', (e) => {
+          if (!menue.hidden && !e.target.closest('#menue, [data-menue-knopf]')) menueZu();
+        });
+        breit.addEventListener('change', (e) => e.matches && menueZu());
 
         /*
           Kapitelmarkierung: die letzte Phase, deren Oberkante die Kopfleiste

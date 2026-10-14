@@ -371,11 +371,14 @@ Klick führt zum Neuesten, die Erzählung bleibt in ihrer Reihenfolge.
 
 - **Jede neue Phase braucht dort einen Eintrag.** Sonst wächst die Seite nach
   unten, ohne dass man sie erreicht — genau das Problem, das die Leiste löst.
-- **Die Namen stehen erst ab `lg`, die Uhr erst ab `xl`.** Mit vier Phasen messen
-  Marke, Einträge und Knopf bei 1024 px zusammen rund 870 px; mit der Uhr wären
-  es 1000 und die Zeile bräche um. Vorher standen beide ab `sm` — das ging mit
-  drei Phasen gerade noch. Bei einer fünften Phase ist diese Rechnung erneut
-  fällig.
+- **Die Namen stehen ab 1120 px, darunter liegen die Kapitel im Klappmenü**
+  (14.10.2026, `min-[1120px]:` im Markup und dieselbe Schwelle als
+  `matchMedia` im Skript — beide mitziehen). Gemessen: mit Text braucht die
+  Zeile 1093 px (Marke 160 + Kapitel 547 + „Folg uns“ 136 + „Mach mit“ 117 +
+  Abstände), bei 1024 lief „Mach mit“ 37 px über den Rand. Bei einer sechsten
+  Phase neu messen. Zuvor standen die Namen erst ab `xl`.
+- **Die Zwischenstufe „nur Ziffern“ ist entfallen.** „01“ allein sagt nicht,
+  wohin es führt; im Menü steht überall der Name dazu.
 - Sprungziel ist das **Bild**, das die Phase eröffnet (`id="phase-NN"` plus
   `data-phase` auf der `<figure>`), nicht der Textabschnitt. Sonst überspringt
   der Sprung das Motiv.
@@ -389,9 +392,30 @@ Klick führt zum Neuesten, die Erzählung bleibt in ihrer Reihenfolge.
   Bildschirme hoch, also sind oft zwei gleichzeitig im Blick, und ein Observer
   müsste raten. Die Regel ist stattdessen eindeutig — es gilt die letzte Phase,
   deren Oberkante die Unterkante der Leiste passiert hat.
-- Unterhalb `sm` stehen nur die Ziffern, und die Uhr entfällt: „01 Traumphase
-  02 Bestandsaufnahme“ plus Marke plus Uhr passt bei 390px nicht in eine Zeile.
-  Die Uhr ist Dekor, die Navigation nicht.
+
+### Klappmenü unter 1120 px (seit 14.10.2026)
+
+Burger links neben „Folg uns“/„Mach mit“, Panel über die ganze Breite
+unter der Leiste.
+Einträge „01 Traum“ … „05 Antwort“, Zeilen 55 px hoch (Touch), gemessen
+320–1920 ohne Querlauf, Leiste bleibt 64 px.
+
+- **Die Fläche ist deckend `#013565`, ohne `backdrop-filter`** — anders als
+  beide Leisten. Bei 97 % plus Weichzeichner las sich die Riesenschrift aus 01
+  noch durch (gemessen: 8 von 255 je Kanal). Nebeneffekt: außerhalb des
+  iOS-Verdachts gegen `fixed` + `backdrop-filter`.
+- **Das Panel liegt absolut unter der Leiste**, nicht in deren Fluss — sonst
+  wächst die Leiste beim Öffnen und `pt-16` samt aller `scroll-mt-16` stimmt
+  nicht mehr.
+- Offenes Menü setzt `data-menue-offen` auf die Leiste: über dem Auftakt ist
+  sie durchsichtig, darunter stünde sonst eine deckende Fläche.
+- **Burger-Kreuz: die beiden Außenstriche sind Pseudos des Knopfs, nicht des
+  Mittelstrichs.** Hingen sie am Mittelstrich, nähme dessen Transformation
+  beim Öffnen die Kinder mit — das Kreuz war unsichtbar.
+- Schließt bei Linkklick, Escape (Fokus zurück auf den Knopf), Klick daneben
+  und sobald die Zeile mit Text wieder passt.
+- Die Markierung läuft über dieselbe `[data-phase-link]`-Schleife wie oben;
+  neue Einträge brauchen nur das Attribut.
 
 ## Wo „Mach mit" steht — an beiden Orten
 
